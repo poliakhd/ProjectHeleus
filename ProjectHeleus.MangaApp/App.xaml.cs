@@ -4,6 +4,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.ApplicationModel.Resources;
 using Windows.ApplicationModel.Store;
+using Windows.UI;
 using Windows.UI.Core;
 using Caliburn.Micro;
 using ProjectHeleus.MangaApp.Providers;
@@ -11,6 +12,7 @@ using ProjectHeleus.MangaApp.ViewModels;
 using ProjectHeleus.SharedLibrary.Providers.AppPurchase;
 using ProjectHeleus.SharedLibrary.Providers.AppPurchase.Contracts;
 using ProjectHeleus.SharedLibrary.Providers.Menu.Contracts;
+using ColorHelper = Microsoft.Toolkit.Uwp.ColorHelper;
 
 namespace ProjectHeleus.MangaApp
 {
@@ -47,6 +49,24 @@ namespace ProjectHeleus.MangaApp
                 .Singleton<ShellPageViewModel>()
                 .PerRequest<SettingsPageViewModel>();
 
+            ConfigureSettings();
+            ConfigureNavigation();
+        }
+
+        private void ConfigureSettings()
+        {
+            if(Windows.Storage.ApplicationData.Current.LocalSettings.Values["IsDarkThemeEnabled"] is null)
+                Windows.Storage.ApplicationData.Current.LocalSettings.Values["IsDarkThemeEnabled"] = false;
+
+            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneBackgroundColor"] is null)
+                Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneBackgroundColor"] = ColorHelper.ToHex(Colors.White);
+
+            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneForegroundColor"] is null)
+                Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneForegroundColor"] = ColorHelper.ToHex(Colors.Black);
+        }
+
+        private static void ConfigureNavigation()
+        {
             var navigation = SystemNavigationManager.GetForCurrentView();
             navigation.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             navigation.BackRequested += (o, e) =>

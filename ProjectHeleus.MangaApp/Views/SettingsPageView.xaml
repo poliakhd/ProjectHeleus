@@ -3,10 +3,21 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:micro="using:Caliburn.Micro"
       mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{Binding Source={StaticResource Settings}, Path=PaneForegroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </Style>
+        <Style TargetType="PivotItem">
+            <Setter Property="Foreground" Value="{Binding Source={StaticResource Settings}, Path=PaneForegroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </Style>
+        <Style TargetType="ToggleSwitch">
+            <Setter Property="Foreground" Value="{Binding Source={StaticResource Settings}, Path=PaneForegroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </Style>
+    </Page.Resources>
+
+    <Grid Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
@@ -37,15 +48,13 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <TextBlock x:Uid="ColorsStatus"
-                                   Margin="0,0,0,10"
-                                   Foreground="Black" />
+                        <TextBlock x:Uid="ColorsStatus" Margin="0,0,0,10" />
 
                         <ToggleSwitch x:Uid="DarkTheme"
                                       Grid.Row="1"
                                       Margin="0,5"
-                                      micro:Message.Attach="[Event Toggled]  = [ThemeChanged()]"
-                                      IsOn="{Binding Path=IsDarkTheme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                      Foreground="White"
+                                      IsOn="{Binding Source={StaticResource Settings}, Path=IsDarkThemeEnabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </Grid>
             </PivotItem>

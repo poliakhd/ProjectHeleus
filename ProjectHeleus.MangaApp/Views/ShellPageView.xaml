@@ -28,11 +28,8 @@
         </DataTemplate>
     </Page.Resources>
 
-    <Grid Background="{Binding Path=PaneBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
-          BorderBrush="Black"
-          BorderThickness="1">
+    <Grid Background="{Binding Source={StaticResource Settings}, Path=PaneBackgroundColor, UpdateSourceTrigger=PropertyChanged}">
         <controls:HamburgerMenu micro:Message.Attach="[Event ItemClick] = [MainMenuItemClick($source, $eventArgs)]; [Event OptionsItemClick] = [OptionMenuItemClick($source, $eventArgs)]"
-                                Background="{Binding Path=PaneBackgroundColor, UpdateSourceTrigger=PropertyChanged}"
                                 CompactPaneLength="47"
                                 DisplayMode="CompactInline"
                                 Foreground="White"
@@ -45,7 +42,6 @@
                                 OptionsItemsSource="{Binding Path=OptionsMenu, UpdateSourceTrigger=PropertyChanged}"
                                 PaneBackground="#464B4D">
             <Grid>
-
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
@@ -64,8 +60,6 @@
                         </TransitionCollection>
                     </Frame.ContentTransitions>
                 </Frame>
-
-
             </Grid>
         </controls:HamburgerMenu>
     </Grid>

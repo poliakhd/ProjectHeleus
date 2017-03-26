@@ -1,17 +1,13 @@
-﻿using Windows.UI;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
+﻿using Windows.UI.Xaml.Controls;
 using Caliburn.Micro;
-using ProjectHeleus.MangaApp.Models.Messages;
 using ProjectHeleus.SharedLibrary.Extenstions;
 using ProjectHeleus.SharedLibrary.Models;
 using ProjectHeleus.SharedLibrary.Providers.Menu.Contracts;
-using ColorHelper = Microsoft.Toolkit.Uwp.ColorHelper;
 
 namespace ProjectHeleus.MangaApp.ViewModels
 {
     public class ShellPageViewModel
-        : Screen, IHandle<UpdateAppTheme>
+        : Screen
     {
         #region Private Members
 
@@ -48,15 +44,6 @@ namespace ProjectHeleus.MangaApp.ViewModels
         private void UpdatePane()
         {
             PaneOpen = PaneOpen && !PaneOpen;
-        }
-        public string PaneBackgroundColor
-        {
-            get { return Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneBackgroundColor"] as string ?? ColorHelper.ToHex(Colors.Black); }
-            set
-            {
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneBackgroundColor"] = value;
-                NotifyOfPropertyChange();
-            }
         }
 
         private void MainMenuItemClick(object sender, ItemClickEventArgs eventArgs)
@@ -117,26 +104,5 @@ namespace ProjectHeleus.MangaApp.ViewModels
             NotifyOfPropertyChange(nameof(MainMenu));
             NotifyOfPropertyChange(nameof(OptionsMenu));
         }
-
-        #region Implementation of IHandle<UpdateAppTheme>
-
-        public void Handle(UpdateAppTheme message)
-        {
-            UpdateAppTheme(message.Theme);
-        }
-        private void UpdateAppTheme(AppTheme theme)
-        {
-            switch (theme)
-            {
-                case AppTheme.Light:
-                    PaneBackgroundColor = ColorHelper.ToHex(Colors.White);
-                    break;
-                case AppTheme.Dark:
-                    PaneBackgroundColor = ColorHelper.ToHex(Colors.Black);
-                    break;
-            }
-        }
-
-        #endregion
     }
 }

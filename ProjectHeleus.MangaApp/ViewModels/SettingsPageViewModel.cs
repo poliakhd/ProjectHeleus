@@ -1,7 +1,7 @@
 ﻿using Windows.UI;
+using Windows.UI.Xaml;
 using Caliburn.Micro;
-using ProjectHeleus.MangaApp.Models.Messages;
-using ColorHelper = Microsoft.Toolkit.Uwp.ColorHelper;
+using ProjectHeleus.MangaApp.Core;
 
 namespace ProjectHeleus.MangaApp.ViewModels
 {
@@ -11,13 +11,14 @@ namespace ProjectHeleus.MangaApp.ViewModels
         #region Private Members
 
         private readonly IEventAggregator _eventAggregator;
-        private Color _color;
+        private Settings _settings;
 
         #endregion
 
         public SettingsPageViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
+            _settings = Application.Current.Resources["Settings"] as Settings;
 
             Initialize();
             NotifyProperties();
@@ -29,13 +30,6 @@ namespace ProjectHeleus.MangaApp.ViewModels
         }
         private void NotifyProperties()
         {
-        }
-
-        public bool IsDarkTheme { get; set; }
-
-        public void ThemeChanged()
-        {
-            _eventAggregator.PublishOnUIThread(new UpdateAppTheme {Theme = IsDarkTheme ? AppTheme.Dark : AppTheme.Light});
         }
     }
 }
