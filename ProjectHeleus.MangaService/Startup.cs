@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ProjectHeleus.MangaService.Core;
+using ProjectHeleus.MangaService.Providers;
+using ProjectHeleus.MangaService.Providers.Contracts;
+using StructureMap;
 
 namespace ProjectHeleus.MangaService
 {
@@ -15,25 +21,39 @@ namespace ProjectHeleus.MangaService
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
+
             Configuration = builder.Build();
         }
 
         public IConfigurationRoot Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
+            services.AddDbContext<ApiContext>(options => options.UseInMemoryDatabase());
             services.AddMvc();
+
+            //services.AddTransient<ISourcesProvider, BasicSourcesProvider>();
+
+            var container = new Container();
+            
+            container.Configure(config =>
+            {
+                config.For<ISourcesProvider>().Add<BasicSourcesProvider>();
+
+                config.Populate(services);
+            });
+
+            return container.GetInstance<IServiceProvider>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, ApiContext context)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseMvc();
+
+            ApiContextInitializer.Initialize(context);
         }
     }
 }
