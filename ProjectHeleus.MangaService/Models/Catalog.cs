@@ -2,7 +2,7 @@
 
 namespace ProjectHeleus.MangaService.Models
 {
-    public class Source
+    public class Catalog
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

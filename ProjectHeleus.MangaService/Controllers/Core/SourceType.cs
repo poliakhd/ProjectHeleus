@@ -1,4 +1,4 @@
-﻿namespace ProjectHeleus.MangaService.Parsers.Core
+﻿namespace ProjectHeleus.MangaService.Controllers.Core
 {
     public enum SourceType
     {

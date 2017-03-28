@@ -9,10 +9,10 @@ namespace ProjectHeleus.MangaService.Core
         {
             context.Database.EnsureCreated();
 
-            var sources = new Source[]
+            var sources = new Catalog[]
             {
-                new Source() {Title = "readmanga.ru", Url = "http://readmange.ru"},
-                new Source() {Title = "mangafox.com", Url = "http://mangafox.com"}
+                new Catalog() {Title = "readmanga.ru", Url = "http://readmange.ru"},
+                new Catalog() {Title = "mangafox.com", Url = "http://mangafox.com"}
             };
 
             context.Sources.AddRange(sources);

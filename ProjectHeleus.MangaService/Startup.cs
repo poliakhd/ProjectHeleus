@@ -34,16 +34,16 @@ namespace ProjectHeleus.MangaService
             services.AddDbContext<ApiContext>(options => options.UseInMemoryDatabase());
             services.AddMvc();
 
-            //services.AddTransient<ISourcesProvider, BasicSourcesProvider>();
+            //services.AddTransient<ICatalogsProvider, BasicCatalogsProvider>();
 
             var container = new Container();
             
             container.Configure(config =>
             {
-                config.For<ISourcesProvider>().Add<BasicSourcesProvider>();
+                config.For<ICatalogsProvider>().Add<BasicCatalogsProvider>();
 
-                config.For<ISourceParser>().Add<MangaFoxSourceParser>().Named(nameof(MangaFoxSourceParser));
-                config.For<ISourceParser>().Add<ReadMangaSourceParcer>().Named(nameof(ReadMangaSourceParcer));
+                config.For<ICatalogParser>().Add<MangaFoxCatalogParser>().Named(nameof(MangaFoxCatalogParser));
+                config.For<ICatalogParser>().Add<ReadMangaCatalogParcer>().Named(nameof(ReadMangaCatalogParcer));
 
                 config.Populate(services);
             });

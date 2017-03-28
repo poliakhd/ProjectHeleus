@@ -10,6 +10,6 @@ namespace ProjectHeleus.MangaService.Core
             : base(options)
         { }
         
-        public DbSet<Source> Sources { get; set; }
+        public DbSet<Catalog> Sources { get; set; }
     }
 }

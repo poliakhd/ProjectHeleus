@@ -10,14 +10,24 @@ using ProjectHeleus.MangaService.Parsers.Contracts;
 
 namespace ProjectHeleus.MangaService.Parsers
 {
-    public class ReadMangaSourceParcer 
-        : ISourceParser
+    public class ReadMangaCatalogParcer 
+        : ICatalogParser
     {
+        private const string NewUrl = "http://readmanga.me/list?sortType=created";
         private const string UpdatedUrl = "http://readmanga.me/list?sortType=updated";
-
+        
         public async Task<IEnumerable<Manga>> GetLatestContent()
         {
-            var source = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(UpdatedUrl);
+            return await GetContent(UpdatedUrl);
+        }
+        public async Task<IEnumerable<Manga>> GetNewContent()
+        {
+            return await GetContent(NewUrl);
+        }
+
+        private async Task<IEnumerable<Manga>> GetContent(string siteUrl)
+        {
+            var source = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(siteUrl);
             var list = source.GetElementsByClassName("tile col-sm-6");
 
             var mangas = new List<Manga>();

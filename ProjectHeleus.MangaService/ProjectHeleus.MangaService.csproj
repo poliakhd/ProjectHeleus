@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Parsers\Contracts\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
   <ItemGroup>

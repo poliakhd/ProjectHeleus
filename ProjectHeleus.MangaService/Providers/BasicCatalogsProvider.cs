@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ProjectHeleus.MangaService.Controllers.Core;
 using ProjectHeleus.MangaService.Core;
 using ProjectHeleus.MangaService.Models;
 using ProjectHeleus.MangaService.Parsers;
 using ProjectHeleus.MangaService.Parsers.Contracts;
-using ProjectHeleus.MangaService.Parsers.Core;
 using ProjectHeleus.MangaService.Providers.Contracts;
 using StructureMap;
 
 namespace ProjectHeleus.MangaService.Providers
 {
-    public class BasicSourcesProvider
-        : ISourcesProvider
+    public class BasicCatalogsProvider
+        : ICatalogsProvider
     {
         #region Private Members
 
@@ -21,15 +21,15 @@ namespace ProjectHeleus.MangaService.Providers
 
         #endregion
         
-        public BasicSourcesProvider(ApiContext context, IContainer container)
+        public BasicCatalogsProvider(ApiContext context, IContainer container)
         {
             _context = context;
             _container = container;
         }
 
-        #region Implementation of ISourcesProvider
+        #region Implementation of ICatalogsProvider
 
-        public async Task<IEnumerable<Models.Source>> GetAllSourcesAsync()
+        public async Task<IEnumerable<Models.Catalog>> GetAllSourcesAsync()
         {
             return await _context.Sources.ToListAsync();
         }
@@ -41,20 +41,27 @@ namespace ProjectHeleus.MangaService.Providers
 
             return await Task.FromResult(mangas);
         }
+        public async Task<IEnumerable<Manga>> GetNewSourceContentAsync(SourceType sourceType)
+        {
+            var parser = await GetSourceParser(sourceType);
+            var mangas = await parser.GetNewContent();
+
+            return await Task.FromResult(mangas);
+        }
 
         #endregion
 
-        private async Task<ISourceParser> GetSourceParser(SourceType sourceType)
+        private async Task<ICatalogParser> GetSourceParser(SourceType sourceType)
         {
-            ISourceParser parser = null;
+            ICatalogParser parser = null;
 
             switch (sourceType)
             {
                 case SourceType.MangaFox:
-                    parser = _container.GetInstance<ISourceParser>(nameof(MangaFoxSourceParser));
+                    parser = _container.GetInstance<ICatalogParser>(nameof(MangaFoxCatalogParser));
                     break;
                 case SourceType.ReadManga:
-                    parser = _container.GetInstance<ISourceParser>(nameof(ReadMangaSourceParcer));
+                    parser = _container.GetInstance<ICatalogParser>(nameof(ReadMangaCatalogParcer));
                     break;
             }
 

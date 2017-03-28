@@ -5,10 +5,14 @@ using ProjectHeleus.MangaService.Parsers.Contracts;
 
 namespace ProjectHeleus.MangaService.Parsers
 {
-    public class MangaFoxSourceParser 
-        : ISourceParser
+    public class MangaFoxCatalogParser 
+        : ICatalogParser
     {
         public Task<IEnumerable<Manga>> GetLatestContent()
+        {
+            throw new System.NotImplementedException();
+        }
+        public Task<IEnumerable<Manga>> GetNewContent()
         {
             throw new System.NotImplementedException();
         }

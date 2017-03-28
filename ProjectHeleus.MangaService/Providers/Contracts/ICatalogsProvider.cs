@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ProjectHeleus.MangaService.Controllers.Core;
 using ProjectHeleus.MangaService.Models;
-using ProjectHeleus.MangaService.Parsers.Core;
 
 namespace ProjectHeleus.MangaService.Providers.Contracts
 {
-    public interface ISourcesProvider
+    public interface ICatalogsProvider
     {
-        Task<IEnumerable<Source>> GetAllSourcesAsync();
+        Task<IEnumerable<Catalog>> GetAllSourcesAsync();
         Task<IEnumerable<Manga>> GetLatestSourceContentAsync(SourceType source);
+        Task<IEnumerable<Manga>> GetNewSourceContentAsync(SourceType source);
     }
 }
