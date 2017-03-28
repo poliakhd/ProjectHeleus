@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectHeleus.MangaService.Models;
+using ProjectHeleus.MangaService.Parsers.Core;
 using ProjectHeleus.MangaService.Providers.Contracts;
 
 namespace ProjectHeleus.MangaService.Controllers
@@ -25,9 +26,10 @@ namespace ProjectHeleus.MangaService.Controllers
             return await _sourcesProvider.GetAllSourcesAsync();
         }
 
-        [Route("api/[controller]/{source}")]
-        public async Task<IEnumerable<string>> GetSourceContent(int sourceId)
+        [HttpGet("api/[controller]/{source}")]
+        public async Task<IEnumerable<string>> GetSourceContent(SourceType source)
         {
+            await _sourcesProvider.GetLatestSourceContentAsync(source);
             return null;
         }
 

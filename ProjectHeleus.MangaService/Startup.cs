@@ -6,6 +6,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ProjectHeleus.MangaService.Core;
+using ProjectHeleus.MangaService.Parsers;
+using ProjectHeleus.MangaService.Parsers.Contracts;
 using ProjectHeleus.MangaService.Providers;
 using ProjectHeleus.MangaService.Providers.Contracts;
 using StructureMap;
@@ -39,6 +41,9 @@ namespace ProjectHeleus.MangaService
             container.Configure(config =>
             {
                 config.For<ISourcesProvider>().Add<BasicSourcesProvider>();
+
+                config.For<ISourceParser>().Add<MangaFoxSourceParser>().Named(nameof(MangaFoxSourceParser));
+                config.For<ISourceParser>().Add<ReadMangaSourceParcer>().Named(nameof(ReadMangaSourceParcer));
 
                 config.Populate(services);
             });
