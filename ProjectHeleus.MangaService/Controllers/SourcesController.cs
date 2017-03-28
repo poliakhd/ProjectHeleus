@@ -26,15 +26,14 @@ namespace ProjectHeleus.MangaService.Controllers
             return await _sourcesProvider.GetAllSourcesAsync();
         }
 
-        [HttpGet("api/[controller]/{source}")]
-        public async Task<IEnumerable<string>> GetSourceContent(SourceType source)
+        [Route("api/[controller]/{source}")]
+        public async Task<IEnumerable<Manga>> GetSourceContent(SourceType source)
         {
-            await _sourcesProvider.GetLatestSourceContentAsync(source);
-            return null;
+            return await _sourcesProvider.GetLatestSourceContentAsync(source);
         }
 
         [Route("api/[controller]/{source}/{sort}")]
-        public async Task<IEnumerable<string>> GetSourceContent(int sourceId, string sortType)
+        public async Task<IEnumerable<string>> GetSourceContent(SourceType source, string sortType)
         {
             return null;
         }
