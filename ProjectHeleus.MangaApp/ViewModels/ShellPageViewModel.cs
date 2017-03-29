@@ -50,8 +50,8 @@ namespace ProjectHeleus.MangaApp.ViewModels
         {
             var menuItem = eventArgs.ClickedItem as MenuItem;
 
-            //if (menuItem.Page == typeof(HardwareArticlesViewModel))
-            //    _navigation.For<HardwareArticlesViewModel>().Navigate();
+            if (menuItem.Page == typeof(CatalogsPageViewModel))
+                _navigation.For<CatalogsPageViewModel>().Navigate();
             //if (menuItem.Page == typeof(SoftwareArticlesViewModel))
             //    _navigation.For<SoftwareArticlesViewModel>().Navigate();
 

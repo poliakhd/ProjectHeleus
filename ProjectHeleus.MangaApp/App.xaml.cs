@@ -8,6 +8,7 @@ using Windows.UI;
 using Windows.UI.Core;
 using Caliburn.Micro;
 using ProjectHeleus.MangaApp.Providers;
+using ProjectHeleus.MangaApp.Providers.Contracts;
 using ProjectHeleus.MangaApp.ViewModels;
 using ProjectHeleus.SharedLibrary.Providers.AppPurchase;
 using ProjectHeleus.SharedLibrary.Providers.AppPurchase.Contracts;
@@ -46,8 +47,10 @@ namespace ProjectHeleus.MangaApp
                 .Singleton<IInAppPurchaseProvider, InAppPurchaseProviderProvider>()
 #endif
                 .Singleton<IMenuProvider, MenuProvider>()
+                .Singleton<ICatalogsProvider, MangaCatalogsProvider>()
                 .Singleton<ShellPageViewModel>()
-                .PerRequest<SettingsPageViewModel>();
+                .PerRequest<SettingsPageViewModel>()
+                .PerRequest<CatalogsPageViewModel>();
 
             ConfigureSettings();
             ConfigureNavigation();

@@ -16,7 +16,7 @@ namespace ProjectHeleus.MangaApp.Providers
         public IEnumerable<MenuItem> GetMainItems()
         {
             yield return new MenuItem { Name = _resourceLoader.GetString("Home"), Icon = Symbol.Home};
-            yield return new MenuItem { Name = _resourceLoader.GetString("Library"), Icon = Symbol.Library};
+            yield return new MenuItem { Name = _resourceLoader.GetString("Catalogs"), Icon = Symbol.Library, Page = typeof(CatalogsPageViewModel)};
         }
 
         public IEnumerable<MenuItem> GetOptionItems()

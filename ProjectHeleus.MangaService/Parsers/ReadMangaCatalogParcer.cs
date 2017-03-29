@@ -45,7 +45,7 @@ namespace ProjectHeleus.MangaService.Parsers
                         var title = element.GetElementsByTagName("h3");
 
                         if (title.Any())
-                            manga.Title = title[0].TextContent;
+                            manga.Title = title[0].TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' ');
 
                         #endregion
 
@@ -54,7 +54,7 @@ namespace ProjectHeleus.MangaService.Parsers
                         var titleAlt = element.GetElementsByTagName("h4");
 
                         if (titleAlt.Any())
-                            manga.TitleAlt = titleAlt[0].TextContent;
+                            manga.TitleAlt = titleAlt[0].TextContent.Replace("\n","").TrimStart(' ').TrimEnd(' ');
 
                         #endregion
 

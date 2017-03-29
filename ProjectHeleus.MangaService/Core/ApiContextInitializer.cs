@@ -11,8 +11,8 @@ namespace ProjectHeleus.MangaService.Core
 
             var sources = new Catalog[]
             {
-                new Catalog() {Title = "readmanga.ru", Url = "http://readmange.ru"},
-                new Catalog() {Title = "mangafox.com", Url = "http://mangafox.com"}
+                new Catalog() {Title = "mangafox.com", Url = "http://mangafox.com"},
+                new Catalog() {Title = "readmanga.ru", Url = "http://readmanga.ru"}
             };
 
             context.Sources.AddRange(sources);
