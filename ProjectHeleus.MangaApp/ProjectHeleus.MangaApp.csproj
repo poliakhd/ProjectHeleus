@@ -99,7 +99,13 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Settings.cs" />
+    <Compile Include="Models\Author.cs" />
+    <Compile Include="Models\Catalog.cs" />
+    <Compile Include="Models\Genre.cs" />
+    <Compile Include="Models\Manga.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\Contracts\ICatalogsProvider.cs" />
+    <Compile Include="Providers\Contracts\MangaCatalogsProvider.cs" />
     <Compile Include="Providers\MenuProvider.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="ViewModels\ShellPageViewModel.cs" />
@@ -132,9 +138,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\ProjectHeleus.MangaLibrary\ProjectHeleus.MangaLibrary.csproj">
       <Project>{6ccdef0f-14b8-4c6b-a2e2-181050b4acc2}</Project>
