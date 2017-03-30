@@ -22,30 +22,42 @@ namespace ProjectHeleus.MangaService.Controllers
         }
 
         [Route("api/[controller]")]
-        public async Task<IEnumerable<Catalog>> GetAllSources()
+        public async Task<IEnumerable<Catalog>> GetAllCatalogs()
         {
-            return await _catalogsProvider.GetAllSourcesAsync();
+            return await _catalogsProvider.GetCatalogsAsync();
         }
 
-        [Route("api/[controller]/{source}")]
-        public async Task<IEnumerable<Manga>> GetSourceContent(SourceType source)
+        [Route("api/[controller]/{catalog}")]
+        public async Task<IEnumerable<Manga>> GetCatalogContent(CatalogType catalog)
         {
-            return await _catalogsProvider.GetLatestSourceContentAsync(source);
+            return await GetCatalogContent(catalog, 0);
         }
 
-        [Route("api/[controller]/{source}/{sort}")]
-        public async Task<IEnumerable<Manga>> GetSourceContent(SourceType source, string sort)
+        [Route("api/[controller]/{catalog}/{page}")]
+        public async Task<IEnumerable<Manga>> GetCatalogContent(CatalogType catalog, int page)
+        {
+            return await _catalogsProvider.GetLatestCatalogContentAsync(catalog, page);
+        }
+
+        [Route("api/[controller]/{catalog}/{sort}")]
+        public async Task<IEnumerable<Manga>> GetCatalogContent(CatalogType catalog, string sort)
+        {
+            return await GetCatalogContent(catalog, sort, 0);
+        }
+
+        [Route("api/[controller]/{catalog}/{sort}/{page}")]
+        public async Task<IEnumerable<Manga>> GetCatalogContent(CatalogType catalog, string sort, int page)
         {
             var sortType = (SortType)Enum.Parse(typeof(SortType), sort, true);
 
             switch (sortType)
             {
                 case SortType.Newest:
-                    return await _catalogsProvider.GetNewSourceContentAsync(source);
+                    return await _catalogsProvider.GetNewestCatalogContentAsync(catalog, page);
                 case SortType.Latest:
-                    return await _catalogsProvider.GetLatestSourceContentAsync(source);
+                    return await _catalogsProvider.GetLatestCatalogContentAsync(catalog, page);
                 default:
-                    return await _catalogsProvider.GetLatestSourceContentAsync(source);
+                    return await _catalogsProvider.GetNewestCatalogContentAsync(catalog, page);
             }
         }
     }

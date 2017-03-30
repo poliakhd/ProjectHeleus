@@ -7,8 +7,9 @@ namespace ProjectHeleus.MangaService.Providers.Contracts
 {
     public interface ICatalogsProvider
     {
-        Task<IEnumerable<Catalog>> GetAllSourcesAsync();
-        Task<IEnumerable<Manga>> GetLatestSourceContentAsync(SourceType source);
-        Task<IEnumerable<Manga>> GetNewSourceContentAsync(SourceType source);
+        Task<IEnumerable<Catalog>> GetCatalogsAsync();
+
+        Task<IEnumerable<Manga>> GetNewestCatalogContentAsync(CatalogType catalog, int page);
+        Task<IEnumerable<Manga>> GetLatestCatalogContentAsync(CatalogType catalog, int page);
     }
 }

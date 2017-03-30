@@ -13,21 +13,36 @@ namespace ProjectHeleus.MangaService.Parsers
     public class ReadMangaCatalogParcer 
         : ICatalogParser
     {
-        private const string NewUrl = "http://readmanga.me/list?sortType=created";
-        private const string UpdatedUrl = "http://readmanga.me/list?sortType=updated";
-        
-        public async Task<IEnumerable<Manga>> GetLatestContent()
+        #region Private Members
+
+        private readonly string _newUrl;
+        private readonly string _updatedUrl;
+
+        #endregion
+
+        public string Url { get; set; } = "http://readmanga.me";
+
+        public ReadMangaCatalogParcer()
         {
-            return await GetContent(UpdatedUrl);
-        }
-        public async Task<IEnumerable<Manga>> GetNewContent()
-        {
-            return await GetContent(NewUrl);
+            _newUrl = $"{Url}/list?sortType=created";
+            _updatedUrl = $"{Url}/list?sortType=updated";
         }
 
-        private async Task<IEnumerable<Manga>> GetContent(string siteUrl)
+        public async Task<IEnumerable<Manga>> GetLatestContent(int page)
         {
-            var source = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(siteUrl);
+            return await GetListContent(_updatedUrl, page);
+        }
+        public async Task<IEnumerable<Manga>> GetNewestContent(int page)
+        {
+            return await GetListContent(_newUrl, page);
+        }
+
+        private async Task<IEnumerable<Manga>> GetListContent(string sourceUrl, int page)
+        {
+            if (page > 0)
+                sourceUrl = $"{sourceUrl}&offset={70 * page}&max=70";
+
+            var source = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(sourceUrl);
             var list = source.GetElementsByClassName("tile col-sm-6");
 
             var mangas = new List<Manga>();
@@ -54,7 +69,7 @@ namespace ProjectHeleus.MangaService.Parsers
                         var titleAlt = element.GetElementsByTagName("h4");
 
                         if (titleAlt.Any())
-                            manga.TitleAlt = titleAlt[0].TextContent.Replace("\n","").TrimStart(' ').TrimEnd(' ');
+                            manga.TitleAlt = titleAlt[0].TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' ');
 
                         #endregion
 
@@ -72,7 +87,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
                         #endregion
 
-                        #region ImageUrl
+                        #region Cover
 
                         var imageUrl = element.GetElementsByClassName("img");
 
@@ -86,7 +101,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
                                 if (imageUrl.Any())
                                 {
-                                    manga.ImageUrl = imageUrl[0].GetAttribute("src");
+                                    manga.Cover = imageUrl[0].GetAttribute("src");
                                 }
                             }
                         }

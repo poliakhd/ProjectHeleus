@@ -11,7 +11,7 @@ using StructureMap;
 
 namespace ProjectHeleus.MangaService.Providers
 {
-    public class BasicCatalogsProvider
+    public class MangasCatalogsProvider
         : ICatalogsProvider
     {
         #region Private Members
@@ -21,7 +21,7 @@ namespace ProjectHeleus.MangaService.Providers
 
         #endregion
         
-        public BasicCatalogsProvider(ApiContext context, IContainer container)
+        public MangasCatalogsProvider(ApiContext context, IContainer container)
         {
             _context = context;
             _container = container;
@@ -29,38 +29,38 @@ namespace ProjectHeleus.MangaService.Providers
 
         #region Implementation of ICatalogsProvider
 
-        public async Task<IEnumerable<Models.Catalog>> GetAllSourcesAsync()
+        public async Task<IEnumerable<Models.Catalog>> GetCatalogsAsync()
         {
             return await _context.Sources.ToListAsync();
         }
 
-        public async Task<IEnumerable<Manga>> GetLatestSourceContentAsync(SourceType sourceType)
+        public async Task<IEnumerable<Manga>> GetLatestCatalogContentAsync(CatalogType catalogType, int page)
         {
-            var parser = await GetSourceParser(sourceType);
-            var mangas = await parser.GetLatestContent();
+            var parser = await GetSourceParser(catalogType);
+            var mangas = await parser.GetLatestContent(page);
 
             return await Task.FromResult(mangas);
         }
-        public async Task<IEnumerable<Manga>> GetNewSourceContentAsync(SourceType sourceType)
+        public async Task<IEnumerable<Manga>> GetNewestCatalogContentAsync(CatalogType catalogType, int page)
         {
-            var parser = await GetSourceParser(sourceType);
-            var mangas = await parser.GetNewContent();
+            var parser = await GetSourceParser(catalogType);
+            var mangas = await parser.GetNewestContent(page);
 
             return await Task.FromResult(mangas);
         }
 
         #endregion
 
-        private async Task<ICatalogParser> GetSourceParser(SourceType sourceType)
+        private async Task<ICatalogParser> GetSourceParser(CatalogType catalogType)
         {
             ICatalogParser parser = null;
 
-            switch (sourceType)
+            switch (catalogType)
             {
-                case SourceType.MangaFox:
+                case CatalogType.MangaFox:
                     parser = _container.GetInstance<ICatalogParser>(nameof(MangaFoxCatalogParser));
                     break;
-                case SourceType.ReadManga:
+                case CatalogType.ReadManga:
                     parser = _container.GetInstance<ICatalogParser>(nameof(ReadMangaCatalogParcer));
                     break;
             }

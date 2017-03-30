@@ -8,11 +8,13 @@ namespace ProjectHeleus.MangaService.Parsers
     public class MangaFoxCatalogParser 
         : ICatalogParser
     {
-        public Task<IEnumerable<Manga>> GetLatestContent()
+        public string Url { get; set; }
+
+        public Task<IEnumerable<Manga>> GetLatestContent(int page)
         {
             throw new System.NotImplementedException();
         }
-        public Task<IEnumerable<Manga>> GetNewContent()
+        public Task<IEnumerable<Manga>> GetNewestContent(int page)
         {
             throw new System.NotImplementedException();
         }

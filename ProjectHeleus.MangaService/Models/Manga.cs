@@ -7,7 +7,7 @@ namespace ProjectHeleus.MangaService.Models
         public string Title { get; set; }
         public string TitleAlt { get; set; }
         public string Url { get; set; }
-        public string ImageUrl { get; set; }
+        public string Cover { get; set; }
         public string Description { get; set; }
         public string DescriptionAlt { get; set; }
         public int Views { get; set; }

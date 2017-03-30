@@ -36,7 +36,7 @@ namespace ProjectHeleus.MangaApp.ViewModels
 
         private async void Initialize()
         {
-            Mangas = new IncrementalLoadingCollection<GeneratingDataSource, Manga>(new GeneratingDataSource(_catalogsProvider), 10);
+            Mangas = new IncrementalLoadingCollection<GeneratingDataSource, Manga>(new GeneratingDataSource(_catalogsProvider), 70);
         }
     }
 
@@ -51,10 +51,13 @@ namespace ProjectHeleus.MangaApp.ViewModels
 
         #region Implementation of IIncrementalSource<Manga>
 
-        public async Task<IEnumerable<Manga>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
-        {
+        public async Task<IEnumerable<Manga>> GetPagedItemsAsync(int pageIndex, int pageSize,
+            CancellationToken cancellationToken = new CancellationToken())
+        {            
             var catalogs = await _catalogsProvider.GetAllCatalogs();
-            return await Task.FromResult(await catalogs.FirstOrDefault(x => x.Id == 2).GetCatalogContent());
+            var catalog = catalogs.FirstOrDefault(x => x.Id == 2);
+
+            return await Task.FromResult(await _catalogsProvider.GetCatalogContent(catalog, pageIndex));
         }
 
         #endregion

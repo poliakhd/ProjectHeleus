@@ -11,24 +11,25 @@ namespace ProjectHeleus.MangaApp.Providers
     public class MangaCatalogsProvider
         : ICatalogsProvider
     {
+        public string Url { get; set; }
+
         public async Task<IEnumerable<Catalog>> GetAllCatalogs()
         {
             using (var client = new HttpClient())
             {
-                var mangas = await client.GetStringAsync(new Uri("http://localhost:5486/api/catalogs"));
-                return JsonConvert.DeserializeObject<IEnumerable<Catalog>>(mangas);
+                return JsonConvert.DeserializeObject<IEnumerable<Catalog>>(await client.GetStringAsync(new Uri("http://localhost:5486/api/catalogs")));
             }
         }
-    }
 
-    public static class MangaCatalogsProviderExtensions
-    {
-        public static async Task<IEnumerable<Manga>> GetCatalogContent(this Catalog catalog)
+        public async Task<IEnumerable<Manga>> GetCatalogContent(Catalog catalog)
+        {
+            return await GetCatalogContent(catalog, 0);
+        }
+        public async Task<IEnumerable<Manga>> GetCatalogContent(Catalog catalog, int page)
         {
             using (var client = new HttpClient())
             {
-                var mangas = await client.GetStringAsync(new Uri($"http://localhost:5486/api/catalogs/{catalog.Id}/"));
-                return JsonConvert.DeserializeObject<IEnumerable<Manga>>(mangas);
+                return JsonConvert.DeserializeObject<IEnumerable<Manga>>(await client.GetStringAsync(new Uri($"http://localhost:5486/api/catalogs/{catalog.Id}/{page}")));
             }
         }
     }
