@@ -1,30 +1,35 @@
-﻿<Page x:Class="ProjectHeleus.MangaApp.Views.CatalogsPageView"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:models="using:ProjectHeleus.MangaApp.Models"
-      mc:Ignorable="d">
+﻿<Page
+    x:Class="ProjectHeleus.MangaApp.Views.CatalogsPageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:ProjectHeleus.MangaApp.Models"
+    mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
+            <RowDefinition Height="48" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0"
-              Padding="15,0,0,0"
-              Background="#E8E8E8">
+        <Grid
+            Grid.Row="0"
+            Padding="15,0,0,0"
+            Background="#E8E8E8">
 
             <TextBlock VerticalAlignment="Center" Foreground="Black" />
         </Grid>
 
         <Grid Grid.Row="1">
-            <controls:AdaptiveGridView x:Name="MangaArticles"
-                                       Margin="5"
-                                       ItemsSource="{Binding Path=Mangas}"
-                                       StretchContentForSingleRow="False">
+            <controls:AdaptiveGridView
+                x:Name="MangaArticles"
+                Margin="5"
+                animations:ReorderGridAnimation.Duration="300"
+                ItemsSource="{Binding Path=Mangas}"
+                StretchContentForSingleRow="False">
                 <controls:AdaptiveGridView.ItemTemplate>
                     <DataTemplate x:DataType="models:Manga">
                         <Grid>
@@ -34,11 +39,12 @@
                                 <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
-                            <controls:ImageEx Grid.Row="0"
-                                              Grid.RowSpan="3"
-                                              IsCacheEnabled="True"
-                                              Source="{x:Bind Path=Cover}"
-                                              Stretch="UniformToFill" />
+                            <controls:ImageEx
+                                Grid.Row="0"
+                                Grid.RowSpan="3"
+                                IsCacheEnabled="True"
+                                Source="{x:Bind Path=Cover}"
+                                Stretch="UniformToFill" />
 
                             <Grid Grid.Row="2" Padding="1">
                                 <Grid.Background>
@@ -50,27 +56,42 @@
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
 
-                                <TextBlock VerticalAlignment="Bottom"
-                                           FontSize="13"
-                                           FontWeight="SemiBold"
-                                           Foreground="White"
-                                           Text="{x:Bind Path=Title}"
-                                           TextWrapping="WrapWholeWords" />
+                                <TextBlock
+                                    VerticalAlignment="Bottom"
+                                    FontSize="13"
+                                    FontWeight="SemiBold"
+                                    Foreground="White"
+                                    Text="{x:Bind Path=Title}"
+                                    TextWrapping="WrapWholeWords" />
 
-                                <TextBlock Grid.Row="1"
-                                           VerticalAlignment="Bottom"
-                                           FontSize="11"
-                                           FontWeight="SemiLight"
-                                           Foreground="White"
-                                           Text="{x:Bind Path=TitleAlt}"
-                                           TextWrapping="WrapWholeWords" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    VerticalAlignment="Bottom"
+                                    FontSize="11"
+                                    FontWeight="SemiLight"
+                                    Foreground="White"
+                                    Text="{x:Bind Path=TitleAlt}"
+                                    TextWrapping="WrapWholeWords" />
                             </Grid>
                         </Grid>
                     </DataTemplate>
                 </controls:AdaptiveGridView.ItemTemplate>
             </controls:AdaptiveGridView>
 
+
         </Grid>
+        <controls:Loading
+            Grid.Row="1"
+            IsLoading="True"
+            IsTemplateFocusTarget="True">
+            <StackPanel Padding="12" Orientation="Horizontal">
+                <ProgressRing
+                    Margin="0,0,12,0"
+                    Foreground="Black"
+                    IsActive="True" />
+                <TextBlock VerticalAlignment="Center" Text="Loading control with wait ring" />
+            </StackPanel>
+        </controls:Loading>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="WindowStates">
