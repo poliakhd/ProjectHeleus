@@ -5,15 +5,15 @@ using ProjectHeleus.MangaApp.ViewModels;
 using ProjectHeleus.SharedLibrary.Models;
 using ProjectHeleus.SharedLibrary.Providers.Menu.Contracts;
 
-namespace ProjectHeleus.MangaApp.Providers
+namespace ProjectHeleus.MangaApp.Providers.Menus
 {
-    public class MenuProvider : IMenuProvider
+    public class ShellMenuProvider : IMenuProvider
     {
         private readonly ResourceLoader _resourceLoader = new ResourceLoader();
 
         #region Implementation of IMenuProvider
 
-        public IEnumerable<MenuItem> GetMainItems()
+        public virtual IEnumerable<MenuItem> GetMainItems()
         {
             yield return new MenuItem { Name = _resourceLoader.GetString("Home"), Icon = Symbol.Home};
             yield return new MenuItem { Name = _resourceLoader.GetString("Catalogs"), Icon = Symbol.Library, Page = typeof(CatalogsPageViewModel)};
