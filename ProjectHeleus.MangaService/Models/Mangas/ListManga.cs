@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace ProjectHeleus.MangaService.Models
+namespace ProjectHeleus.MangaService.Models.Mangas
 {
-    public class Manga
+    public class ListManga
     {
         public string Title { get; set; }
         public string TitleAlt { get; set; }

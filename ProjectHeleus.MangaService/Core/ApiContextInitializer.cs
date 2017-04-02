@@ -1,5 +1,4 @@
-﻿using System;
-using ProjectHeleus.MangaService.Models;
+﻿using ProjectHeleus.MangaService.Models;
 
 namespace ProjectHeleus.MangaService.Core
 {
@@ -11,8 +10,8 @@ namespace ProjectHeleus.MangaService.Core
 
             var sources = new Catalog[]
             {
-                new Catalog() {Title = "mangafox.com", Url = "http://mangafox.com"},
-                new Catalog() {Title = "readmanga.ru", Url = "http://readmanga.ru"}
+                new Catalog() {Title = "mangafox.me", Url = "http://mangafox.me/"},
+                new Catalog() {Title = "readmanga.me", Url = "http://readmanga.me/"}
             };
 
             context.Sources.AddRange(sources);

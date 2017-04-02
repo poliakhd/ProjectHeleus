@@ -2,7 +2,8 @@
 {
     public enum SortType
     {
-        Latest,
-        Newest
+        Update,
+        New,
+        Rating
     }
 }

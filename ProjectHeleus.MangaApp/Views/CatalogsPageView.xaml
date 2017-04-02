@@ -75,9 +75,8 @@
                     </DataTemplate>
                 </controls:AdaptiveGridView.ItemTemplate>
             </controls:AdaptiveGridView>
-
-
         </Grid>
+
         <controls:Loading Grid.Row="1"
                           IsLoading="True"
                           IsTemplateFocusTarget="True">

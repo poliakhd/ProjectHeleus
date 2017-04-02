@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectHeleus.MangaService.Controllers.Core;
+using ProjectHeleus.MangaService.Extensions;
 using ProjectHeleus.MangaService.Models;
+using ProjectHeleus.MangaService.Models.Mangas;
 using ProjectHeleus.MangaService.Providers.Contracts;
 
 namespace ProjectHeleus.MangaService.Controllers
@@ -28,36 +30,39 @@ namespace ProjectHeleus.MangaService.Controllers
         }
 
         [Route("api/[controller]/{catalog}")]
-        public async Task<IEnumerable<Manga>> GetCatalogContent(CatalogType catalog)
+        public async Task<IEnumerable<ListManga>> GetCatalogContent(string catalog)
         {
             return await GetCatalogContent(catalog, 0);
         }
 
-        [Route("api/[controller]/{catalog}/{page}")]
-        public async Task<IEnumerable<Manga>> GetCatalogContent(CatalogType catalog, int page)
+        [Route("api/[controller]/{catalog}/{page:int}")]
+        public async Task<IEnumerable<ListManga>> GetCatalogContent(string catalog, int page)
         {
-            return await _catalogsProvider.GetLatestCatalogContentAsync(catalog, page);
+            return await _catalogsProvider.GetUpdateCatalogContentAsync(catalog.GetCatalogType(), page);
         }
 
         [Route("api/[controller]/{catalog}/{sort}")]
-        public async Task<IEnumerable<Manga>> GetCatalogContent(CatalogType catalog, string sort)
+        public async Task<IEnumerable<ListManga>> GetCatalogContent(string catalog, string sort)
         {
             return await GetCatalogContent(catalog, sort, 0);
         }
 
         [Route("api/[controller]/{catalog}/{sort}/{page}")]
-        public async Task<IEnumerable<Manga>> GetCatalogContent(CatalogType catalog, string sort, int page)
+        public async Task<IEnumerable<ListManga>> GetCatalogContent(string catalog, string sort, int page)
         {
             var sortType = (SortType)Enum.Parse(typeof(SortType), sort, true);
+            var catalogType = catalog.GetCatalogType();
 
             switch (sortType)
             {
-                case SortType.Newest:
-                    return await _catalogsProvider.GetNewestCatalogContentAsync(catalog, page);
-                case SortType.Latest:
-                    return await _catalogsProvider.GetLatestCatalogContentAsync(catalog, page);
+                case SortType.New:
+                    return await _catalogsProvider.GetNewCatalogContentAsync(catalogType, page);
+                case SortType.Update:
+                    return await _catalogsProvider.GetUpdateCatalogContentAsync(catalogType, page);
+                case SortType.Rating:
+                    return await _catalogsProvider.GetRatingCatalogContentAsync(catalogType, page);
                 default:
-                    return await _catalogsProvider.GetNewestCatalogContentAsync(catalog, page);
+                    return await _catalogsProvider.GetNewCatalogContentAsync(catalogType, page);
             }
         }
     }

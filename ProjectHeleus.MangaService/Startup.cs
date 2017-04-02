@@ -39,10 +39,11 @@ namespace ProjectHeleus.MangaService
             container.Configure(
                 config =>
                 {
-                    config.For<ICatalogsProvider>().Add<MangasCatalogsProvider>();
+                    config.For<ICatalogsProvider>().Add<HubCatalogsProvider>();
+                    config.For<IMangaProvider>().Add<HubMangaProvider>();
 
-                    config.For<ICatalogParser>().Add<MangaFoxCatalogParser>().Named(nameof(MangaFoxCatalogParser));
-                    config.For<ICatalogParser>().Add<ReadMangaCatalogParcer>().Named(nameof(ReadMangaCatalogParcer));
+                    config.For<IParser>().Add<MangaFoxParser>().Named(nameof(MangaFoxParser));
+                    config.For<IParser>().Add<ReadMangaParcer>().Named(nameof(ReadMangaParcer));
 
                     config.Populate(services);
                 }
