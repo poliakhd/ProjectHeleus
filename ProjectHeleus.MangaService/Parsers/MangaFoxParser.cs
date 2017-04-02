@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AngleSharp;
+using AngleSharp.Extensions;
 using ProjectHeleus.MangaService.Models.Mangas;
 using ProjectHeleus.MangaService.Parsers.Contracts;
 
@@ -8,13 +11,24 @@ namespace ProjectHeleus.MangaService.Parsers
     public class MangaFoxParser 
         : IParser
     {
-        public string Url { get; set; }
+        #region Private Members
+
+        private string _updateUrl;
+
+        #endregion
+
+        public string Url { get; set; } = "http://mangafox.me";
+
+        public MangaFoxParser()
+        {
+            _updateUrl = $"{Url}/directory/";
+        }
 
         #region Implementation of IParser
 
-        public Task<IEnumerable<ListManga>> GetUpdateContent(int page)
+        public async Task<IEnumerable<ListManga>> GetUpdateContent(int page)
         {
-            throw new System.NotImplementedException();
+            return await GetListContent(_updateUrl, page);
         }
         public Task<IEnumerable<ListManga>> GetNewContent(int page)
         {
@@ -37,5 +51,10 @@ namespace ProjectHeleus.MangaService.Parsers
         }
 
         #endregion
+
+        private async Task<IEnumerable<ListManga>> GetListContent(string sourceUrl, int page)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

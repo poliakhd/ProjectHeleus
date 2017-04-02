@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using ProjectHeleus.MangaService.Models.Mangas;
 
@@ -13,6 +14,6 @@ namespace ProjectHeleus.MangaService.Parsers.Contracts
         Task<IEnumerable<ListManga>> GetRatingContent(int page);
 
         Task<Manga> GetMangaContent(string mangaId);
-        Task<IEnumerable<string>> GetMangaChapterContent(string mangaId);
+        Task<IEnumerable<string>> GetMangaChapterContent(string manga);
     }
 }

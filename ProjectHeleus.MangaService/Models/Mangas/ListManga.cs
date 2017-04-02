@@ -8,8 +8,6 @@ namespace ProjectHeleus.MangaService.Models.Mangas
         public string TitleAlt { get; set; }
         public string Url { get; set; }
         public string Cover { get; set; }
-        public string Description { get; set; }
-        public string DescriptionAlt { get; set; }
         public int Views { get; set; }
         public float Rating { get; set; }
         public float RatingLimit { get; set; }
