@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ProjectHeleus.MangaService.Controllers.Core;
-using ProjectHeleus.MangaService.Core;
 using ProjectHeleus.MangaService.Extensions;
 using ProjectHeleus.MangaService.Models.Mangas;
 using ProjectHeleus.MangaService.Providers.Contracts;

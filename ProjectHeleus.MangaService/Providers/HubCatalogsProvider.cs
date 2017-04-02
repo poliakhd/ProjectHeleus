@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using ProjectHeleus.MangaService.Controllers.Core;
-using ProjectHeleus.MangaService.Core;
 using ProjectHeleus.MangaService.Extensions;
+using ProjectHeleus.MangaService.Models;
 using ProjectHeleus.MangaService.Models.Mangas;
 using ProjectHeleus.MangaService.Providers.Contracts;
 using StructureMap;
@@ -15,14 +14,12 @@ namespace ProjectHeleus.MangaService.Providers
     {
         #region Private Members
 
-        private readonly ApiContext _context;
         private readonly IContainer _container;
 
         #endregion
         
-        public HubCatalogsProvider(ApiContext context, IContainer container)
+        public HubCatalogsProvider(IContainer container)
         {
-            _context = context;
             _container = container;
         }
 
@@ -30,7 +27,13 @@ namespace ProjectHeleus.MangaService.Providers
 
         public async Task<IEnumerable<Models.Catalog>> GetCatalogsAsync()
         {
-            return await _context.Sources.ToListAsync();
+            var catalogs = new[]
+            {
+                new Catalog {Id = "mangafox.me", Url = "http://mangafox.me/"},
+                new Catalog {Id = "readmanga.me", Url = "http://readmanga.me/"}
+            };
+
+            return await Task.FromResult(catalogs);
         }
 
         public async Task<IEnumerable<ListManga>> GetUpdateCatalogContentAsync(CatalogType catalogType, int page)

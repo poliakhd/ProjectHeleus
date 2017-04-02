@@ -1,11 +1,9 @@
 ﻿using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ProjectHeleus.MangaService.Core;
 using ProjectHeleus.MangaService.Parsers;
 using ProjectHeleus.MangaService.Parsers.Contracts;
 using ProjectHeleus.MangaService.Providers;
@@ -31,7 +29,6 @@ namespace ProjectHeleus.MangaService
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApiContext>(options => options.UseInMemoryDatabase());
             services.AddMvc();
 
             var container = new Container();
@@ -52,14 +49,12 @@ namespace ProjectHeleus.MangaService
             return container.GetInstance<IServiceProvider>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, ApiContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             app.UseMvc();
-
-            ApiContextInitializer.Initialize(context);
         }
     }
 }
