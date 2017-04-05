@@ -13,6 +13,6 @@ namespace ProjectHeleus.MangaService.Providers.Contracts
         Task<IEnumerable<ListManga>> GetNewCatalogContentAsync(CatalogType catalog, int page);
         Task<IEnumerable<ListManga>> GetUpdateCatalogContentAsync(CatalogType catalog, int page);
         Task<IEnumerable<ListManga>> GetRatingCatalogContentAsync(CatalogType catalog, int page);
-
+        Task<IEnumerable<ListManga>> GetPopularCatalogContentAsync(CatalogType catalog, int page);
     }
 }

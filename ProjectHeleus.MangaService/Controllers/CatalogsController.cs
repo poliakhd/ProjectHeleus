@@ -38,7 +38,7 @@ namespace ProjectHeleus.MangaService.Controllers
         [Route("api/[controller]/{catalog}/{page:int}")]
         public async Task<IEnumerable<ListManga>> GetCatalogContent(string catalog, int page)
         {
-            return await _catalogsProvider.GetUpdateCatalogContentAsync(catalog.GetCatalogType(), page);
+            return await _catalogsProvider.GetPopularCatalogContentAsync(catalog.GetCatalogType(), page);
         }
 
         [Route("api/[controller]/{catalog}/{sort}")]
@@ -61,9 +61,11 @@ namespace ProjectHeleus.MangaService.Controllers
                     return await _catalogsProvider.GetUpdateCatalogContentAsync(catalogType, page);
                 case SortType.Rating:
                     return await _catalogsProvider.GetRatingCatalogContentAsync(catalogType, page);
-                default:
-                    return await _catalogsProvider.GetNewCatalogContentAsync(catalogType, page);
+                case SortType.Popular:
+                    return await _catalogsProvider.GetPopularCatalogContentAsync(catalogType, page);
             }
+
+            return null;
         }
     }
 }

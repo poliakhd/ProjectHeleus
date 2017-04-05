@@ -4,6 +4,7 @@
     {
         Update,
         New,
-        Rating
+        Rating,
+        Popular
     }
 }

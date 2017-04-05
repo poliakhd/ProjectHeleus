@@ -40,7 +40,7 @@ namespace ProjectHeleus.MangaService
                     config.For<IMangaProvider>().Add<HubMangaProvider>();
 
                     config.For<IParser>().Add<MangaFoxParser>().Named(nameof(MangaFoxParser));
-                    config.For<IParser>().Add<ReadMangaParcer>().Named(nameof(ReadMangaParcer));
+                    config.For<IParser>().Add<ReadMangaParser>().Named(nameof(ReadMangaParser));
 
                     config.Populate(services);
                 }

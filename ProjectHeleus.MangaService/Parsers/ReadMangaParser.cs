@@ -9,45 +9,52 @@ using AngleSharp.Extensions;
 using ProjectHeleus.MangaService.Models;
 using ProjectHeleus.MangaService.Models.Mangas;
 using ProjectHeleus.MangaService.Parsers.Contracts;
+using ProjectHeleus.MangaService.Parsers.Core;
 
 namespace ProjectHeleus.MangaService.Parsers
 {
-    public class ReadMangaParcer 
-        : IParser
+    public class ReadMangaParser 
+        : DefaultParser
     {
         #region Private Members
 
         private readonly string _newUrl;
         private readonly string _updateUrl;
         private readonly string _ratingUrl;
+        private readonly string _popularUrl;
 
         #endregion
 
-        public string Url { get; set; } = "http://readmanga.me";
+        public new string Url { get; set; } = "http://readmanga.me";
 
-        public ReadMangaParcer()
+        public ReadMangaParser()
         {
             _newUrl = $"{Url}/list?sortType=created";
             _updateUrl = $"{Url}/list?sortType=updated";
             _ratingUrl = $"{Url}/list?sortType=votes";
+            _popularUrl = $"{Url}/list?sortType=rate";
         }
 
-        #region Implementation of IParser
+        #region Overrides of IParser
 
-        public async Task<IEnumerable<ListManga>> GetUpdateContent(int page)
+        public override async Task<IEnumerable<ListManga>> GetUpdateContent(int page)
         {
             return await GetListContent(_updateUrl, page);
         }
-        public async Task<IEnumerable<ListManga>> GetNewContent(int page)
+        public override async Task<IEnumerable<ListManga>> GetNewContent(int page)
         {
             return await GetListContent(_newUrl, page);
         }
-        public async Task<IEnumerable<ListManga>> GetRatingContent(int page)
+        public override async Task<IEnumerable<ListManga>> GetRatingContent(int page)
         {
             return await GetListContent(_ratingUrl, page);
         }
+        public override async Task<IEnumerable<ListManga>> GetPopularContent(int page)
+        {
+            return await GetListContent(_popularUrl, page);
+        }
 
-        public async Task<Manga> GetMangaContent(string mangaId)
+        public override async Task<Manga> GetMangaContent(string mangaId)
         {
             var webSource = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync($"{Url}/{mangaId}");
             var mangaWeb = webSource.QuerySelector(".leftContent");
@@ -156,7 +163,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
             return manga;
         }
-        public async Task<IEnumerable<string>> GetMangaChapterContent(string manga)
+        public override async Task<IEnumerable<string>> GetMangaChapterContent(string manga)
         {
             var webSource = await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript()).OpenAsync($"{Url}/{manga}");
             var mangaImagesWeb = webSource.QuerySelectorAll("script").FirstOrDefault(x => x.TextContent.Contains("rm_h.init"));

@@ -57,6 +57,13 @@ namespace ProjectHeleus.MangaService.Providers
 
             return await Task.FromResult(mangas);
         }
+        public async Task<IEnumerable<ListManga>> GetPopularCatalogContentAsync(CatalogType catalogType, int page)
+        {
+            var parser = catalogType.GetParser(_container);
+            var mangas = await parser.GetPopularContent(page);
+
+            return await Task.FromResult(mangas);
+        }
 
         #endregion
     }

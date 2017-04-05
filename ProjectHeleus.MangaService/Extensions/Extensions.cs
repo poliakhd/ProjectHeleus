@@ -19,7 +19,7 @@ namespace ProjectHeleus.MangaService.Extensions
                     parser = container.GetInstance<IParser>(nameof(MangaFoxParser));
                     break;
                 case CatalogType.ReadManga:
-                    parser = container.GetInstance<IParser>(nameof(ReadMangaParcer));
+                    parser = container.GetInstance<IParser>(nameof(ReadMangaParser));
                     break;
             }
 

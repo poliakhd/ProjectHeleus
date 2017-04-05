@@ -12,6 +12,7 @@ namespace ProjectHeleus.MangaService.Parsers.Contracts
         Task<IEnumerable<ListManga>> GetUpdateContent(int page);
         Task<IEnumerable<ListManga>> GetNewContent(int page);
         Task<IEnumerable<ListManga>> GetRatingContent(int page);
+        Task<IEnumerable<ListManga>> GetPopularContent(int page);
 
         Task<Manga> GetMangaContent(string mangaId);
         Task<IEnumerable<string>> GetMangaChapterContent(string manga);
