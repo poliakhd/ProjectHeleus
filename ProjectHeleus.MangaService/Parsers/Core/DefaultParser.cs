@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProjectHeleus.MangaService.Models.Mangas;
+using ProjectHeleus.MangaService.Models;
+using ProjectHeleus.MangaService.Models.Contracts;
 using ProjectHeleus.MangaService.Parsers.Contracts;
 
 namespace ProjectHeleus.MangaService.Parsers.Core
@@ -11,22 +12,22 @@ namespace ProjectHeleus.MangaService.Parsers.Core
 
         public virtual string Url { get; set; }
 
-        public virtual Task<IEnumerable<ListManga>> GetUpdateContent(int page)
+        public virtual Task<IEnumerable<IManga>> GetUpdateContent(int page)
         {
             return null;
         }
 
-        public virtual Task<IEnumerable<ListManga>> GetNewContent(int page)
+        public virtual Task<IEnumerable<IManga>> GetNewContent(int page)
         {
             return null;
         }
 
-        public virtual Task<IEnumerable<ListManga>> GetRatingContent(int page)
+        public virtual Task<IEnumerable<IManga>> GetRatingContent(int page)
         {
             return null;
         }
 
-        public virtual Task<Manga> GetMangaContent(string mangaId)
+        public virtual Task<IManga> GetMangaContent(string mangaId)
         {
             return null;
         }
@@ -36,7 +37,7 @@ namespace ProjectHeleus.MangaService.Parsers.Core
             return null;
         }
         
-        public virtual Task<IEnumerable<ListManga>> GetPopularContent(int page)
+        public virtual Task<IEnumerable<IManga>> GetPopularContent(int page)
         {
             throw new System.NotImplementedException();
         }

@@ -6,7 +6,7 @@ using AngleSharp;
 using AngleSharp.Dom.Html;
 using AngleSharp.Extensions;
 using ProjectHeleus.MangaService.Models;
-using ProjectHeleus.MangaService.Models.Mangas;
+using ProjectHeleus.MangaService.Models.Contracts;
 using ProjectHeleus.MangaService.Parsers.Contracts;
 using ProjectHeleus.MangaService.Parsers.Core;
 
@@ -34,20 +34,20 @@ namespace ProjectHeleus.MangaService.Parsers
 
         #region Overrides of IParser
 
-        public override async Task<IEnumerable<ListManga>> GetUpdateContent(int page)
+        public override async Task<IEnumerable<IManga>> GetUpdateContent(int page)
         {
             return await GetListContent(_updateUrl, page);
         }
-        public override async Task<IEnumerable<ListManga>> GetRatingContent(int page)
+        public override async Task<IEnumerable<IManga>> GetRatingContent(int page)
         {
             return await GetListContent(_ratingUrl, page);
         }
-        public override async Task<IEnumerable<ListManga>> GetPopularContent(int page)
+        public override async Task<IEnumerable<IManga>> GetPopularContent(int page)
         {
             return await GetListContent(_popularUrl, page);
         }
         
-        public override Task<Manga> GetMangaContent(string mangaId)
+        public override Task<IManga> GetMangaContent(string mangaId)
         {
             throw new System.NotImplementedException();
         }
@@ -58,12 +58,12 @@ namespace ProjectHeleus.MangaService.Parsers
 
         #endregion
 
-        private async Task<IEnumerable<ListManga>> GetListContent(string sourceUrl, int page)
+        private async Task<IEnumerable<MangaShortModel>> GetListContent(string sourceUrl, int page)
         {
             var webSource = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(sourceUrl);
             var mangas = webSource.QuerySelectorAll("#mangalist .list li");
 
-            var mangasResult = new List<ListManga>();
+            var mangasResult = new List<MangaShortModel>();
 
             if (mangas.Any())
             {
@@ -73,7 +73,7 @@ namespace ProjectHeleus.MangaService.Parsers
                     {
                         #region Header
 
-                        var manga = new ListManga
+                        var manga = new MangaShortModel
                         {
                             Title = mangaItem.QuerySelector(".manga_text a")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
                             TitleAlt = mangaItem.QuerySelector(".manga_text a")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
@@ -111,7 +111,7 @@ namespace ProjectHeleus.MangaService.Parsers
                             info[0].TextContent.Split(',')
                                 .Select(x => x.Replace(".", "").Trim())
                                 .Where(y => !string.IsNullOrEmpty(y))
-                                .Select(x => new Genre() {Title = x, Url = null});
+                                .Select(x => new GenreModel() {Title = x, Url = null});
 
                         #endregion
 

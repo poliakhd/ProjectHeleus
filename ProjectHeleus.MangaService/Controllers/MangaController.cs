@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectHeleus.MangaService.Controllers.Core;
 using ProjectHeleus.MangaService.Extensions;
-using ProjectHeleus.MangaService.Models.Mangas;
+using ProjectHeleus.MangaService.Models;
+using ProjectHeleus.MangaService.Models.Contracts;
 using ProjectHeleus.MangaService.Providers.Contracts;
 
 namespace ProjectHeleus.MangaService.Controllers
@@ -22,7 +23,7 @@ namespace ProjectHeleus.MangaService.Controllers
         }
 
         [Route("api/[controller]/{catalog}/{manga}")]
-        public async Task<Manga> GetMangaContent(string catalog, string manga)
+        public async Task<IManga> GetMangaContent(string catalog, string manga)
         {
             return await _mangaProvider.GetMangaContentAsync(catalog.GetCatalogType(), manga);
         }

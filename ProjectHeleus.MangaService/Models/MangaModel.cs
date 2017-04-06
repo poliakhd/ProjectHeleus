@@ -1,23 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using ProjectHeleus.MangaService.Models.Contracts;
+using ProjectHeleus.MangaService.Models.Core;
 
-namespace ProjectHeleus.MangaService.Models.Mangas
+namespace ProjectHeleus.MangaService.Models
 {
-    public enum MangaStatus
-    {
-        Hold,
-        Ongoing,
-        Completed,
-        Closed
-    }
-
-    public class Manga
+    public class MangaModel : IManga
     {
         public string Name { get; set; }
         public string AlternativeName { get; set; }
         public string OriginalName { get; set; }
 
-        public MangaStatus Status { get; set; }
+        public MangaStatusModel Status { get; set; }
         public int Published { get; set; }
         public int Volumes { get; set; }
         public int Views { get; set; }
@@ -25,11 +19,11 @@ namespace ProjectHeleus.MangaService.Models.Mangas
         public string Description { get; set; }
 
         public IEnumerable<Uri> Covers { get; set; }
-        public IEnumerable<Genre> Genres { get; set; }
+        public IEnumerable<IGenre> Genres { get; set; }
 
-        public IEnumerable<Author> Authors { get; set; }
-        public IEnumerable<Translator> Translators { get; set; }
+        public IEnumerable<IAuthor> Authors { get; set; }
+        public IEnumerable<ITranslator> Translators { get; set; }
         
-        public IEnumerable<MangaChapter> Chapters { get; set; }
+        public IEnumerable<IChapter> Chapters { get; set; }
     }
 }

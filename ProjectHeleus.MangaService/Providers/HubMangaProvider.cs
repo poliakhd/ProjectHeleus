@@ -2,7 +2,8 @@
 using System.Threading.Tasks;
 using ProjectHeleus.MangaService.Controllers.Core;
 using ProjectHeleus.MangaService.Extensions;
-using ProjectHeleus.MangaService.Models.Mangas;
+using ProjectHeleus.MangaService.Models;
+using ProjectHeleus.MangaService.Models.Contracts;
 using ProjectHeleus.MangaService.Providers.Contracts;
 using StructureMap;
 
@@ -24,9 +25,9 @@ namespace ProjectHeleus.MangaService.Providers
 
         #region Implementation of IMangaProvider
 
-        public async Task<Manga> GetMangaContentAsync(CatalogType catalogType, string relativeUrl)
+        public async Task<IManga> GetMangaContentAsync(CatalogType catalogType, string relativeUrl)
         {
-            var parser = catalogType.GetParser(_container);
+            var parser = _container.GetParser(catalogType);
             var mangas = await parser.GetMangaContent(relativeUrl);
 
             return await Task.FromResult(mangas);
@@ -34,7 +35,7 @@ namespace ProjectHeleus.MangaService.Providers
 
         public async Task<IEnumerable<string>> GetMangaChapterContentAsync(CatalogType catalogType, string relativeUrl)
         {
-            var parser = catalogType.GetParser(_container);
+            var parser = _container.GetParser(catalogType);
             var images = await parser.GetMangaChapterContent(relativeUrl);
 
             return await Task.FromResult(images);

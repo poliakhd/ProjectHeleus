@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using ProjectHeleus.MangaService.Models.Contracts;
 
-namespace ProjectHeleus.MangaService.Models.Mangas
+namespace ProjectHeleus.MangaService.Models
 {
-    public class ListManga
+    public class MangaShortModel : IManga
     {
         public string Title { get; set; }
         public string TitleAlt { get; set; }
@@ -11,7 +12,7 @@ namespace ProjectHeleus.MangaService.Models.Mangas
         public int Views { get; set; }
         public float Rating { get; set; }
         public float RatingLimit { get; set; }
-        public IEnumerable<Author> Authors { get; set; }
-        public IEnumerable<Genre> Genres { get; set; }
+        public IEnumerable<AuthorModel> Authors { get; set; }
+        public IEnumerable<GenreModel> Genres { get; set; }
     }
 }

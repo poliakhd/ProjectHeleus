@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using ProjectHeleus.MangaService.Controllers.Core;
 using ProjectHeleus.MangaService.Extensions;
 using ProjectHeleus.MangaService.Models;
-using ProjectHeleus.MangaService.Models.Mangas;
+using ProjectHeleus.MangaService.Models.Contracts;
 using ProjectHeleus.MangaService.Providers.Contracts;
 using StructureMap;
 
@@ -25,41 +25,41 @@ namespace ProjectHeleus.MangaService.Providers
 
         #region Implementation of ICatalogsProvider
 
-        public async Task<IEnumerable<Models.Catalog>> GetCatalogsAsync()
+        public async Task<IEnumerable<ICatalog>> GetCatalogsAsync()
         {
             var catalogs = new[]
             {
-                new Catalog {Id = "mangafox.me", Url = "http://mangafox.me/"},
-                new Catalog {Id = "readmanga.me", Url = "http://readmanga.me/"}
+                new CatalogModel {Id = "mangafox.me", Url = "http://mangafox.me/"},
+                new CatalogModel {Id = "readmanga.me", Url = "http://readmanga.me/"}
             };
 
             return await Task.FromResult(catalogs);
         }
 
-        public async Task<IEnumerable<ListManga>> GetUpdateCatalogContentAsync(CatalogType catalogType, int page)
+        public async Task<IEnumerable<IManga>> GetUpdateCatalogContentAsync(CatalogType catalogType, int page)
         {
-            var parser = catalogType.GetParser(_container);
+            var parser = _container.GetParser(catalogType);
             var mangas = await parser.GetUpdateContent(page);
 
             return await Task.FromResult(mangas);
         }
-        public async Task<IEnumerable<ListManga>> GetNewCatalogContentAsync(CatalogType catalogType, int page)
+        public async Task<IEnumerable<IManga>> GetNewCatalogContentAsync(CatalogType catalogType, int page)
         {
-            var parser = catalogType.GetParser(_container);
+            var parser = _container.GetParser(catalogType);
             var mangas = await parser.GetNewContent(page);
 
             return await Task.FromResult(mangas);
         }
-        public async Task<IEnumerable<ListManga>> GetRatingCatalogContentAsync(CatalogType catalogType, int page)
+        public async Task<IEnumerable<IManga>> GetRatingCatalogContentAsync(CatalogType catalogType, int page)
         {
-            var parser = catalogType.GetParser(_container);
+            var parser = _container.GetParser(catalogType);
             var mangas = await parser.GetRatingContent(page);
 
             return await Task.FromResult(mangas);
         }
-        public async Task<IEnumerable<ListManga>> GetPopularCatalogContentAsync(CatalogType catalogType, int page)
+        public async Task<IEnumerable<IManga>> GetPopularCatalogContentAsync(CatalogType catalogType, int page)
         {
-            var parser = catalogType.GetParser(_container);
+            var parser = _container.GetParser(catalogType);
             var mangas = await parser.GetPopularContent(page);
 
             return await Task.FromResult(mangas);

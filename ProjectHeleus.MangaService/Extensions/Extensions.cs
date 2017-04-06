@@ -9,7 +9,7 @@ namespace ProjectHeleus.MangaService.Extensions
 {
     public static class Extensions
     {
-        public static IParser GetParser(this CatalogType catalogType, IContainer container)
+        public static IParser GetParser(this IContainer container, CatalogType catalogType)
         {
             IParser parser = null;
             
