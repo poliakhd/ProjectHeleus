@@ -21,6 +21,9 @@ namespace ProjectHeleus.MangaService.Extensions
                 case CatalogType.ReadManga:
                     parser = container.GetInstance<IParser>(nameof(ReadMangaParser));
                     break;
+                case CatalogType.MintManga:
+                    parser = container.GetInstance<IParser>(nameof(MintMangaParser));
+                    break;
             }
 
             return parser;
@@ -34,6 +37,8 @@ namespace ProjectHeleus.MangaService.Extensions
                     return CatalogType.ReadManga;
                 case "mangafox.me":
                     return CatalogType.MangaFox;
+                case "mintmanga.com":
+                    return CatalogType.MintManga;
                 default:
                     throw new NotSupportedException();
             }

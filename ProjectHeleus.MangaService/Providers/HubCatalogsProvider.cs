@@ -33,7 +33,9 @@ namespace ProjectHeleus.MangaService.Providers
             var catalogs = new[]
             {
                 new CatalogModel {Id = "mangafox.me", Url = "http://mangafox.me/"},
-                new CatalogModel {Id = "readmanga.me", Url = "http://readmanga.me/"}
+                new CatalogModel {Id = "readmanga.me", Url = "http://readmanga.me/"},
+                new CatalogModel {Id = "mintmanga.com", Url = "http://mintmanga.com/"}
+
             };
 
             return await Task.FromResult(catalogs);
