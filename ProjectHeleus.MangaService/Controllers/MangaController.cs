@@ -29,7 +29,7 @@ namespace ProjectHeleus.MangaService.Controllers
         }
 
         [Route("api/[controller]/{catalog}/{manga}/{volume}/{chapter}")]
-        public async Task<IEnumerable<string>> GetMangaChapterContent(string catalog, string manga, string volume, string chapter)
+        public async Task<IChapterContent> GetMangaChapterContent(string catalog, string manga, string volume, string chapter)
         {
             return await _mangaProvider.GetMangaChapterContentAsync(catalog.GetCatalogType(), $"/{manga}/{volume}/{chapter}");
         }

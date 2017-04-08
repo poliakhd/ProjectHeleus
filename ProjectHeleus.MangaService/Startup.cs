@@ -36,11 +36,12 @@ namespace ProjectHeleus.MangaService
             container.Configure(
                 config =>
                 {
-                    config.For<ICatalogsProvider>().Add<HubCatalogsProvider>();
-                    config.For<IMangaProvider>().Add<HubMangaProvider>();
+                    config.ForSingletonOf<ICatalogsProvider>().Add<HubCatalogsProvider>();
+                    config.ForSingletonOf<IMangaProvider>().Add<HubMangaProvider>();
 
-                    config.For<IParser>().Add<MangaFoxParser>().Named(nameof(MangaFoxParser));
-                    config.For<IParser>().Add<ReadMangaParser>().Named(nameof(ReadMangaParser));
+                    config.ForSingletonOf<IParser>().Add<MangaFoxParser>().Named(nameof(MangaFoxParser));
+                    config.ForSingletonOf<IParser>().Add<ReadMangaParser>().Named(nameof(ReadMangaParser));
+                    config.ForSingletonOf<IParser>().Add<MintMangaParser>().Named(nameof(MintMangaParser));
 
                     config.Populate(services);
                 }
@@ -52,7 +53,7 @@ namespace ProjectHeleus.MangaService
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory.AddFile("Logs/{Date}.log");
 
             app.UseMvc();
         }

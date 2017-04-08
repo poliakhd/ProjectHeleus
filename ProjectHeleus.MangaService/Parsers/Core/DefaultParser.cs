@@ -32,7 +32,7 @@ namespace ProjectHeleus.MangaService.Parsers.Core
             return null;
         }
 
-        public virtual Task<IEnumerable<string>> GetMangaChapterContent(string manga)
+        public virtual Task<IChapterContent> GetMangaChapterContent(string manga)
         {
             return null;
         }

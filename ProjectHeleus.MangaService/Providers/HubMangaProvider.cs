@@ -25,20 +25,19 @@ namespace ProjectHeleus.MangaService.Providers
 
         #region Implementation of IMangaProvider
 
-        public async Task<IManga> GetMangaContentAsync(CatalogType catalogType, string relativeUrl)
+        public async Task<IManga> GetMangaContentAsync(CatalogType catalogType, string manga)
         {
             var parser = _container.GetParser(catalogType);
-            var mangas = await parser.GetMangaContent(relativeUrl);
+            var mangas = await parser.GetMangaContent(manga);
 
-            return await Task.FromResult(mangas);
+            return mangas;
         }
-
-        public async Task<IEnumerable<string>> GetMangaChapterContentAsync(CatalogType catalogType, string relativeUrl)
+        public async Task<IChapterContent> GetMangaChapterContentAsync(CatalogType catalogType, string manga)
         {
             var parser = _container.GetParser(catalogType);
-            var images = await parser.GetMangaChapterContent(relativeUrl);
+            var images = await parser.GetMangaChapterContent(manga);
 
-            return await Task.FromResult(images);
+            return images;
         }
 
         #endregion

@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
-using AngleSharp.Extensions;
 using ProjectHeleus.MangaService.Models;
 using ProjectHeleus.MangaService.Models.Contracts;
-using ProjectHeleus.MangaService.Parsers.Contracts;
 using ProjectHeleus.MangaService.Parsers.Core;
 
 namespace ProjectHeleus.MangaService.Parsers
@@ -72,12 +68,14 @@ namespace ProjectHeleus.MangaService.Parsers
             return formattedManga;
         }
 
-        public override Task<IEnumerable<string>> GetMangaChapterContent(string w)
+        public override Task<IChapterContent> GetMangaChapterContent(string w)
         {
             throw new System.NotImplementedException();
         }
 
         #endregion
+
+        #region Internal Methods
 
         private async Task<IEnumerable<MangaShortModel>> GetListContent(string sourceUrl, int page)
         {
@@ -119,7 +117,7 @@ namespace ProjectHeleus.MangaService.Parsers
                         var info = mangaItem.QuerySelectorAll(".info");
 
                         #region Views
-                        
+
                         if (info.Length > 1)
                             manga.Views = int.Parse(info[1].TextContent.Split(' ')[1].Replace(".", "").Replace(",", ""));
 
@@ -132,7 +130,7 @@ namespace ProjectHeleus.MangaService.Parsers
                             info[0].TextContent.Split(',')
                                 .Select(x => x.Replace(".", "").Trim())
                                 .Where(y => !string.IsNullOrEmpty(y))
-                                .Select(x => new GenreModel() {Title = x, Url = null});
+                                .Select(x => new GenreModel() { Title = x, Url = null });
 
                         #endregion
 
@@ -158,7 +156,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
             var textRating = mangaRaw.QuerySelectorAll("#series_info > .data > span")?[2].TextContent;
 
-            if(string.IsNullOrEmpty(textRating))
+            if (string.IsNullOrEmpty(textRating))
                 return;
 
             var firstRatingIndex = textRating.IndexOf(' ') + 1;
@@ -184,7 +182,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
             formattedManga.Views = -1;
 
-            if(views != null && views.Any())
+            if (views != null && views.Any())
                 if (int.TryParse(views[3].Replace(",", ""), out int result))
                     formattedManga.Views = result;
         }
@@ -206,7 +204,7 @@ namespace ProjectHeleus.MangaService.Parsers
         }
         private void GetTranslators(IElement mangaRaw, MangaModel formattedManga)
         {
-            
+
         }
         private void GetPublishedYear(IElement mangaRaw, MangaModel formattedManga)
         {
@@ -231,5 +229,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
             formattedManga.Chapters = chapters;
         }
+
+        #endregion
     }
 }

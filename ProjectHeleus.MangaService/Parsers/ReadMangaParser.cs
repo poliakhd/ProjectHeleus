@@ -9,7 +9,6 @@ using AngleSharp.Dom.Html;
 using AngleSharp.Extensions;
 using ProjectHeleus.MangaService.Models;
 using ProjectHeleus.MangaService.Models.Contracts;
-using ProjectHeleus.MangaService.Parsers.Contracts;
 using ProjectHeleus.MangaService.Parsers.Core;
 
 namespace ProjectHeleus.MangaService.Parsers
@@ -17,12 +16,12 @@ namespace ProjectHeleus.MangaService.Parsers
     public class ReadMangaParser 
         : DefaultParser
     {
-        #region Private Members
+        #region Protected Members
 
-        private readonly string _newUrl;
-        private readonly string _updateUrl;
-        private readonly string _ratingUrl;
-        private readonly string _popularUrl;
+        protected string NewUrl;
+        protected string UpdateUrl;
+        protected string RatingUrl;
+        protected string PopularUrl;
 
         #endregion
 
@@ -30,29 +29,29 @@ namespace ProjectHeleus.MangaService.Parsers
 
         public ReadMangaParser()
         {
-            _newUrl = $"{Url}/list?sortType=created";
-            _updateUrl = $"{Url}/list?sortType=updated";
-            _ratingUrl = $"{Url}/list?sortType=votes";
-            _popularUrl = $"{Url}/list?sortType=rate";
+            NewUrl = $"{Url}/list?sortType=created";
+            UpdateUrl = $"{Url}/list?sortType=updated";
+            RatingUrl = $"{Url}/list?sortType=votes";
+            PopularUrl = $"{Url}/list?sortType=rate";
         }
 
         #region Overrides of IParser
 
         public override async Task<IEnumerable<IManga>> GetUpdateContent(int page)
         {
-            return await GetListContent(_updateUrl, page);
+            return await GetListContent(UpdateUrl, page);
         }
         public override async Task<IEnumerable<IManga>> GetNewContent(int page)
         {
-            return await GetListContent(_newUrl, page);
+            return await GetListContent(NewUrl, page);
         }
         public override async Task<IEnumerable<IManga>> GetRatingContent(int page)
         {
-            return await GetListContent(_ratingUrl, page);
+            return await GetListContent(RatingUrl, page);
         }
         public override async Task<IEnumerable<IManga>> GetPopularContent(int page)
         {
-            return await GetListContent(_popularUrl, page);
+            return await GetListContent(PopularUrl, page);
         }
 
         public override async Task<IManga> GetMangaContent(string mangaId)
@@ -94,47 +93,52 @@ namespace ProjectHeleus.MangaService.Parsers
             return formattedManga;
         }
 
-        public override async Task<IEnumerable<string>> GetMangaChapterContent(string manga)
+        public override async Task<IChapterContent> GetMangaChapterContent(string manga)
         {
-            var webSource = await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript()).OpenAsync($"{Url}/{manga}");
-            var mangaImagesWeb = webSource.QuerySelectorAll("script").FirstOrDefault(x => x.TextContent.Contains("rm_h.init"));
-
-            var images = new List<string>();
-
-            #region MangaImages
-
-            if (mangaImagesWeb != null)
+            using (var webSource = await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript()).OpenAsync($"{Url}/{manga}"))
             {
-                var source = mangaImagesWeb.TextContent.Substring(mangaImagesWeb.TextContent.IndexOf("rm_h.init"));
-                var formattedSource = source.Substring(source.IndexOf("(")).TrimEnd();
+                var mangaImagesWeb = webSource.QuerySelectorAll("script").FirstOrDefault(x => x.TextContent.Contains("rm_h.init"));
 
-                var startBracket = formattedSource.IndexOf("[");
-                var endBracket = formattedSource.LastIndexOf("]");
+                var images = new List<string>();
 
-                var formattedSourceToRegex = formattedSource.Substring(startBracket + 1, endBracket - startBracket - 1);
+                #region MangaImages
 
-                foreach (Match match in new Regex(@"\[(.*?)\]").Matches(formattedSourceToRegex))
+                if (mangaImagesWeb != null)
                 {
-                    var image = match.Groups[1].Value;
+                    var source = mangaImagesWeb.TextContent.Substring(mangaImagesWeb.TextContent.IndexOf("rm_h.init"));
+                    var formattedSource = source.Substring(source.IndexOf("(")).TrimEnd();
 
-                    if (!string.IsNullOrEmpty(image))
+                    var startBracket = formattedSource.IndexOf("[");
+                    var endBracket = formattedSource.LastIndexOf("]");
+
+                    var formattedSourceToRegex = formattedSource.Substring(startBracket + 1, endBracket - startBracket - 1);
+                    
+                   
+                    foreach (Match match in new Regex(@"\[(.*?)\]").Matches(formattedSourceToRegex))
                     {
-                        var imageAttributes = image.Split(',');
+                        var image = match.Groups[1].Value;
 
-                        images.Add(
-                            $@"{imageAttributes[1].Replace("\'", "")}{imageAttributes[0].Replace("\'", "")}{imageAttributes
-                                [2].Replace("\"", "")}"
-                        );
+                        if (!string.IsNullOrEmpty(image))
+                        {
+                            var imageAttributes = image.Split(',');
+
+                            images.Add(
+                                $@"{imageAttributes[1].Replace("\'", "")}{imageAttributes[0].Replace("\'", "")}{imageAttributes
+                                    [2].Replace("\"", "")}"
+                            );
+                        }
                     }
                 }
+
+                #endregion
+
+                return new ChapterContentModel() {Images = images};
             }
-
-            #endregion
-
-            return images;
         }
 
         #endregion
+
+        #region Internal Methods
 
         private async Task<IEnumerable<IManga>> GetListContent(string url, int page)
         {
@@ -302,5 +306,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
             formattedManga.Chapters = chapters;
         }
+
+        #endregion
     }
 }
