@@ -27,7 +27,7 @@ namespace ProjectHeleus.MangaService.Parsers.Core
             return null;
         }
 
-        public virtual Task<IManga> GetMangaContent(string mangaId)
+        public virtual Task<IManga> GetMangaContent(string manga)
         {
             return null;
         }

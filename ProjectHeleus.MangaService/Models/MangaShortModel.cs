@@ -5,6 +5,7 @@ namespace ProjectHeleus.MangaService.Models
 {
     public class MangaShortModel : IManga
     {
+        public string Id { get; set; }
         public string Title { get; set; }
         public string TitleAlt { get; set; }
         public string Url { get; set; }

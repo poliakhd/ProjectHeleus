@@ -1,6 +1,6 @@
 ﻿namespace ProjectHeleus.MangaService.Models.Contracts
 {
-    public interface ITranslator
+    public interface ITranslator : IIdentifier
     {
         
     }

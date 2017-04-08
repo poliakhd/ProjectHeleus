@@ -1,7 +1,7 @@
 ﻿namespace ProjectHeleus.MangaService.Models.Contracts
 {
-    public interface IAuthor : IIdentifier
+    public interface IIdentifier
     {
-        
+        string Id { get; set; }
     }
 }
