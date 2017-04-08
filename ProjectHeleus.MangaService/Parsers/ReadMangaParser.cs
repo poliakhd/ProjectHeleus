@@ -211,8 +211,11 @@ namespace ProjectHeleus.MangaService.Parsers
         private void GetInformation(MangaModel formattedManga, IElement mangaRaw)
         {
             formattedManga.Name = mangaRaw.QuerySelector(".names .name")?.TextContent;
-            formattedManga.AlternativeName = mangaRaw.QuerySelector(".names .eng-name")?.TextContent;
-            formattedManga.OriginalName = mangaRaw.QuerySelector(".names .original-name")?.TextContent;
+            formattedManga.AlternateNames = new[]
+            {
+                mangaRaw.QuerySelector(".names .eng-name")?.TextContent,
+                mangaRaw.QuerySelector(".names .original-name")?.TextContent
+            };
             formattedManga.Description = mangaRaw.QuerySelector("meta[itemprop=description]")?.GetAttribute("content");
             formattedManga.Covers =
                 mangaRaw.QuerySelectorAll(".picture-fotorama img")?.Select(x => new Uri(x.GetAttribute("data-full")));
@@ -225,10 +228,10 @@ namespace ProjectHeleus.MangaService.Parsers
             var volumeLineAfterIndex = information[0].TextContent.IndexOf(",", StringComparison.Ordinal);
 
             formattedManga.Volumes =
-                int.Parse(volumeLineAfterIndex > 0
+                volumeLineAfterIndex > 0
                     ? information[0].TextContent.Substring(volumeLineBeforeIndex + 1,
                         volumeLineAfterIndex - volumeLineBeforeIndex - 1)
-                    : information[0].TextContent.Substring(volumeLineBeforeIndex + 1));
+                    : information[0].TextContent.Substring(volumeLineBeforeIndex + 1);
         }
         private void GetViews(IHtmlCollection<IElement> information, MangaModel formattedManga)
         {
