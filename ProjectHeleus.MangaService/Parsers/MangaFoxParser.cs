@@ -54,6 +54,7 @@ namespace ProjectHeleus.MangaService.Parsers
                 return null;
 
             var formattedManga = new MangaModel();
+            formattedManga.Id = manga;
 
             GetInformation(formattedManga, mangaRaw);
 
@@ -91,8 +92,12 @@ namespace ProjectHeleus.MangaService.Parsers
                     {
                         #region Header
 
+                        var id = mangaItem.QuerySelector(".manga_text a")?.GetAttribute("href").TrimEnd('/');
+                        id = id.Substring(id.LastIndexOf('/') + 1);
+
                         var manga = new MangaShortModel
                         {
+                            Id = id,
                             Title = mangaItem.QuerySelector(".manga_text a")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
                             TitleAlt = mangaItem.QuerySelector(".manga_text a")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
                             Url = mangaItem.QuerySelector(".manga_text a")?.GetAttribute("href").Replace(Url, ""),
