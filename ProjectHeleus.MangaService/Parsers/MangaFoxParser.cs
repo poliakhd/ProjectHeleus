@@ -70,7 +70,33 @@ namespace ProjectHeleus.MangaService.Parsers
         }
         public override async Task<IChapterContent> GetMangaChapterContent(string manga)
         {
-            return null;
+            var imagesLinks = new List<string>();
+            var urlTemplate = manga.Substring(0, manga.LastIndexOf('/') + 1);
+
+            using (
+                var webSource =
+                    await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript())
+                        .OpenAsync($"{Url}/manga{manga}"))
+            {
+                var links =
+                    webSource.QuerySelectorAll("#top_bar select option")
+                        .Where(x => x.TextContent != "Comments" && x.TextContent != "1");
+
+                imagesLinks.Add(webSource.QuerySelector(".read_img a img").GetAttribute("src"));
+
+                foreach (var link in links)
+                {
+                    using (
+                        var imageSource =
+                            await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript())
+                                .OpenAsync($"{Url}/manga{urlTemplate}/{link.TextContent}.html"))
+                    {
+                        imagesLinks.Add(imageSource.QuerySelector(".read_img a img").GetAttribute("src"));
+                    }
+                }
+            }
+
+            return new ChapterContentModel() {Images = imagesLinks};
         }
 
         #endregion
