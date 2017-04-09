@@ -1,6 +1,7 @@
 ﻿namespace ProjectHeleus.MangaService.Models.Contracts
 {
-    public interface IManga : IIdentifier
+    public interface IManga 
+        : IIdentifier
     {
 
     }

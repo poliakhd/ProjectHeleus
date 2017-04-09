@@ -1,6 +1,7 @@
 ﻿namespace ProjectHeleus.MangaService.Models.Contracts
 {
-    public interface IChapter : IIdentifier
+    public interface IChapter 
+        : IIdentifier
     {
     }
 }

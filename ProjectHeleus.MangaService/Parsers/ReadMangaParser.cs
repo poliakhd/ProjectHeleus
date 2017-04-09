@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Dom.Html;
 using AngleSharp.Extensions;
+using Microsoft.Extensions.Logging;
 using ProjectHeleus.MangaService.Models;
 using ProjectHeleus.MangaService.Models.Contracts;
 using ProjectHeleus.MangaService.Parsers.Core;
@@ -16,6 +18,12 @@ namespace ProjectHeleus.MangaService.Parsers
     public class ReadMangaParser 
         : DefaultParser
     {
+        #region Private Members
+
+        private readonly ILogger<ReadMangaParser> _logger;
+
+        #endregion
+
         #region Protected Members
 
         protected string NewUrl;
@@ -27,8 +35,10 @@ namespace ProjectHeleus.MangaService.Parsers
 
         public new string Url { get; set; } = "http://readmanga.me";
 
-        public ReadMangaParser()
+        public ReadMangaParser(ILogger<ReadMangaParser> logger)
         {
+            _logger = logger;
+
             NewUrl = $"{Url}/list?sortType=created";
             UpdateUrl = $"{Url}/list?sortType=updated";
             RatingUrl = $"{Url}/list?sortType=votes";
@@ -36,6 +46,8 @@ namespace ProjectHeleus.MangaService.Parsers
         }
 
         #region Overrides of IParser
+
+        #region Get Catalogs Content
 
         public override async Task<IEnumerable<IManga>> GetUpdateContent(int page)
         {
@@ -54,162 +66,235 @@ namespace ProjectHeleus.MangaService.Parsers
             return await GetListContent(PopularUrl, page);
         }
 
-        public override async Task<IManga> GetMangaContent(string manga)
+        private async Task<IEnumerable<IManga>> GetListContent(string url, int page)
         {
-            var web = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync($"{Url}/{manga}");
-            var mangaRaw = web.QuerySelector(".leftContent");
+            #region Build URL
 
-            if (mangaRaw == null)
-                return null;
+            if (page > 0)
+                url = $"{url}&offset={70 * page}&max=70";
 
-            var formattedManga = new MangaModel();
+            #endregion
 
-            GetInformation(formattedManga, mangaRaw);
+            var formattedMangas = new List<MangaShortModel>();
 
-            var information = mangaRaw.QuerySelectorAll(".subject-meta.col-sm-7 p");
-            if (information.Any())
+            try
             {
-                GetVolume(information, formattedManga);
-                GetViews(information, formattedManga);
+                var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(url);
+                var htmlMangas = htmlDocument.QuerySelectorAll(".tile.col-sm-6");
 
-                foreach (var informationLine in information.Skip(2))
+                if (!htmlMangas.Any())
                 {
-                    if (GetGenres(informationLine, formattedManga))
-                        continue;
-
-                    if (GetAuthors(informationLine, formattedManga))
-                        continue;
-
-                    if (GetTranslators(informationLine, formattedManga))
-                        continue;
-
-                    GetPublishedYear(informationLine, formattedManga);
+                    _logger.LogInformation($"There were no content for catalog: {url}");
+                    return null;
                 }
-            }
 
-
-            GetChapters(mangaRaw, formattedManga);
-
-            return formattedManga;
-        }
-        public override async Task<IChapterContent> GetMangaChapterContent(string manga)
-        {
-            using (var webSource = await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript()).OpenAsync($"{Url}/{manga}"))
-            {
-                var mangaImagesWeb = webSource.QuerySelectorAll("script").FirstOrDefault(x => x.TextContent.Contains("rm_h.init"));
-
-                var images = new List<string>();
-
-                #region MangaImages
-
-                if (mangaImagesWeb != null)
+                foreach (var htmlManga in htmlMangas)
                 {
-                    var source = mangaImagesWeb.TextContent.Substring(mangaImagesWeb.TextContent.IndexOf("rm_h.init"));
-                    var formattedSource = source.Substring(source.IndexOf("(")).TrimEnd();
+                    #region Header
 
-                    var startBracket = formattedSource.IndexOf("[");
-                    var endBracket = formattedSource.LastIndexOf("]");
-
-                    var formattedSourceToRegex = formattedSource.Substring(startBracket + 1, endBracket - startBracket - 1);
-                    
-                   
-                    foreach (Match match in new Regex(@"\[(.*?)\]").Matches(formattedSourceToRegex))
+                    var formattedManga = new MangaShortModel
                     {
-                        var image = match.Groups[1].Value;
+                        Id = htmlManga.QuerySelector(".img a")?.GetAttribute("href").Replace("/", ""),
+                        Title = htmlManga.QuerySelector("h3")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
+                        Url = $@"{Url}{htmlManga.QuerySelector(".img a")?.GetAttribute("href")}",
+                        Cover = htmlManga.QuerySelector(".img a img")?.GetAttribute("src")
+                    };
 
-                        if (!string.IsNullOrEmpty(image))
-                        {
-                            var imageAttributes = image.Split(',');
+                    #endregion
 
-                            images.Add(
-                                $@"{imageAttributes[1].Replace("\'", "")}{imageAttributes[0].Replace("\'", "")}{imageAttributes
-                                    [2].Replace("\"", "")}"
-                            );
-                        }
+                    #region Rating
+
+                    var htmlRatings = htmlManga.QuerySelector(".desc .rating")?.GetAttribute("title").Split(' ');
+
+                    if (htmlRatings != null)
+                    {
+                        formattedManga.Rating = float.Parse(htmlRatings[0]);
+                        formattedManga.RatingLimit = float.Parse(htmlRatings[3]);
                     }
+
+                    #endregion
+
+                    #region Views
+
+                    var htmlViews = htmlManga.QuerySelector(".tile-info p");
+
+                    if (int.TryParse(htmlViews.TextContent.Substring(htmlViews.TextContent.LastIndexOf(' ')), out int views))
+                        formattedManga.Views = views;
+
+                    #endregion
+
+                    #region AuthorsAndGenres
+
+                    var htmlTileInfo = htmlManga.QuerySelector(".tile-info");
+
+                    var authorsAndGenres = htmlTileInfo.QuerySelectorAll("a");
+                    var authorsAndGenresSeparator = htmlTileInfo.Children.Index(htmlTileInfo.ChildNodes.FirstOrDefault(x => x is IHtmlBreakRowElement));
+
+                    formattedManga.Authors =
+                        authorsAndGenres.Take(authorsAndGenresSeparator)
+                            .Select(
+                                x =>
+                                    new AuthorModel()
+                                    {
+                                        Id =
+                                            x.GetAttribute("href")
+                                                .Substring(x.GetAttribute("href").LastIndexOf('/') + 1),
+                                        Name = x.TextContent,
+                                        Url = $@"{Url}{x.GetAttribute("href")}"
+                                    }
+                                );
+
+                    formattedManga.Genres =
+                        authorsAndGenres.Skip(authorsAndGenresSeparator)
+                            .Select(
+                                x =>
+                                    new GenreModel()
+                                    {
+                                        Id =
+                                            x.GetAttribute("href")
+                                                .Substring(x.GetAttribute("href").LastIndexOf('/') + 1),
+                                        Title = x.TextContent,
+                                        Url = $@"{Url}{x.GetAttribute("href")}"
+                                    }
+                                );
+
+                    #endregion
+
+                    formattedMangas.Add(formattedManga);
                 }
 
-                #endregion
-
-                return new ChapterContentModel() {Images = images};
             }
+            catch (Exception e)
+            {
+                _logger.LogError($"Cannot get calatog content from: {url}");
+                _logger.LogError(e.Message);
+
+                throw new HttpRequestException(e.Message);
+            }
+
+            return formattedMangas;
         }
 
         #endregion
 
-        #region Internal Methods
+        #region Get Manga Content
 
-        private async Task<IEnumerable<IManga>> GetListContent(string url, int page)
+        public override async Task<IManga> GetMangaContent(string url)
         {
-            if (page > 0)
-                url = $"{url}&offset={70 * page}&max=70";
+            #region Build URL
 
-            var webSource = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(url);
-            var mangas = webSource.QuerySelectorAll(".tile.col-sm-6");
+            url = $"{Url}/{url}";
 
-            var mangasResult = new List<MangaShortModel>();
+            #endregion
 
-            if (mangas.Any())
+            var parsedManga = new MangaModel();
+
+            try
             {
-                try
+                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(url))
                 {
-                    foreach (var element in mangas)
+                    var htmlManga = htmlDocument.QuerySelector(".leftContent");
+
+                    if (htmlManga == null)
+                        return null;
+
+                    GetInformation(parsedManga, htmlManga);
+
+                    var information = htmlManga.QuerySelectorAll(".subject-meta.col-sm-7 p");
+
+                    if (information.Any())
                     {
-                        #region Header
+                        GetVolume(information, parsedManga);
+                        GetViews(information, parsedManga);
 
-                        var manga = new MangaShortModel
+                        foreach (var informationLine in information.Skip(2))
                         {
-                            Id = element.QuerySelector(".img a")?.GetAttribute("href").Replace("/", ""),
-                            Title = element.QuerySelector("h3")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
-                            TitleAlt = element.QuerySelector("h4")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
-                            Url = $@"{Url}{element.QuerySelector(".img a")?.GetAttribute("href")}",
-                            Cover = element.QuerySelector(".img a img")?.GetAttribute("src")
-                        };
+                            if (GetGenres(informationLine, parsedManga))
+                                continue;
 
-                        #endregion
+                            if (GetAuthors(informationLine, parsedManga))
+                                continue;
 
-                        #region Rating
+                            if (GetTranslators(informationLine, parsedManga))
+                                continue;
 
-                        var ratings = element.QuerySelector(".desc .rating")?.GetAttribute("title").Split(' ');
-
-                        if (ratings != null)
-                        {
-                            manga.Rating = float.Parse(ratings[0]);
-                            manga.RatingLimit = float.Parse(ratings[2]);
+                            GetPublishedYear(informationLine, parsedManga);
                         }
-
-                        #endregion
-
-                        #region Views
-
-                        var views = element.QuerySelector(".tile-info p");
-                        if (views != null)
-                            manga.Views = int.Parse(views?.TextContent.Substring(views.TextContent.LastIndexOf(' ')));
-
-                        #endregion
-
-                        #region AuthorsAndGenres
-
-                        var tileInfo = element.QuerySelector(".tile-info");
-                        
-                        var authorsAndGenres = tileInfo.QuerySelectorAll("a");
-                        var authorsAndGenresSeparator = tileInfo.Children.Index(tileInfo.ChildNodes.FirstOrDefault(x => x is IHtmlBreakRowElement));
-
-                        manga.Authors = authorsAndGenres.Take(authorsAndGenresSeparator).Select(x => new AuthorModel() { Id = x.GetAttribute("href").Substring(x.GetAttribute("href").LastIndexOf('/') + 1), Name = x.TextContent, Url = $@"{Url}{ x.GetAttribute("href")}"});
-                        manga.Genres = authorsAndGenres.Skip(authorsAndGenresSeparator).Select(x=> new GenreModel() { Id = x.GetAttribute("href").Substring(x.GetAttribute("href").LastIndexOf('/') + 1), Title = x.TextContent, Url = $@"{Url}{ x.GetAttribute("href")}"});
-                        
-                        #endregion
-
-                        mangasResult.Add(manga);
                     }
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e);
+
+                    GetChapters(htmlManga, parsedManga);
                 }
             }
+            catch (Exception e)
+            {
+                _logger.LogError($"Cannot get manga content from: {url}");
+                _logger.LogError(e.Message);
 
-            return mangasResult;
+                throw new HttpRequestException(e.Message);
+            }
+
+            return parsedManga;
+        }
+        public override async Task<IChapterContent> GetMangaChapterContent(string url)
+        {
+            #region Build URL
+
+            url = $"{Url}/{url}";
+
+            #endregion
+
+            try
+            {
+                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript()).OpenAsync(url))
+                {
+                    var htmlChapterImages = htmlDocument.QuerySelectorAll("script").FirstOrDefault(x => x.TextContent.Contains("rm_h.init"));
+                    if (htmlChapterImages == null)
+                        return null;
+
+                    string formattedImagesSource;
+
+                    #region Preparing images source
+
+                    var jsImagesSource = htmlChapterImages.TextContent.Substring(htmlChapterImages.TextContent.IndexOf("rm_h.init"));
+
+                    var preFormattedImagesSource = jsImagesSource.Substring(jsImagesSource.IndexOf("(")).TrimEnd();
+
+                    var startBracket = preFormattedImagesSource.IndexOf("[");
+                    var endBracket = preFormattedImagesSource.LastIndexOf("]");
+
+                    formattedImagesSource = preFormattedImagesSource.Substring(startBracket + 1, endBracket - startBracket - 1);
+
+                    #endregion
+
+                    if (string.IsNullOrEmpty(formattedImagesSource))
+                    {
+                        _logger.LogInformation($"Cannot retrive images for chapter: Url - {url}; jsImagesSource: {jsImagesSource}; preFormattedImagesSource: {preFormattedImagesSource};");
+                        return null;
+                    }
+
+                    var localImagesHrefs = new List<string>();
+
+                    foreach (Match match in new Regex(@"\[(.*?)\]").Matches(formattedImagesSource))
+                    {
+                        var image = match.Groups[1].Value;
+
+                        if (string.IsNullOrEmpty(image))
+                            continue;
+
+                        var imageAttributes = image.Split(',');
+                        localImagesHrefs.Add($@"{imageAttributes[1].Replace("\'", "")}{imageAttributes[0].Replace("\'", "")}{imageAttributes[2].Replace("\"", "")}");
+                    }
+
+                    return new ChapterContentModel() { Images = localImagesHrefs };
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Cannot get manga chapter content from: {url}");
+                _logger.LogError(e.Message);
+
+                throw new HttpRequestException(e.Message);
+            }
         }
 
         private void GetInformation(MangaModel formattedManga, IElement mangaRaw)
@@ -287,28 +372,29 @@ namespace ProjectHeleus.MangaService.Parsers
         }
         private void GetChapters(IElement mangaRaw, MangaModel formattedManga)
         {
-            var webChapters = mangaRaw.QuerySelectorAll(".expandable.chapters-link tbody tr");
+            var formattedChapters = new List<ChapterModel>();
+            var htmlChapters = mangaRaw.QuerySelectorAll(".expandable.chapters-link tbody tr");
 
-            var chapters = new List<ChapterModel>();
-            foreach (var chapter in webChapters)
+            foreach (var chapter in htmlChapters)
             {
                 var chapterInfo = chapter.QuerySelectorAll("td");
 
                 if (chapterInfo.Any())
                 {
-                    chapters.Add(new ChapterModel()
+                    formattedChapters.Add(new ChapterModel()
                     {
                         Id = chapterInfo[0].QuerySelector("a")?.GetAttribute("href").Substring(1),
-                        Name =
-                            Regex.Replace(chapterInfo[0].QuerySelector("a")?.TextContent, @"\s{2,}", " ").TrimStart().TrimEnd(),
+                        Name = Regex.Replace(chapterInfo[0].QuerySelector("a")?.TextContent, @"\s{2,}", " ").TrimStart().TrimEnd(),
                         Url = $@"{Url}{chapterInfo[0].QuerySelector("a")?.GetAttribute("href")}",
                         Date = chapterInfo[1].TextContent.Replace("\n", "").Replace(" ", "")
                     });
                 }
             }
 
-            formattedManga.Chapters = chapters;
+            formattedManga.Chapters = formattedChapters;
         }
+
+        #endregion
 
         #endregion
     }

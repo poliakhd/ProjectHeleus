@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using ProjectHeleus.MangaService.Models;
 using ProjectHeleus.MangaService.Models.Contracts;
 using ProjectHeleus.MangaService.Parsers.Contracts;
 
 namespace ProjectHeleus.MangaService.Parsers.Core
 {
-    public class DefaultParser : IParser
+    public class DefaultParser 
+        : IParser
     {
         #region Implementation of IParser
 
@@ -27,19 +27,19 @@ namespace ProjectHeleus.MangaService.Parsers.Core
             return null;
         }
 
-        public virtual Task<IManga> GetMangaContent(string manga)
+        public virtual Task<IManga> GetMangaContent(string url)
         {
             return null;
         }
 
-        public virtual Task<IChapterContent> GetMangaChapterContent(string manga)
+        public virtual Task<IChapterContent> GetMangaChapterContent(string url)
         {
             return null;
         }
         
         public virtual Task<IEnumerable<IManga>> GetPopularContent(int page)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
         
         #endregion

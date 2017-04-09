@@ -1,6 +1,5 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using ProjectHeleus.MangaService.Controllers.Core;
+using ProjectHeleus.MangaService.Core;
 using ProjectHeleus.MangaService.Parsers;
 using ProjectHeleus.MangaService.Parsers.Contracts;
 using StructureMap;

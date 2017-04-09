@@ -1,4 +1,4 @@
-﻿namespace ProjectHeleus.MangaService.Controllers.Core
+﻿namespace ProjectHeleus.MangaService.Core
 {
     public enum SortType
     {
