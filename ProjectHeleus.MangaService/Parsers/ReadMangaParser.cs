@@ -92,7 +92,6 @@ namespace ProjectHeleus.MangaService.Parsers
 
             return formattedManga;
         }
-
         public override async Task<IChapterContent> GetMangaChapterContent(string manga)
         {
             using (var webSource = await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript()).OpenAsync($"{Url}/{manga}"))

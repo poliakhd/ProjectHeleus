@@ -68,7 +68,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
             return formattedManga;
         }
-        public override Task<IChapterContent> GetMangaChapterContent(string manga)
+        public override async Task<IChapterContent> GetMangaChapterContent(string manga)
         {
             return null;
         }
@@ -195,16 +195,38 @@ namespace ProjectHeleus.MangaService.Parsers
             var titleInfo = mangaRaw.QuerySelectorAll("#title table td");
 
             formattedManga.Genres =
-                    titleInfo[3].QuerySelectorAll("a")
-                        .Select(x => new GenreModel() { Title = x.TextContent, Url = x.GetAttribute("href").Replace(Url, "") });
+                titleInfo[3].QuerySelectorAll("a")
+                    .Select(
+                        x =>
+                            new GenreModel()
+                            {
+                                Id =
+                                    x.GetAttribute("href")
+                                        .Replace(Url, "")
+                                        .TrimEnd('/')
+                                        .Substring(
+                                            x.GetAttribute("href").Replace(Url, "").TrimEnd('/').LastIndexOf('/') + 1),
+                                Title = x.TextContent,
+                                Url = x.GetAttribute("href")
+                            });
         }
         private void GetAuthors(IElement mangaRaw, MangaModel formattedManga)
         {
             var titleInfo = mangaRaw.QuerySelectorAll("#title table td");
 
             formattedManga.Authors =
-                    titleInfo[1].QuerySelectorAll("a")
-                        .Select(x => new AuthorModel() { Name = x.TextContent, Url = x.GetAttribute("href").Replace(Url, "") });
+                titleInfo[1].QuerySelectorAll("a")
+                    .Select(x => new AuthorModel()
+                    {
+                        Id =
+                            x.GetAttribute("href")
+                                .Replace(Url, "")
+                                .TrimEnd('/')
+                                .Substring(
+                                    x.GetAttribute("href").Replace(Url, "").TrimEnd('/').LastIndexOf('/') + 1),
+                        Name = x.TextContent,
+                        Url = x.GetAttribute("href")
+                    });
         }
         private void GetTranslators(IElement mangaRaw, MangaModel formattedManga)
         {
@@ -225,8 +247,9 @@ namespace ProjectHeleus.MangaService.Parsers
             {
                 chapters.Add(new ChapterModel()
                 {
+                    Id = chaptersWeb[i].GetAttribute("href").Replace(Url, "").Replace("/manga/", ""),
                     Name = chaptersWeb[i].TextContent,
-                    Url = chaptersWeb[i].GetAttribute("href").Replace(Url, ""),
+                    Url = chaptersWeb[i].GetAttribute("href"),
                     Date = datesWeb[i].TextContent
                 });
             }
