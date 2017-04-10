@@ -47,7 +47,7 @@ namespace ProjectHeleus.MangaService.Controllers
             return await GetCatalogContent(catalog, sort, 0);
         }
 
-        [Route("api/[controller]/{catalog}/{sort}/{page}")]
+        [Route("api/[controller]/{catalog}/{sort}/{page:int}")]
         public async Task<IEnumerable<IManga>> GetCatalogContent(string catalog, string sort, int page)
         {
             var sortType = (SortType)Enum.Parse(typeof(SortType), sort, true);

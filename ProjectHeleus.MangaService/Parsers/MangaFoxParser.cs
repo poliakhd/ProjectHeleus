@@ -40,11 +40,11 @@ namespace ProjectHeleus.MangaService.Parsers
 
         #region Get Catalogs Content
 
-        public override async Task<IEnumerable<IManga>> GetUpdateContent(int page)
+        public async Task<IEnumerable<IManga>> GetUpdateContent(int page)
         {
             return await GetListContent(_updateUrl, page);
         }
-        public override async Task<IEnumerable<IManga>> GetRatingContent(int page)
+        public async Task<IEnumerable<IManga>> GetRatingContent(int page)
         {
             return await GetListContent(_ratingUrl, page);
         }
@@ -333,6 +333,32 @@ namespace ProjectHeleus.MangaService.Parsers
             }
 
             formattedManga.Chapters = chapters;
+        }
+
+        #endregion
+
+        #region Get Genres Content
+
+        public override async Task<IEnumerable<IGenre>> GetGenres()
+        {
+            var formattedMangas = new List<MangaShortModel>();
+
+            try
+            {
+                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(_popularUrl))
+                {
+                    var htmlGenres = htmlDocument.QuerySelectorAll("#manga_genres ul li a");
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Cannot get genres content from: {_popularUrl}");
+                _logger.LogError(e.Message);
+
+                throw new HttpRequestException(e.Message);
+            }
+
+            return null;
         }
 
         #endregion
