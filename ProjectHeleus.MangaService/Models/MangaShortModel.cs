@@ -1,8 +1,9 @@
-﻿using System.Collections.Generic;
-using ProjectHeleus.MangaService.Models.Contracts;
-
-namespace ProjectHeleus.MangaService.Models
+﻿namespace ProjectHeleus.MangaService.Models
 {
+    using System.Collections.Generic;
+
+    using Interfaces;
+
     public class MangaShortModel 
         : IManga
     {

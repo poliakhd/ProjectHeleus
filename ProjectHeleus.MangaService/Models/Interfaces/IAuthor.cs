@@ -1,4 +1,4 @@
-﻿namespace ProjectHeleus.MangaService.Models.Contracts
+﻿namespace ProjectHeleus.MangaService.Models.Interfaces
 {
     public interface IAuthor 
         : IIdentifier

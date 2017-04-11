@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using ProjectHeleus.MangaService.Models.Contracts;
-using ProjectHeleus.MangaService.Models.Core;
-
-namespace ProjectHeleus.MangaService.Models
+﻿namespace ProjectHeleus.MangaService.Models
 {
+    using System;
+    using System.Collections.Generic;
+
+    using Core;
+    using Interfaces;
+
     public class MangaModel 
         : IManga
     {

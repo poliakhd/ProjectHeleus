@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ProjectHeleus.MangaService.Parsers;
-using ProjectHeleus.MangaService.Parsers.Contracts;
+using ProjectHeleus.MangaService.Parsers.Interfaces;
 using ProjectHeleus.MangaService.Providers;
 using ProjectHeleus.MangaService.Providers.Contracts;
 using StructureMap;

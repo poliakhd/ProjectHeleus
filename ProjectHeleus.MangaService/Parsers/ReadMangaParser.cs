@@ -1,22 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using AngleSharp;
-using AngleSharp.Dom;
-using AngleSharp.Dom.Html;
-using AngleSharp.Extensions;
-using Microsoft.Extensions.Logging;
-using ProjectHeleus.MangaService.Models;
-using ProjectHeleus.MangaService.Models.Contracts;
-using ProjectHeleus.MangaService.Parsers.Core;
-
-namespace ProjectHeleus.MangaService.Parsers
+﻿namespace ProjectHeleus.MangaService.Parsers
 {
+    using System;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+    using System.Text.RegularExpressions;
+
+    using AngleSharp;
+    using AngleSharp.Dom;
+    using AngleSharp.Dom.Html;
+    using AngleSharp.Extensions;
+
+    using Microsoft.Extensions.Logging;
+
+    using Core;
+    using Models;
+    using Interfaces;
+    using Models.Interfaces;
+
     public class ReadMangaParser 
-        : DefaultParser
+        : IParser
     {
         #region Private Members
 
@@ -33,8 +37,6 @@ namespace ProjectHeleus.MangaService.Parsers
 
         #endregion
 
-        public new string Url { get; set; } = "http://readmanga.me";
-
         public ReadMangaParser(ILogger<ReadMangaParser> logger)
         {
             _logger = logger;
@@ -45,28 +47,32 @@ namespace ProjectHeleus.MangaService.Parsers
             PopularUrl = $"{Url}/list?sortType=rate";
         }
 
-        #region Overrides of IParser
+        #region Implementation of IParser
 
-        #region Get Catalogs Content
+        public string Url { get; set; } = "http://readmanga.me";
 
-        public override async Task<IEnumerable<IManga>> GetUpdateContent(int page)
+        #endregion
+
+        #region Implementation of ICatalogParser
+
+        public async Task<IEnumerable<IManga>> GetAllFromCatalogAsync(SortType sortType, int page)
         {
-            return await GetListContent(UpdateUrl, page);
-        }
-        public override async Task<IEnumerable<IManga>> GetNewContent(int page)
-        {
-            return await GetListContent(NewUrl, page);
-        }
-        public override async Task<IEnumerable<IManga>> GetRatingContent(int page)
-        {
-            return await GetListContent(RatingUrl, page);
-        }
-        public override async Task<IEnumerable<IManga>> GetPopularContent(int page)
-        {
-            return await GetListContent(PopularUrl, page);
+            switch (sortType)
+            {
+                case SortType.New:
+                    return await GetCatalogContentAsync(NewUrl, page);
+                case SortType.Popular:
+                    return await GetCatalogContentAsync(PopularUrl, page);
+                case SortType.Rating:
+                    return await GetCatalogContentAsync(RatingUrl, page);
+                case SortType.Update:
+                    return await GetCatalogContentAsync(UpdateUrl, page);
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
-        private async Task<IEnumerable<IManga>> GetListContent(string url, int page)
+        private async Task<IEnumerable<IManga>> GetCatalogContentAsync(string url, int page)
         {
             #region Build URL
 
@@ -177,9 +183,9 @@ namespace ProjectHeleus.MangaService.Parsers
 
         #endregion
 
-        #region Get Manga Content
+        #region Implementation of IMangaParser
 
-        public override async Task<IManga> GetMangaContent(string url)
+        public async Task<IManga> GetMangaAsync(string url)
         {
             #region Build URL
 
@@ -235,7 +241,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
             return parsedManga;
         }
-        public override async Task<IChapterContent> GetMangaChapterContent(string url)
+        public async Task<IChapterImages> GetMangaChapterAsync(string url)
         {
             #region Build URL
 
@@ -285,7 +291,7 @@ namespace ProjectHeleus.MangaService.Parsers
                         localImagesHrefs.Add($@"{imageAttributes[1].Replace("\'", "")}{imageAttributes[0].Replace("\'", "")}{imageAttributes[2].Replace("\"", "")}");
                     }
 
-                    return new ChapterContentModel() { Images = localImagesHrefs };
+                    return new ChapterImagesModel() { Images = localImagesHrefs };
                 }
             }
             catch (Exception e)
@@ -395,6 +401,13 @@ namespace ProjectHeleus.MangaService.Parsers
         }
 
         #endregion
+
+        #region Implementation of IGenreParser
+
+        public Task<IEnumerable<IGenre>> GetAllGenresAsync()
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
     }

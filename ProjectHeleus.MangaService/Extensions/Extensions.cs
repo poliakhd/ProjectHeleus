@@ -1,7 +1,7 @@
 ﻿using System;
 using ProjectHeleus.MangaService.Core;
 using ProjectHeleus.MangaService.Parsers;
-using ProjectHeleus.MangaService.Parsers.Contracts;
+using ProjectHeleus.MangaService.Parsers.Interfaces;
 using StructureMap;
 
 namespace ProjectHeleus.MangaService.Extensions

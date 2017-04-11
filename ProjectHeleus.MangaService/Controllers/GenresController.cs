@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProjectHeleus.MangaService.Models.Contracts;
+using ProjectHeleus.MangaService.Models.Interfaces;
 
 namespace ProjectHeleus.MangaService.Controllers
 {
@@ -13,7 +13,7 @@ namespace ProjectHeleus.MangaService.Controllers
         [Route("api/[controller]/{catalog}")]
         public async Task<IGenre> GetAllGenres()
         {
-            
+            return null;
         }
     }
 }

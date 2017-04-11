@@ -1,7 +1,7 @@
-﻿using ProjectHeleus.MangaService.Models.Contracts;
-
-namespace ProjectHeleus.MangaService.Models
+﻿namespace ProjectHeleus.MangaService.Models
 {
+    using Interfaces;
+
     public class CatalogModel 
         : ICatalog
     {

@@ -1,12 +1,13 @@
-﻿using System.Threading.Tasks;
-using ProjectHeleus.MangaService.Core;
-using ProjectHeleus.MangaService.Models.Contracts;
-
-namespace ProjectHeleus.MangaService.Providers.Contracts
+﻿namespace ProjectHeleus.MangaService.Providers.Contracts
 {
+    using System.Threading.Tasks;
+
+    using Core;
+    using Models.Interfaces;
+
     public interface IMangaProvider
     {
         Task<IManga> GetMangaContentAsync(CatalogType catalogType, string manga);
-        Task<IChapterContent> GetMangaChapterContentAsync(CatalogType catalogType, string manga);
+        Task<IChapterImages> GetMangaChapterContentAsync(CatalogType catalogType, string manga);
     }
 }

@@ -1,13 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ProjectHeleus.MangaService.Core;
-using ProjectHeleus.MangaService.Models.Contracts;
-
-namespace ProjectHeleus.MangaService.Providers.Contracts
+﻿namespace ProjectHeleus.MangaService.Providers.Contracts
 {
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
+
+    using Core;
+    using Models.Interfaces;
+
     public interface ICatalogsProvider
     {
         Task<IEnumerable<ICatalog>> GetCatalogsAsync();
-        Task<IEnumerable<IManga>> GetCatalogContentAsync(CatalogType catalog, SortType sort, int page);
+
+        Task<IEnumerable<IManga>> GetAllFromCatalogAsync(CatalogType catalog, SortType sort, int page);
     }
 }

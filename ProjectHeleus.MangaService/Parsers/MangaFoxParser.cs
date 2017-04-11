@@ -1,59 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-using AngleSharp;
-using AngleSharp.Dom;
-using Microsoft.Extensions.Logging;
-using ProjectHeleus.MangaService.Models;
-using ProjectHeleus.MangaService.Models.Contracts;
-using ProjectHeleus.MangaService.Parsers.Core;
-
-namespace ProjectHeleus.MangaService.Parsers
+﻿namespace ProjectHeleus.MangaService.Parsers
 {
-    public class MangaFoxParser 
-        : DefaultParser
-    {
-        private readonly ILogger<MangaFoxParser> _logger;
+    using System;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
+    using System.Collections.Generic;
 
+    using AngleSharp;
+    using AngleSharp.Dom;
+
+    using Microsoft.Extensions.Logging;
+
+    using Core;
+    using Models;
+    using Interfaces;
+    using Models.Interfaces;
+
+    public class MangaFoxParser 
+        : IParser
+    {
         #region Private Members
 
-        private string _updateUrl;
-        private string _ratingUrl;
-        private string _popularUrl;
+        private readonly ILogger<MangaFoxParser> _logger;
 
         #endregion
 
-        public new string Url { get; set; } = "http://mangafox.me";
+        #region Protected Members
+
+        protected string UpdateUrl;
+        protected string RatingUrl;
+        protected string PopularUrl;
+
+        #endregion
 
         public MangaFoxParser(ILogger<MangaFoxParser> logger)
         {
             _logger = logger;
 
-            _updateUrl = $"{Url}/directory/?latest";
-            _ratingUrl = $"{Url}/directory/?rating";
-            _popularUrl = $"{Url}/directory/";
+            UpdateUrl = $"{Url}/directory/?latest";
+            RatingUrl = $"{Url}/directory/?rating";
+            PopularUrl = $"{Url}/directory/";
         }
 
-        #region Overrides of IParser
+        #region Implementation of IParser
 
-        #region Get Catalogs Content
+        public string Url { get; set; } = "http://mangafox.me";
 
-        public async Task<IEnumerable<IManga>> GetUpdateContent(int page)
+        #endregion
+
+        #region Implementation of ICatalogParser
+
+        public async Task<IEnumerable<IManga>> GetAllFromCatalogAsync(SortType sortType, int page)
         {
-            return await GetListContent(_updateUrl, page);
-        }
-        public async Task<IEnumerable<IManga>> GetRatingContent(int page)
-        {
-            return await GetListContent(_ratingUrl, page);
-        }
-        public override async Task<IEnumerable<IManga>> GetPopularContent(int page)
-        {
-            return await GetListContent(_popularUrl, page);
+            switch (sortType)
+            {
+                case SortType.Update:
+                    return await GetCatalogContentAsync(UpdateUrl, page);
+                case SortType.Rating:
+                    return await GetCatalogContentAsync(RatingUrl, page);
+                case SortType.Popular:
+                    return await GetCatalogContentAsync(PopularUrl, page);
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
-        private async Task<IEnumerable<MangaShortModel>> GetListContent(string url, int page)
+        private async Task<IEnumerable<MangaShortModel>> GetCatalogContentAsync(string url, int page)
         {
             #region Build URL
 
@@ -114,7 +126,7 @@ namespace ProjectHeleus.MangaService.Parsers
                         #region Views
 
                         if (info.Length > 1)
-                            if(int.TryParse(info[1].TextContent.Split(' ')[1].Replace(".", "").Replace(",", ""), out int views))
+                            if (int.TryParse(info[1].TextContent.Split(' ')[1].Replace(".", "").Replace(",", ""), out int views))
                                 formattedManga.Views = views;
 
                         #endregion
@@ -126,7 +138,7 @@ namespace ProjectHeleus.MangaService.Parsers
                             info[0].TextContent.Split(',')
                                 .Select(x => x.Replace(".", "").Trim())
                                 .Where(y => !string.IsNullOrEmpty(y))
-                                .Select(x => new GenreModel() {Title = x, Url = null});
+                                .Select(x => new GenreModel() { Title = x, Url = null });
 
                         #endregion
 
@@ -147,9 +159,9 @@ namespace ProjectHeleus.MangaService.Parsers
 
         #endregion
 
-        #region Get Manga Content
+        #region Implementation of IMangaParser
 
-        public override async Task<IManga> GetMangaContent(string url)
+        public async Task<IManga> GetMangaAsync(string url)
         {
             #region Build URL
 
@@ -192,7 +204,7 @@ namespace ProjectHeleus.MangaService.Parsers
 
             return formattedManga;
         }
-        public override async Task<IChapterContent> GetMangaChapterContent(string url)
+        public async Task<IChapterImages> GetMangaChapterAsync(string url)
         {
             #region Build URL
 
@@ -229,7 +241,7 @@ namespace ProjectHeleus.MangaService.Parsers
                 throw new HttpRequestException(e.Message);
             }
 
-            return new ChapterContentModel() { Images = imagesLinks };
+            return new ChapterImagesModel() { Images = imagesLinks };
         }
 
         private void GetInformation(IElement htmlManga, MangaModel formattedManga)
@@ -337,22 +349,22 @@ namespace ProjectHeleus.MangaService.Parsers
 
         #endregion
 
-        #region Get Genres Content
+        #region Implementation of IGenreParser
 
-        public override async Task<IEnumerable<IGenre>> GetGenres()
+        public async Task<IEnumerable<IGenre>> GetAllGenresAsync()
         {
             var formattedMangas = new List<MangaShortModel>();
 
             try
             {
-                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(_popularUrl))
+                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(PopularUrl))
                 {
                     var htmlGenres = htmlDocument.QuerySelectorAll("#manga_genres ul li a");
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError($"Cannot get genres content from: {_popularUrl}");
+                _logger.LogError($"Cannot get genres content from: {PopularUrl}");
                 _logger.LogError(e.Message);
 
                 throw new HttpRequestException(e.Message);
@@ -360,8 +372,6 @@ namespace ProjectHeleus.MangaService.Parsers
 
             return null;
         }
-
-        #endregion
 
         #endregion
     }

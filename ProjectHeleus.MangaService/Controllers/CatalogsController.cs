@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ProjectHeleus.MangaService.Core;
 using ProjectHeleus.MangaService.Extensions;
-using ProjectHeleus.MangaService.Models.Contracts;
+using ProjectHeleus.MangaService.Models.Interfaces;
 using ProjectHeleus.MangaService.Providers.Contracts;
 
 namespace ProjectHeleus.MangaService.Controllers
@@ -53,7 +53,7 @@ namespace ProjectHeleus.MangaService.Controllers
             var sortType = (SortType)Enum.Parse(typeof(SortType), sort, true);
             var catalogType = catalog.GetCatalogType();
 
-            return await _catalogsProvider.GetCatalogContentAsync(catalogType, sortType, page);
+            return await _catalogsProvider.GetAllFromCatalogAsync(catalogType, sortType, page);
         }
     }
 }
