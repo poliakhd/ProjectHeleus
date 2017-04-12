@@ -368,7 +368,6 @@
                 throw new HttpRequestException(e.Message);
             }
         }
-
         public async Task<IEnumerable<IManga>> GetAllFromGenreGenreAsync(SortType sortType, string url, int page)
         {
             return await GetCatalogContentAsync(GetGenreContentUrl(sortType, url, page), 0);
