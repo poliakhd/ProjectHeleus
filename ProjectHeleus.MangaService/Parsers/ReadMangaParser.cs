@@ -28,27 +28,9 @@
 
         #endregion
 
-        #region Protected Members
-
-        protected string NewUrl;
-        protected string UpdateUrl;
-        protected string RatingUrl;
-        protected string PopularUrl;
-
-        protected string GenresUrl;
-
-        #endregion
-
         public ReadMangaParser(ILogger<ReadMangaParser> logger)
         {
             _logger = logger;
-
-            NewUrl = $"{Url}/list?sortType=created";
-            UpdateUrl = $"{Url}/list?sortType=updated";
-            RatingUrl = $"{Url}/list?sortType=votes";
-            PopularUrl = $"{Url}/list?sortType=rate";
-
-            GenresUrl = $"{Url}/list/genres/sort_name";
         }
 
         #region Implementation of IParser
@@ -64,13 +46,13 @@
             switch (sortType)
             {
                 case SortType.New:
-                    return await GetCatalogContentAsync(NewUrl, page);
+                    return await GetCatalogContentAsync($"{Url}/list?sortType=created", page);
                 case SortType.Popular:
-                    return await GetCatalogContentAsync(PopularUrl, page);
+                    return await GetCatalogContentAsync($"{Url}/list?sortType=rate", page);
                 case SortType.Rating:
-                    return await GetCatalogContentAsync(RatingUrl, page);
+                    return await GetCatalogContentAsync($"{Url}/list?sortType=votes", page);
                 case SortType.Update:
-                    return await GetCatalogContentAsync(UpdateUrl, page);
+                    return await GetCatalogContentAsync($"{Url}/list?sortType=updated", page);
                 default:
                     throw new NotSupportedException();
             }
@@ -119,7 +101,7 @@
                     if (htmlRatings != null)
                     {
                         formattedManga.Rating = float.Parse(htmlRatings[0]);
-                        formattedManga.RatingLimit = float.Parse(htmlRatings[3]);
+                        formattedManga.RatingLimit = float.Parse(htmlRatings[2]);
                     }
 
                     #endregion
@@ -412,7 +394,7 @@
         {
             try
             {
-                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(GenresUrl))
+                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync($"{Url}/list/genres/sort_name"))
                 {
                     return
                         htmlDocument.QuerySelectorAll(".table.table-hover tbody tr td a")?
@@ -431,11 +413,38 @@
             }
             catch (Exception e)
             {
-                _logger.LogError($"Cannot get genres content from: {GenresUrl}");
+                _logger.LogError($"Cannot get genres content from: {Url}/list/genres/sort_name");
                 _logger.LogError(e.Message);
 
                 throw new HttpRequestException(e.Message);
             }
+        }
+        public async Task<IEnumerable<IManga>> GetAllFromGenreGenreAsync(SortType sortType, string url, int page)
+        {
+            return await GetCatalogContentAsync(GetGenreContentUrl(sortType, url, page), 0);
+        }
+
+        private string GetGenreContentUrl(SortType sortType, string url, int page)
+        {
+            string formattedUrl = $"{Url}/list/genre/{url}{{0}}{{1}}";;
+
+            switch (sortType)
+            {
+                case SortType.New:
+                   formattedUrl = string.Format(formattedUrl, "?sortType=created", page > 0 ? $"{url}&offset={70 * page}&max=70" : "");
+                    break;
+                case SortType.Popular:
+                    formattedUrl = string.Format(formattedUrl, "?sortType=rate", page > 0 ? $"{url}&offset={70 * page}&max=70" : "");
+                    break;
+                case SortType.Rating:
+                    formattedUrl = string.Format(formattedUrl, "?sortType=votes", page > 0 ? $"{url}&offset={70 * page}&max=70" : "");
+                    break;
+                case SortType.Update:
+                    formattedUrl = string.Format(formattedUrl, "?sortType=updated", page > 0 ? $"{url}&offset={70 * page}&max=70" : "");
+                    break;
+            }
+
+            return formattedUrl;
         }
 
         #endregion

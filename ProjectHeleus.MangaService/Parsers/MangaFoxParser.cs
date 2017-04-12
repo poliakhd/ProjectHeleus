@@ -25,21 +25,9 @@
 
         #endregion
 
-        #region Protected Members
-
-        protected string UpdateUrl;
-        protected string RatingUrl;
-        protected string PopularUrl;
-
-        #endregion
-
         public MangaFoxParser(ILogger<MangaFoxParser> logger)
         {
             _logger = logger;
-
-            UpdateUrl = $"{Url}/directory/?latest";
-            RatingUrl = $"{Url}/directory/?rating";
-            PopularUrl = $"{Url}/directory/";
         }
 
         #region Implementation of IParser
@@ -55,11 +43,11 @@
             switch (sortType)
             {
                 case SortType.Update:
-                    return await GetCatalogContentAsync(UpdateUrl, page);
+                    return await GetCatalogContentAsync($"{Url}/directory/?latest", page);
                 case SortType.Rating:
-                    return await GetCatalogContentAsync(RatingUrl, page);
+                    return await GetCatalogContentAsync($"{Url}/directory/?rating", page);
                 case SortType.Popular:
-                    return await GetCatalogContentAsync(PopularUrl, page);
+                    return await GetCatalogContentAsync($"{Url}/directory/", page);
                 default:
                     throw new NotSupportedException();
             }
@@ -355,7 +343,7 @@
         {
             try
             {
-                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(PopularUrl))
+                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync($"{Url}/directory/"))
                 {
                     return
                         htmlDocument.QuerySelectorAll("#genre_filter li > a")?
@@ -374,11 +362,39 @@
             }
             catch (Exception e)
             {
-                _logger.LogError($"Cannot get genres content from: {PopularUrl}");
+                _logger.LogError($"Cannot get genres content from: {Url}/directory/");
                 _logger.LogError(e.Message);
 
                 throw new HttpRequestException(e.Message);
             }
+        }
+
+        public async Task<IEnumerable<IManga>> GetAllFromGenreGenreAsync(SortType sortType, string url, int page)
+        {
+            return await GetCatalogContentAsync(GetGenreContentUrl(sortType, url, page), 0);
+        }
+
+        private string GetGenreContentUrl(SortType sortType, string url, int page)
+        {
+            string formattedUrl = $"{Url}/directory/{url}/";
+
+            if (page > 1)
+                formattedUrl = $"{formattedUrl}{page}.html{{0}}";
+
+            switch (sortType)
+            {
+                case SortType.Popular:
+                    formattedUrl = string.Format(formattedUrl, "");
+                    break;
+                case SortType.Rating:
+                    formattedUrl = string.Format(formattedUrl, "?rating");
+                    break;
+                case SortType.Update:
+                    formattedUrl = string.Format(formattedUrl, "?latest");
+                    break;
+            }
+
+            return formattedUrl;
         }
 
         #endregion

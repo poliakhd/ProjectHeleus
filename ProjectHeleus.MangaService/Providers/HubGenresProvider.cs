@@ -30,9 +30,10 @@
             return await parser.GetAllGenresAsync();
         }
 
-        public Task<IEnumerable<IManga>> GetAllFromGenreAsync(CatalogType catalogType, string url)
+        public async Task<IEnumerable<IManga>> GetAllFromGenreAsync(CatalogType catalogType, SortType sortType, string url, int page)
         {
-            throw new System.NotImplementedException();
+            var parser = _container.GetParser(catalogType);
+            return await parser.GetAllFromGenreGenreAsync(sortType, url, page);
         }
 
         #endregion

@@ -8,6 +8,6 @@
     public interface IGenresProvider
     {
         Task<IEnumerable<IGenre>> GetAllGenresAsync(CatalogType catalogType);
-        Task<IEnumerable<IManga>> GetAllFromGenreAsync(CatalogType catalogType, string url);
+        Task<IEnumerable<IManga>> GetAllFromGenreAsync(CatalogType catalogType, SortType sortType, string url, int page);
     }
 }
