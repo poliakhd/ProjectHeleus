@@ -28,7 +28,7 @@
                                        ItemsSource="{Binding Path=Mangas}"
                                        StretchContentForSingleRow="False">
                 <controls:AdaptiveGridView.ItemTemplate>
-                    <DataTemplate x:DataType="models:Manga">
+                    <DataTemplate x:DataType="models:MangaShortModel">
                         <Border Margin="3"
                                 BorderBrush="Black"
                                 BorderThickness="1">
@@ -62,13 +62,13 @@
                                                Text="{x:Bind Path=Title}"
                                                TextWrapping="WrapWholeWords" />
 
-                                    <TextBlock Grid.Row="1"
+                                    <!--<TextBlock Grid.Row="1"
                                                VerticalAlignment="Bottom"
                                                FontSize="11"
                                                FontWeight="SemiLight"
                                                Foreground="White"
                                                Text="{x:Bind Path=TitleAlt}"
-                                               TextWrapping="WrapWholeWords" />
+                                               TextWrapping="WrapWholeWords" />-->
                                 </Grid>
                             </Grid>
                         </Border>

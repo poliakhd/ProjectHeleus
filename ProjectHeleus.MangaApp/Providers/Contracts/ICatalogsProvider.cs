@@ -8,8 +8,8 @@ namespace ProjectHeleus.MangaApp.Providers.Contracts
     {
         string Url { get; set; }
 
-        Task<IEnumerable<Catalog>> GetAllCatalogs();
-        Task<IEnumerable<Manga>> GetCatalogContent(Catalog catalog);
-        Task<IEnumerable<Manga>> GetCatalogContent(Catalog catalog, int page);
+        Task<IEnumerable<CatalogModel>> GetAllCatalogs();
+        Task<IEnumerable<MangaShortModel>> GetCatalogContent(CatalogModel catalog);
+        Task<IEnumerable<MangaShortModel>> GetCatalogContent(CatalogModel catalog, int page);
     }
 }

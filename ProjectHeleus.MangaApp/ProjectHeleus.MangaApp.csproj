@@ -99,10 +99,14 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Settings.cs" />
-    <Compile Include="Models\Author.cs" />
-    <Compile Include="Models\Catalog.cs" />
-    <Compile Include="Models\Genre.cs" />
-    <Compile Include="Models\Manga.cs" />
+    <Compile Include="Models\AuthorModel.cs" />
+    <Compile Include="Models\CatalogModel.cs" />
+    <Compile Include="Models\ChapterImagesModel.cs" />
+    <Compile Include="Models\ChapterModel.cs" />
+    <Compile Include="Models\GenreModel.cs" />
+    <Compile Include="Models\MangaModel.cs" />
+    <Compile Include="Models\MangaShortModel.cs" />
+    <Compile Include="Models\TranslatorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\Contracts\ICatalogsProvider.cs" />
     <Compile Include="Providers\MangaCatalogsProvider.cs" />
