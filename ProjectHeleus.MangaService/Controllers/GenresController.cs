@@ -1,19 +1,31 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using ProjectHeleus.MangaService.Models.Interfaces;
-
 namespace ProjectHeleus.MangaService.Controllers
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Mvc;
+
+    using Extensions;
+    using Models.Interfaces;
+    using Providers.Interfaces;
+
     public class GenresController : Controller
     {
-        [Route("api/[controller]/{catalog}")]
-        public async Task<IGenre> GetAllGenres()
+        #region Private Members
+
+        private readonly IGenresProvider _genresProvider;
+
+        #endregion
+
+        public GenresController(IGenresProvider genresProvider)
         {
-            return null;
+            _genresProvider = genresProvider;
+        }
+
+        [Route("api/[controller]/{catalog}")]
+        public async Task<IEnumerable<IGenre>> GetAllGenres(string catalog)
+        {
+            return await _genresProvider.GetAllGenresAsync(catalog.GetCatalogType());
         }
     }
 }

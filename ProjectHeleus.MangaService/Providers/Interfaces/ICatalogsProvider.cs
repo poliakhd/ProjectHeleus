@@ -1,8 +1,8 @@
-﻿namespace ProjectHeleus.MangaService.Providers.Contracts
+﻿namespace ProjectHeleus.MangaService.Providers.Interfaces
 {
     using System.Threading.Tasks;
     using System.Collections.Generic;
-
+    
     using Core;
     using Models.Interfaces;
 

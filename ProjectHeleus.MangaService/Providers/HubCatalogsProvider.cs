@@ -9,8 +9,8 @@
 
     using Core;
     using Models;
-    using Contracts;
     using Extensions;
+    using Interfaces;
     using Models.Interfaces;
 
     public class HubCatalogsProvider

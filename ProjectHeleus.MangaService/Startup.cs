@@ -7,11 +7,12 @@ using Microsoft.Extensions.Logging;
 using ProjectHeleus.MangaService.Parsers;
 using ProjectHeleus.MangaService.Parsers.Interfaces;
 using ProjectHeleus.MangaService.Providers;
-using ProjectHeleus.MangaService.Providers.Contracts;
 using StructureMap;
 
 namespace ProjectHeleus.MangaService
 {
+    using Providers.Interfaces;
+
     public class Startup
     {
         public Startup(IHostingEnvironment env)
@@ -37,7 +38,8 @@ namespace ProjectHeleus.MangaService
                 config =>
                 {
                     config.ForSingletonOf<ICatalogsProvider>().Add<HubCatalogsProvider>();
-                    config.ForSingletonOf<IMangaProvider>().Add<HubMangaProvider>();
+                    config.ForSingletonOf<IMangasProvider>().Add<HubMangasProvider>();
+                    config.ForSingletonOf<IGenresProvider>().Add<HubGenresProvider>();
 
                     config.ForSingletonOf<IParser>().Add<MangaFoxParser>().Named(nameof(MangaFoxParser));
                     config.ForSingletonOf<IParser>().Add<ReadMangaParser>().Named(nameof(ReadMangaParser));

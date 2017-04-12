@@ -7,10 +7,10 @@
     using Core;
     using Extensions;
     using Models.Interfaces;
-    using Contracts;
+    using Interfaces;
 
-    public class HubMangaProvider
-        : IMangaProvider
+    public class HubMangasProvider
+        : IMangasProvider
     {
         #region Private Members
 
@@ -18,24 +18,24 @@
 
         #endregion
 
-        public HubMangaProvider(IContainer container)
+        public HubMangasProvider(IContainer container)
         {
             _container = container;
         }
 
         #region Implementation of IMangaProvider
 
-        public async Task<IManga> GetMangaContentAsync(CatalogType catalogType, string manga)
+        public async Task<IManga> GetMangaContentAsync(CatalogType catalogType, string url)
         {
             var parser = _container.GetParser(catalogType);
-            var mangas = await parser.GetMangaAsync(manga);
+            var mangas = await parser.GetMangaAsync(url);
 
             return mangas;
         }
-        public async Task<IChapterImages> GetMangaChapterContentAsync(CatalogType catalogType, string manga)
+        public async Task<IChapterImages> GetMangaChapterContentAsync(CatalogType catalogType, string url)
         {
             var parser = _container.GetParser(catalogType);
-            var images = await parser.GetMangaChapterAsync(manga);
+            var images = await parser.GetMangaChapterAsync(url);
 
             return images;
         }

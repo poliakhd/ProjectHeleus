@@ -1,11 +1,12 @@
-﻿using System;
-using ProjectHeleus.MangaService.Core;
-using ProjectHeleus.MangaService.Parsers;
-using ProjectHeleus.MangaService.Parsers.Interfaces;
-using StructureMap;
-
-namespace ProjectHeleus.MangaService.Extensions
+﻿namespace ProjectHeleus.MangaService.Extensions
 {
+    using System;
+
+    using Core;
+    using Parsers;
+    using Parsers.Interfaces;
+    using StructureMap;
+
     public static class Extensions
     {
         public static IParser GetParser(this IContainer container, CatalogType catalogType)

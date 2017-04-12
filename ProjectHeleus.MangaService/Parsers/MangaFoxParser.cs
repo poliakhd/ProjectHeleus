@@ -353,13 +353,23 @@
 
         public async Task<IEnumerable<IGenre>> GetAllGenresAsync()
         {
-            var formattedMangas = new List<MangaShortModel>();
-
             try
             {
                 using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(PopularUrl))
                 {
-                    var htmlGenres = htmlDocument.QuerySelectorAll("#manga_genres ul li a");
+                    return
+                        htmlDocument.QuerySelectorAll("#genre_filter li > a")?
+                            .Select(
+                                x =>
+                                    new GenreModel()
+                                    {
+                                        Id =
+                                            x.GetAttribute("href")?
+                                                .TrimEnd('/')
+                                                .Substring(x.GetAttribute("href").TrimEnd('/').LastIndexOf("/") + 1),
+                                        Title = x.TextContent,
+                                        Url = $"{Url}{x.GetAttribute("href")}"
+                                    });
                 }
             }
             catch (Exception e)
@@ -369,8 +379,6 @@
 
                 throw new HttpRequestException(e.Message);
             }
-
-            return null;
         }
 
         #endregion

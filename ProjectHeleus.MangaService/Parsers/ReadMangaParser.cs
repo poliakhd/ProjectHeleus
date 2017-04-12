@@ -35,6 +35,8 @@
         protected string RatingUrl;
         protected string PopularUrl;
 
+        protected string GenresUrl;
+
         #endregion
 
         public ReadMangaParser(ILogger<ReadMangaParser> logger)
@@ -45,11 +47,13 @@
             UpdateUrl = $"{Url}/list?sortType=updated";
             RatingUrl = $"{Url}/list?sortType=votes";
             PopularUrl = $"{Url}/list?sortType=rate";
+
+            GenresUrl = $"{Url}/list/genres/sort_name";
         }
 
         #region Implementation of IParser
 
-        public string Url { get; set; } = "http://readmanga.me";
+        public virtual string Url { get; set; } = "http://readmanga.me";
 
         #endregion
 
@@ -404,9 +408,34 @@
 
         #region Implementation of IGenreParser
 
-        public Task<IEnumerable<IGenre>> GetAllGenresAsync()
+        public async Task<IEnumerable<IGenre>> GetAllGenresAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(GenresUrl))
+                {
+                    return
+                        htmlDocument.QuerySelectorAll(".table.table-hover tbody tr td a")?
+                            .Select(
+                                x =>
+                                    new GenreModel()
+                                    {
+                                        Id =
+                                            x.GetAttribute("href")?
+                                                .TrimEnd('/')
+                                                .Substring(x.GetAttribute("href").TrimEnd('/').LastIndexOf("/") + 1),
+                                        Title = x.TextContent,
+                                        Url = $"{Url}{x.GetAttribute("href")}"
+                                    });
+                }
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Cannot get genres content from: {GenresUrl}");
+                _logger.LogError(e.Message);
+
+                throw new HttpRequestException(e.Message);
+            }
         }
 
         #endregion

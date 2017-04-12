@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ProjectHeleus.MangaService.Core;
-using ProjectHeleus.MangaService.Extensions;
-using ProjectHeleus.MangaService.Models.Interfaces;
-using ProjectHeleus.MangaService.Providers.Contracts;
-
-namespace ProjectHeleus.MangaService.Controllers
+﻿namespace ProjectHeleus.MangaService.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using Microsoft.AspNetCore.Mvc;
+
+    using Core;
+    using Extensions;
+    using Models.Interfaces;
+    using Providers.Interfaces;
+
     public class CatalogsController 
         : Controller
     {
