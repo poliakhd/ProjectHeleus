@@ -1,30 +1,66 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Caliburn.Micro;
+﻿using Caliburn.Micro;
 using Microsoft.Toolkit.Uwp;
 using ProjectHeleus.MangaApp.Models;
-using ProjectHeleus.MangaApp.Providers;
 using ProjectHeleus.MangaApp.Providers.Contracts;
 
 namespace ProjectHeleus.MangaApp.ViewModels
 {
-    using System;
+    using Core.Collections;
+    using SharedLibrary.Extenstions;
 
     public class CatalogsPageViewModel 
         : Screen
     {
+        #region Private Members
+
         private readonly ICatalogsProvider _catalogsProvider;
-        private IncrementalLoadingCollection<GeneratingDataSource, MangaShortModel> _mangas;
+        private BindableCollection<CatalogModel> _catalogs;
+        private bool _isSourcesPaneOpen;
+        private CatalogModel _catalog;
+        private IncrementalLoadingCollection<MangaIncrementalCollection, MangaShortModel> _mangas;
 
+        #endregion
 
-        public IncrementalLoadingCollection<GeneratingDataSource, MangaShortModel> Mangas
+        public bool IsSourcesPaneOpen
+        {
+            get { return _isSourcesPaneOpen; }
+            set
+            {
+                _isSourcesPaneOpen = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public CatalogModel Catalog
+        {
+            get { return _catalog; }
+            set
+            {
+                _catalog = value;
+                _mangas = new IncrementalLoadingCollection<MangaIncrementalCollection, MangaShortModel>(new MangaIncrementalCollection(value, _catalogsProvider));
+
+                NotifyOfPropertyChange();
+                NotifyOfPropertyChange(nameof(Mangas));
+
+                DoCatalogsPaneBehavior();
+            }
+        }
+
+        public BindableCollection<CatalogModel> Catalogs
+        {
+            get { return _catalogs; }
+            set
+            {
+                _catalogs = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        public IncrementalLoadingCollection<MangaIncrementalCollection, MangaShortModel> Mangas
         {
             get { return _mangas; }
             set
             {
-                _mangas = value;
+                _mangas = value; 
                 NotifyOfPropertyChange();
             }
         }
@@ -32,36 +68,22 @@ namespace ProjectHeleus.MangaApp.ViewModels
         public CatalogsPageViewModel(ICatalogsProvider catalogsProvider)
         {
             _catalogsProvider = catalogsProvider;
-
             Initialize();
         }
 
         private async void Initialize()
         {
-            Mangas = new IncrementalLoadingCollection<GeneratingDataSource, MangaShortModel>(new GeneratingDataSource(_catalogsProvider), 70);
+            Catalogs = (await _catalogsProvider.GetAllCatalogs()).ToBindableCollection();
         }
-    }
 
-    public class GeneratingDataSource : IIncrementalSource<MangaShortModel>
-    {
-        private readonly ICatalogsProvider _catalogsProvider;
-
-        public GeneratingDataSource(ICatalogsProvider catalogsProvider)
+        private void MangaSources()
         {
-            _catalogsProvider = catalogsProvider;
+            DoCatalogsPaneBehavior();
         }
 
-        #region Implementation of IIncrementalSource<Manga>
-
-        public async Task<IEnumerable<MangaShortModel>> GetPagedItemsAsync(int pageIndex, int pageSize,
-            CancellationToken cancellationToken = new CancellationToken())
-        {            
-            var catalogs = await _catalogsProvider.GetAllCatalogs();
-            var catalog = catalogs.FirstOrDefault(x => x.Id == "readmanga.me");
-
-            return await Task.FromResult(await _catalogsProvider.GetCatalogContent(catalog, pageIndex));
+        private void DoCatalogsPaneBehavior()
+        {
+            IsSourcesPaneOpen = !IsSourcesPaneOpen;
         }
-
-        #endregion
     }
 }

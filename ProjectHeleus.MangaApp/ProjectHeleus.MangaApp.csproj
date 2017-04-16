@@ -98,6 +98,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Core\Collections\MangaIncrementalCollection.cs" />
+    <Compile Include="Core\Extensions.cs" />
     <Compile Include="Core\Settings.cs" />
     <Compile Include="Models\AuthorModel.cs" />
     <Compile Include="Models\CatalogModel.cs" />
@@ -146,7 +148,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <SDKReference Include="Syncfusion Controls for UWP XAML, Version=15.1.0.41">
+      <Name>Syncfusion Controls for UWP XAML</Name>
+    </SDKReference>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProjectHeleus.MangaLibrary\ProjectHeleus.MangaLibrary.csproj">
       <Project>{6ccdef0f-14b8-4c6b-a2e2-181050b4acc2}</Project>

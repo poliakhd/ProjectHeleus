@@ -153,4 +153,7 @@
   <data name="SettingsHeader.Text" xml:space="preserve">
     <value>Settings</value>
   </data>
+  <data name="SourcesBarButton.Label" xml:space="preserve">
+    <value>Catalogs</value>
+  </data>
 </root>

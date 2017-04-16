@@ -4,14 +4,18 @@
       xmlns:animations="using:Microsoft.Toolkit.Uwp.UI.Animations"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:input="using:Syncfusion.UI.Xaml.Controls.Input"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:micro="using:Caliburn.Micro"
       xmlns:models="using:ProjectHeleus.MangaApp.Models"
+      xmlns:notification="using:Syncfusion.UI.Xaml.Controls.Notification"
       mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="48" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0"
@@ -21,72 +25,121 @@
             <TextBlock VerticalAlignment="Center" Foreground="Black" />
         </Grid>
 
-        <Grid Grid.Row="1">
-            <controls:AdaptiveGridView x:Name="MangaArticles"
-                                       Margin="5"
-                                       animations:ReorderGridAnimation.Duration="300"
-                                       ItemsSource="{Binding Path=Mangas}"
-                                       StretchContentForSingleRow="False">
-                <controls:AdaptiveGridView.ItemTemplate>
-                    <DataTemplate x:DataType="models:MangaShortModel">
-                        <Border Margin="3"
-                                BorderBrush="Black"
-                                BorderThickness="1">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+        <SplitView Grid.Row="1"
+                   CompactPaneLength="0"
+                   DisplayMode="Overlay"
+                   IsPaneOpen="{Binding Path=IsSourcesPaneOpen}"
+                   OpenPaneLength="240"
+                   PanePlacement="Right">
+            <SplitView.Pane>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                                <controls:ImageEx Grid.Row="0"
-                                                  Grid.RowSpan="3"
-                                                  IsCacheEnabled="True"
-                                                  Source="{x:Bind Path=Cover}"
-                                                  Stretch="UniformToFill" />
+                    <TextBlock HorizontalAlignment="Center"
+                               FontSize="24"
+                               FontWeight="SemiLight"
+                               Foreground="Black"
+                               Text="Catalogs" />
 
-                                <Grid Grid.Row="2" Padding="1">
-                                    <Grid.Background>
-                                        <SolidColorBrush Opacity="0.6" Color="Black" />
-                                    </Grid.Background>
+                    <ListView Grid.Row="1"
+                              ItemsSource="{Binding Path=Catalogs, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding Path=Catalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="models:CatalogModel">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
 
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto" />
-                                        <RowDefinition Height="Auto" />
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock VerticalAlignment="Bottom"
-                                               FontSize="13"
-                                               FontWeight="SemiBold"
-                                               Foreground="White"
-                                               Text="{x:Bind Path=Title}"
-                                               TextWrapping="WrapWholeWords" />
-
-                                    <!--<TextBlock Grid.Row="1"
-                                               VerticalAlignment="Bottom"
-                                               FontSize="11"
+                                    <controls:ImageEx Width="25"
+                                                      Height="25"
+                                                      Margin="0,0,5,0"
+                                                      Source="{x:Bind Path=Icon}" />
+                                    <TextBlock Grid.Column="1"
+                                               VerticalAlignment="Center"
+                                               FontSize="14"
                                                FontWeight="SemiLight"
-                                               Foreground="White"
-                                               Text="{x:Bind Path=TitleAlt}"
-                                               TextWrapping="WrapWholeWords" />-->
+                                               Text="{x:Bind Path=Title}" />
                                 </Grid>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </controls:AdaptiveGridView.ItemTemplate>
-            </controls:AdaptiveGridView>
-        </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
 
-        <controls:Loading Grid.Row="1"
-                          IsLoading="True"
-                          IsTemplateFocusTarget="True">
-            <StackPanel Padding="12" Orientation="Horizontal">
-                <ProgressRing Margin="0,0,12,0"
-                              Foreground="Black"
-                              IsActive="True" />
-                <TextBlock VerticalAlignment="Center" Text="Loading control with wait ring" />
-            </StackPanel>
-        </controls:Loading>
+            </SplitView.Pane>
+            <SplitView.Content>
+                <Grid>
+                    <!--<notification:SfBusyIndicator IsBusy="True" />-->
+                    <controls:AdaptiveGridView x:Name="MangaArticles"
+                                               Margin="5"
+                                               animations:ReorderGridAnimation.Duration="500"
+                                               ItemsSource="{Binding Path=Mangas}"
+                                               StretchContentForSingleRow="False">
+                        <controls:AdaptiveGridView.ItemTemplate>
+                            <DataTemplate x:DataType="models:MangaShortModel">
+                                <Border Margin="3">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <controls:ImageEx Grid.Row="0"
+                                                          IsCacheEnabled="True"
+                                                          Source="{x:Bind Path=Cover}"
+                                                          Stretch="UniformToFill" />
+
+                                        <Grid Grid.Row="1" Padding="1">
+
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+
+                                            <StackPanel Orientation="Horizontal" />
+
+
+                                            <TextBlock Grid.Row="1"
+                                                       HorizontalAlignment="Left"
+                                                       FontSize="14"
+                                                       FontWeight="SemiLight"
+                                                       Text="{x:Bind Path=Title}"
+                                                       TextWrapping="WrapWholeWords" />
+
+
+                                            <input:SfRating Grid.Row="0"
+                                                            HorizontalAlignment="Left"
+                                                            IsReadOnly="True"
+                                                            ItemsCount="{x:Bind RatingMax}"
+                                                            Value="{x:Bind Rating}">
+
+                                                <input:SfRating.Resources>
+                                                    <Style TargetType="input:SfRatingItem">
+                                                        <Setter Property="RatedFill" Value="Gold" />
+                                                        <Setter Property="Width" Value="13" />
+                                                    </Style>
+                                                </input:SfRating.Resources>
+                                            </input:SfRating>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </controls:AdaptiveGridView.ItemTemplate>
+                    </controls:AdaptiveGridView>
+                </Grid>
+            </SplitView.Content>
+        </SplitView>
+
+        <CommandBar Grid.Row="2">
+            <AppBarToggleButton x:Uid="SourcesBarButton"
+                                HorizontalAlignment="Right"
+                                micro:Message.Attach="[Event Click] = [MangaSources()]"
+                                Icon="List" />
+        </CommandBar>
 
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="WindowStates">
@@ -95,8 +148,8 @@
                         <AdaptiveTrigger MinWindowWidth="1440" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MangaArticles.DesiredWidth" Value="250" />
-                        <Setter Target="MangaArticles.ItemHeight" Value="300" />
+                        <Setter Target="MangaArticles.DesiredWidth" Value="200" />
+                        <Setter Target="MangaArticles.ItemHeight" Value="275" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="WideState">
@@ -104,7 +157,7 @@
                         <AdaptiveTrigger MinWindowWidth="720" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MangaArticles.DesiredWidth" Value="200" />
+                        <Setter Target="MangaArticles.DesiredWidth" Value="175" />
                         <Setter Target="MangaArticles.ItemHeight" Value="250" />
                     </VisualState.Setters>
                 </VisualState>
@@ -114,7 +167,7 @@
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="MangaArticles.DesiredWidth" Value="150" />
-                        <Setter Target="MangaArticles.ItemHeight" Value="200" />
+                        <Setter Target="MangaArticles.ItemHeight" Value="225" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

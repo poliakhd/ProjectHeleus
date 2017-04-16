@@ -25,6 +25,7 @@ namespace ProjectHeleus.MangaApp.Providers
         {
             return await GetCatalogContent(catalog, 0);
         }
+
         public async Task<IEnumerable<MangaShortModel>> GetCatalogContent(CatalogModel catalog, int page)
         {
             using (var client = new HttpClient())
