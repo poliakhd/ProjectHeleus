@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectHeleus.MangaApp", "ProjectHeleus.MangaApp\ProjectHeleus.MangaApp.csproj", "{4935FC1F-BC13-4BAE-922C-9B5F35073C2E}"
 EndProject
@@ -14,10 +14,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{BE502AE3-996F-4A11-9951-3ED39877FFD2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectHeleus.MangaService", "ProjectHeleus.MangaService\ProjectHeleus.MangaService.csproj", "{C0C80714-8189-41C5-BEDA-A2A3B20C1691}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4E062586-A321-475F-B544-C1F40DA1DBEA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectHeleus.MangaService.Tests", "ProjectHeleus.MangaService.Tests\ProjectHeleus.MangaService.Tests.csproj", "{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,22 +95,6 @@ Global
 		{C0C80714-8189-41C5-BEDA-A2A3B20C1691}.Release|x64.Build.0 = Release|Any CPU
 		{C0C80714-8189-41C5-BEDA-A2A3B20C1691}.Release|x86.ActiveCfg = Release|Any CPU
 		{C0C80714-8189-41C5-BEDA-A2A3B20C1691}.Release|x86.Build.0 = Release|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Debug|ARM.Build.0 = Debug|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Debug|x64.Build.0 = Debug|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Debug|x86.Build.0 = Debug|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Release|ARM.ActiveCfg = Release|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Release|ARM.Build.0 = Release|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Release|x64.ActiveCfg = Release|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Release|x64.Build.0 = Release|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Release|x86.ActiveCfg = Release|Any CPU
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +102,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6CCDEF0F-14B8-4C6B-A2E2-181050B4ACC2} = {BE502AE3-996F-4A11-9951-3ED39877FFD2}
 		{5752698F-902B-422E-9B28-DB2BD3BE3CDA} = {D49EB7A5-853D-4F66-8D92-4F198352C7DF}
-		{D493EB31-45A5-4C9D-B64B-6AD992FB56FC} = {4E062586-A321-475F-B544-C1F40DA1DBEA}
 	EndGlobalSection
 EndGlobal
