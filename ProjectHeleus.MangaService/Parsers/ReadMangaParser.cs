@@ -43,18 +43,26 @@
 
         public async Task<IEnumerable<IManga>> GetAllFromCatalogAsync(SortType sortType, int page)
         {
-            switch (sortType)
+            try
             {
-                case SortType.New:
-                    return await GetCatalogContentAsync($"{Url}/list?sortType=created", page);
-                case SortType.Popular:
-                    return await GetCatalogContentAsync($"{Url}/list?sortType=rate", page);
-                case SortType.Rating:
-                    return await GetCatalogContentAsync($"{Url}/list?sortType=votes", page);
-                case SortType.Update:
-                    return await GetCatalogContentAsync($"{Url}/list?sortType=updated", page);
-                default:
-                    throw new NotSupportedException();
+                switch (sortType)
+                {
+                    case SortType.New:
+                        return await GetCatalogContentAsync($"{Url}/list?sortType=created", page);
+                    case SortType.Popular:
+                        return await GetCatalogContentAsync($"{Url}/list?sortType=rate", page);
+                    case SortType.Rating:
+                        return await GetCatalogContentAsync($"{Url}/list?sortType=votes", page);
+                    case SortType.Update:
+                        return await GetCatalogContentAsync($"{Url}/list?sortType=updated", page);
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
         }
 
@@ -163,6 +171,11 @@
 
                 throw new HttpRequestException(e.Message);
             }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
 
             return formattedMangas;
         }
@@ -223,6 +236,11 @@
                 _logger.LogError(e.Message);
 
                 throw new HttpRequestException(e.Message);
+            }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
 
             return parsedManga;
@@ -286,6 +304,11 @@
                 _logger.LogError(e.Message);
 
                 throw new HttpRequestException(e.Message);
+            }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
         }
 

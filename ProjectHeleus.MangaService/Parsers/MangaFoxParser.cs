@@ -40,16 +40,24 @@
 
         public async Task<IEnumerable<IManga>> GetAllFromCatalogAsync(SortType sortType, int page)
         {
-            switch (sortType)
+            try
             {
-                case SortType.Update:
-                    return await GetCatalogContentAsync($"{Url}/directory/?latest", page);
-                case SortType.Rating:
-                    return await GetCatalogContentAsync($"{Url}/directory/?rating", page);
-                case SortType.Popular:
-                    return await GetCatalogContentAsync($"{Url}/directory/", page);
-                default:
-                    throw new NotSupportedException();
+                switch (sortType)
+                {
+                    case SortType.Update:
+                        return await GetCatalogContentAsync($"{Url}/directory/?latest", page);
+                    case SortType.Rating:
+                        return await GetCatalogContentAsync($"{Url}/directory/?rating", page);
+                    case SortType.Popular:
+                        return await GetCatalogContentAsync($"{Url}/directory/", page);
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
         }
 
@@ -66,7 +74,9 @@
 
             try
             {
-                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(url))
+                using (
+                    var htmlDocument =
+                        await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(url))
                 {
                     var htmlMangas = htmlDocument.QuerySelectorAll("#mangalist .list li");
 
@@ -114,7 +124,8 @@
                         #region Views
 
                         if (info.Length > 1)
-                            if (int.TryParse(info[1].TextContent.Split(' ')[1].Replace(".", "").Replace(",", ""), out int views))
+                            if (int.TryParse(info[1].TextContent.Split(' ')[1].Replace(".", "").Replace(",", ""),
+                                out int views))
                                 formattedManga.Views = views;
 
                         #endregion
@@ -126,7 +137,7 @@
                             info[0].TextContent.Split(',')
                                 .Select(x => x.Replace(".", "").Trim())
                                 .Where(y => !string.IsNullOrEmpty(y))
-                                .Select(x => new GenreModel() { Title = x, Url = null });
+                                .Select(x => new GenreModel() {Title = x, Url = null});
 
                         #endregion
 
@@ -189,6 +200,11 @@
 
                 throw new HttpRequestException(e.Message);
             }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
 
             return formattedManga;
         }
@@ -227,6 +243,11 @@
                 _logger.LogError(e.Message);
 
                 throw new HttpRequestException(e.Message);
+            }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
 
             return new ChapterImagesModel() { Images = imagesLinks };
@@ -367,10 +388,23 @@
 
                 throw new HttpRequestException(e.Message);
             }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
         }
         public async Task<IEnumerable<IManga>> GetAllFromGenreGenreAsync(SortType sortType, string url, int page)
         {
-            return await GetCatalogContentAsync(GetGenreContentUrl(sortType, url, page), 0);
+            try
+            {
+                return await GetCatalogContentAsync(GetGenreContentUrl(sortType, url, page), 0);
+            }
+            finally
+            {
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
         }
 
         private string GetGenreContentUrl(SortType sortType, string url, int page)
