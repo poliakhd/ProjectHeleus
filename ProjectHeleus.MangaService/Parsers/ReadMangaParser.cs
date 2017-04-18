@@ -95,7 +95,7 @@
                     var formattedManga = new MangaShortModel
                     {
                         Id = htmlManga.QuerySelector(".img a")?.GetAttribute("href").Replace("/", ""),
-                        Title = htmlManga.QuerySelector("h3")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
+                        Title = htmlManga.QuerySelector("h4")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
                         Url = $@"{Url}{htmlManga.QuerySelector(".img a")?.GetAttribute("href")}",
                         Cover = htmlManga.QuerySelector(".img a img")?.GetAttribute("src")
                     };

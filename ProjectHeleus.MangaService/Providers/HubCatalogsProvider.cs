@@ -35,7 +35,7 @@
         {
             var catalogs = new[]
             {
-                new CatalogModel {Id = "mangafox.me", Url = "http://mangafox.me/", Title = "mangafox", Icon = "http://mangafox.me/apple-touch-icon.png"},
+                new CatalogModel {Id = "mangafox.me", Url = "http://mangafox.me/", Title = "Mangafox", Icon = "http://mangafox.me/apple-touch-icon.png"},
                 new CatalogModel {Id = "readmanga.me", Url = "http://readmanga.me/", Title = "ReadManga", Icon = "http://res.readmanga.me/static/apple-touch-icon-a401a05b79c2dad93553ebc3523ad5fe.png"},
                 new CatalogModel {Id = "mintmanga.com", Url = "http://mintmanga.com/", Title = "MintManga", Icon = "http://res.mintmanga.com/static/apple-touch-icon-a401a05b79c2dad93553ebc3523ad5fe.png"}
             };
