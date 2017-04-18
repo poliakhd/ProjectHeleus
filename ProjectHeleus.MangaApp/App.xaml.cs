@@ -52,26 +52,12 @@ namespace ProjectHeleus.MangaApp
                 .Singleton<IMenuProvider, ShellMenuProvider>()
                 .Singleton<ICatalogsProvider, MangaCatalogsProvider>()
                 .Singleton<ShellPageViewModel>()
-                .PerRequest<MangaCollection>()
-                .PerRequest<SettingsPageViewModel>()
-                .PerRequest<CatalogsPageViewModel>();
+                .Singleton<CatalogsPageViewModel>()
+                .Singleton<SettingsPageViewModel>()
+                .PerRequest<MangaCollection>();
 
-            ConfigureSettings();
             ConfigureNavigation();
         }
-
-        private void ConfigureSettings()
-        {
-            if(Windows.Storage.ApplicationData.Current.LocalSettings.Values["IsDarkThemeEnabled"] is null)
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values["IsDarkThemeEnabled"] = false;
-
-            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneBackgroundColor"] is null)
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneBackgroundColor"] = ColorHelper.ToHex(Colors.White);
-
-            if (Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneForegroundColor"] is null)
-                Windows.Storage.ApplicationData.Current.LocalSettings.Values["PaneForegroundColor"] = ColorHelper.ToHex(Colors.Black);
-        }
-
         private static void ConfigureNavigation()
         {
             var navigation = SystemNavigationManager.GetForCurrentView();
@@ -92,11 +78,6 @@ namespace ProjectHeleus.MangaApp
                 return;
 
             DisplayRootViewFor<ShellPageViewModel>();
-        }
-
-        protected override void OnSuspending(object sender, SuspendingEventArgs e)
-        {
-            base.OnSuspending(sender, e);
         }
 
         protected override object GetInstance(Type service, string key)
