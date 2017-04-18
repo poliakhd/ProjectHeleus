@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using Windows.ApplicationModel.Resources;
-using Windows.UI.Xaml.Controls;
-using ProjectHeleus.MangaApp.ViewModels;
-using ProjectHeleus.SharedLibrary.Models;
-using ProjectHeleus.SharedLibrary.Providers.Menu.Contracts;
-
-namespace ProjectHeleus.MangaApp.Providers.Menus
+﻿namespace ProjectHeleus.MangaApp.Providers
 {
+    using System.Collections.Generic;
+    using Windows.ApplicationModel.Resources;
+    using Windows.UI.Xaml.Controls;
+    using SharedLibrary.Models;
+    using SharedLibrary.Providers.Menu.Contracts;
+    using ViewModels;
+
     public class ShellMenuProvider : IMenuProvider
     {
         private readonly ResourceLoader _resourceLoader = new ResourceLoader();

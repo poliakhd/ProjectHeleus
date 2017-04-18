@@ -12,7 +12,7 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -98,21 +98,9 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Core\Collections\MangaIncrementalCollection.cs" />
-    <Compile Include="Core\Extensions.cs" />
     <Compile Include="Core\Settings.cs" />
-    <Compile Include="Models\AuthorModel.cs" />
-    <Compile Include="Models\CatalogModel.cs" />
-    <Compile Include="Models\ChapterImagesModel.cs" />
-    <Compile Include="Models\ChapterModel.cs" />
-    <Compile Include="Models\GenreModel.cs" />
-    <Compile Include="Models\MangaModel.cs" />
-    <Compile Include="Models\MangaShortModel.cs" />
-    <Compile Include="Models\TranslatorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Providers\Contracts\ICatalogsProvider.cs" />
-    <Compile Include="Providers\MangaCatalogsProvider.cs" />
-    <Compile Include="Providers\Menus\ShellMenuProvider.cs" />
+    <Compile Include="Providers\ShellMenuProvider.cs" />
     <Compile Include="ViewModels\CatalogsPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="ViewModels\ShellPageViewModel.cs" />

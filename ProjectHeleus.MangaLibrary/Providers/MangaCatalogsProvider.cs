@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Windows.Web.Http;
-using Newtonsoft.Json;
-using ProjectHeleus.MangaApp.Models;
-using ProjectHeleus.MangaApp.Providers.Contracts;
-
-namespace ProjectHeleus.MangaApp.Providers
+﻿namespace ProjectHeleus.MangaLibrary.Providers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Windows.Web.Http;
+    using Interfaces;
+    using Models;
+    using Newtonsoft.Json;
+
     public class MangaCatalogsProvider
         : ICatalogsProvider
     {

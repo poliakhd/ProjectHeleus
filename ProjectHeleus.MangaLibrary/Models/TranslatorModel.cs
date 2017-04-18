@@ -1,10 +1,9 @@
-﻿namespace ProjectHeleus.MangaApp.Models
+﻿namespace ProjectHeleus.MangaLibrary.Models
 {
-    public class ChapterModel
+    public class TranslatorModel 
     {
         public string Id { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }
-        public string Date { get; set; }
     }
 }

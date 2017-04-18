@@ -1,9 +1,9 @@
-﻿using Windows.UI;
-using Caliburn.Micro;
-using ColorHelper = Microsoft.Toolkit.Uwp.ColorHelper;
-
-namespace ProjectHeleus.MangaApp.Core
+﻿namespace ProjectHeleus.MangaApp.Core
 {
+    using Windows.UI;
+    using Caliburn.Micro;
+    using ColorHelper = Microsoft.Toolkit.Uwp.ColorHelper;
+
     public enum AppTheme
     {
         Light,

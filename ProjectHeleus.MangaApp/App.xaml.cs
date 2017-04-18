@@ -7,9 +7,6 @@ using Windows.ApplicationModel.Store;
 using Windows.UI;
 using Windows.UI.Core;
 using Caliburn.Micro;
-using ProjectHeleus.MangaApp.Providers;
-using ProjectHeleus.MangaApp.Providers.Contracts;
-using ProjectHeleus.MangaApp.Providers.Menus;
 using ProjectHeleus.MangaApp.ViewModels;
 using ProjectHeleus.SharedLibrary.Providers.AppPurchase;
 using ProjectHeleus.SharedLibrary.Providers.AppPurchase.Contracts;
@@ -18,6 +15,11 @@ using ColorHelper = Microsoft.Toolkit.Uwp.ColorHelper;
 
 namespace ProjectHeleus.MangaApp
 {
+    using MangaLibrary.Core.Collections;
+    using MangaLibrary.Providers;
+    using MangaLibrary.Providers.Interfaces;
+    using Providers;
+
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.
     /// </summary>
@@ -50,6 +52,7 @@ namespace ProjectHeleus.MangaApp
                 .Singleton<IMenuProvider, ShellMenuProvider>()
                 .Singleton<ICatalogsProvider, MangaCatalogsProvider>()
                 .Singleton<ShellPageViewModel>()
+                .PerRequest<MangaCollection>()
                 .PerRequest<SettingsPageViewModel>()
                 .PerRequest<CatalogsPageViewModel>();
 

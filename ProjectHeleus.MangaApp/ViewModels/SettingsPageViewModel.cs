@@ -1,10 +1,12 @@
 ﻿using Windows.UI;
 using Windows.UI.Xaml;
 using Caliburn.Micro;
-using ProjectHeleus.MangaApp.Core;
 
 namespace ProjectHeleus.MangaApp.ViewModels
 {
+    using Core;
+    using MangaLibrary.Core;
+
     public class SettingsPageViewModel
         : Screen
     {

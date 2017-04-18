@@ -1,12 +1,13 @@
 ﻿<micro:CaliburnApplication x:Class="ProjectHeleus.MangaApp.App"
                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                           xmlns:core="using:ProjectHeleus.MangaApp.Core"
+                           xmlns:core="using:ProjectHeleus.MangaLibrary.Core"
+                           xmlns:core1="using:ProjectHeleus.MangaApp.Core"
                            xmlns:micro="using:Caliburn.Micro"
                            RequestedTheme="Light">
     <micro:CaliburnApplication.Resources>
         <ResourceDictionary>
-            <core:Settings x:Key="Settings" />
+            <core1:Settings x:Key="Settings" />
         </ResourceDictionary>
     </micro:CaliburnApplication.Resources>
 </micro:CaliburnApplication>

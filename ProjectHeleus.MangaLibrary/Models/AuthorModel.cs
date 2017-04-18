@@ -1,4 +1,4 @@
-﻿namespace ProjectHeleus.MangaApp.Models
+﻿namespace ProjectHeleus.MangaLibrary.Models
 {
     public class AuthorModel
     {

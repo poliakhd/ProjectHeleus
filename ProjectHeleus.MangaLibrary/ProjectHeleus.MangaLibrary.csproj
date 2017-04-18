@@ -107,8 +107,28 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Collections\MangaCollection.cs" />
+    <Compile Include="Core\Extensions.cs" />
+    <Compile Include="Core\Messages\BeginIncrementalLoading.cs" />
+    <Compile Include="Core\Messages\EndIncrementalLoading.cs" />
+    <Compile Include="Models\AuthorModel.cs" />
+    <Compile Include="Models\CatalogModel.cs" />
+    <Compile Include="Models\ChapterImagesModel.cs" />
+    <Compile Include="Models\ChapterModel.cs" />
+    <Compile Include="Models\GenreModel.cs" />
+    <Compile Include="Models\MangaModel.cs" />
+    <Compile Include="Models\MangaShortModel.cs" />
+    <Compile Include="Models\TranslatorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\Interfaces\ICatalogsProvider.cs" />
+    <Compile Include="Providers\MangaCatalogsProvider.cs" />
     <EmbeddedResource Include="Properties\ProjectHeleus.MangaLibrary.rd.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ProjectHeleus.SharedLibrary\ProjectHeleus.SharedLibrary.csproj">
+      <Project>{5752698f-902b-422e-9b28-db2bd3be3cda}</Project>
+      <Name>ProjectHeleus.SharedLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

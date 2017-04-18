@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using ProjectHeleus.MangaApp.Models;
-
-namespace ProjectHeleus.MangaApp.Providers.Contracts
+﻿namespace ProjectHeleus.MangaLibrary.Providers.Interfaces
 {
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using Models;
+
     public interface ICatalogsProvider
     {
         string Url { get; set; }
