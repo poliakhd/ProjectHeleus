@@ -3,6 +3,8 @@ using Microsoft.Toolkit.Uwp;
 
 namespace ProjectHeleus.MangaApp.ViewModels
 {
+    using System;
+    using Windows.UI.Xaml;
     using MangaLibrary.Core.Collections;
     using MangaLibrary.Core.Messages;
     using MangaLibrary.Models;
@@ -122,5 +124,10 @@ namespace ProjectHeleus.MangaApp.ViewModels
         }
 
         #endregion
+
+        private void SizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
+        {
+            //
+        }
     }
 }

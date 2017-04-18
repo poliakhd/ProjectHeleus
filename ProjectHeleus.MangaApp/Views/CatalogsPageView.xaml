@@ -95,6 +95,7 @@
                     <controls:AdaptiveGridView x:Name="MangaArticles"
                                                Margin="5"
                                                animations:ReorderGridAnimation.Duration="500"
+                                               micro:Message.Attach="[Event SizeChanged] = [SizeChanged($source, $eventArgs)]"
                                                ItemsSource="{Binding Path=Mangas}"
                                                StretchContentForSingleRow="False">
                         <controls:AdaptiveGridView.ItemTemplate>
