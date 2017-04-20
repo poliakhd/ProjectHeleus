@@ -52,8 +52,8 @@ namespace ProjectHeleus.MangaApp
                 .Singleton<IMenuProvider, ShellMenuProvider>()
                 .Singleton<ICatalogsProvider, MangaCatalogsProvider>()
                 .Singleton<ShellPageViewModel>()
-                .Singleton<CatalogsPageViewModel>()
                 .Singleton<SettingsPageViewModel>()
+                .PerRequest<CatalogsPageViewModel>()
                 .PerRequest<MangaCollection>();
 
             ConfigureNavigation();

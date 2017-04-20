@@ -23,6 +23,7 @@ namespace ProjectHeleus.MangaApp.ViewModels
         private CatalogModel _catalog;
         private IncrementalLoadingCollection<MangaCollection, MangaShortModel> _mangas;
         private bool _isBusy;
+        private bool _isCatalogsBusy;
 
         #endregion
 
@@ -83,8 +84,12 @@ namespace ProjectHeleus.MangaApp.ViewModels
 
         private async void Initialize()
         {
+            IsCatalogsBusy = true;
+
             _eventAggregator.Subscribe(this);
-            Catalogs = (await _catalogsProvider.GetAllCatalogs()).ToBindableCollection();
+            Catalogs = await _catalogsProvider.GetAllCatalogs();
+
+            IsCatalogsBusy = false;
         }
 
         private void MangaSources()
@@ -103,6 +108,15 @@ namespace ProjectHeleus.MangaApp.ViewModels
             set
             {
                 _isBusy = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        public bool IsCatalogsBusy
+        {
+            get { return _isCatalogsBusy; }
+            set
+            {
+                _isCatalogsBusy = value;
                 NotifyOfPropertyChange();
             }
         }

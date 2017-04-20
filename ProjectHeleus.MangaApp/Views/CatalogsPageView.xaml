@@ -29,7 +29,20 @@
               Padding="15,0,0,0"
               Background="#E8E8E8">
 
-            <TextBlock VerticalAlignment="Center" Foreground="Black" />
+            <StackPanel Orientation="Horizontal">
+                <controls:ImageEx Width="30"
+                                  Height="30"
+                                  IsCacheEnabled="True"
+                                  Source="{Binding Path=Catalog.Icon, UpdateSourceTrigger=PropertyChanged}"
+                                  Stretch="UniformToFill" />
+                <TextBlock Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           FontSize="22"
+                           FontWeight="SemiLight"
+                           Foreground="Black"
+                           Text="{Binding Path=Catalog.Title, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+
         </Grid>
 
         <SplitView Grid.Row="1"
@@ -40,14 +53,7 @@
                    PanePlacement="Right">
             <SplitView.Pane>
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-
-
                     <ListView x:Name="CatalogsListView"
-                              Grid.Row="1"
                               ItemsSource="{Binding Path=Catalogs, UpdateSourceTrigger=PropertyChanged}"
                               SelectedItem="{Binding Path=Catalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ListView.Header>
@@ -87,8 +93,13 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                </Grid>
 
+                    <notification:SfBusyIndicator AnimationSpeed="100"
+                                                  Background="#E8E8E8"
+                                                  IsBusy="{Binding Path=IsCatalogsBusy, UpdateSourceTrigger=PropertyChanged}"
+                                                  Opacity="0.6"
+                                                  Visibility="{Binding Path=IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid>
@@ -151,7 +162,7 @@
                         </controls:AdaptiveGridView.ItemTemplate>
                     </controls:AdaptiveGridView>
 
-                    <notification:SfBusyIndicator AnimationSpeed="500"
+                    <notification:SfBusyIndicator AnimationSpeed="100"
                                                   Background="#E8E8E8"
                                                   IsBusy="{Binding Path=IsBusy, UpdateSourceTrigger=PropertyChanged}"
                                                   Opacity="0.6"
