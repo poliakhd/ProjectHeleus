@@ -9,6 +9,7 @@ namespace ProjectHeleus.MangaService.Parsers.Interfaces
 
     public interface ICatalogParser
     {
+        Task<IEnumerable<string>> GetCatalogSorts();
         Task<IEnumerable<IManga>> GetAllFromCatalogAsync(SortType sortType, int page);
     }
 }

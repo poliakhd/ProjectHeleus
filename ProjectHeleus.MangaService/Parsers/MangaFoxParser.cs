@@ -38,6 +38,17 @@
 
         #region Implementation of ICatalogParser
 
+        public async Task<IEnumerable<string>> GetCatalogSorts()
+        {
+            var sorts = new List<string>
+            {
+                SortType.Update.ToString().ToLower(),
+                SortType.Rating.ToString().ToLower(),
+                SortType.Popular.ToString().ToLower()
+            };
+
+            return await Task.FromResult(sorts);
+        }
         public async Task<IEnumerable<IManga>> GetAllFromCatalogAsync(SortType sortType, int page)
         {
             try

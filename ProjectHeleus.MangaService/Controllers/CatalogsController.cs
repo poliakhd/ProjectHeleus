@@ -32,9 +32,12 @@
         }
 
         [Route("api/[controller]/{catalog}")]
-        public async Task<IEnumerable<IManga>> GetCatalogContent(string catalog)
+        public async Task<object> GetCatalogContent(string catalog)
         {
-            return await GetCatalogContent(catalog, 0);
+            return new
+            {
+                Sorts = await _catalogsProvider.GetCatalogSorts(catalog.GetCatalogType())
+            };
         }
 
         [Route("api/[controller]/{catalog}/{page:int}")]
