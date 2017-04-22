@@ -14,10 +14,12 @@
     {
         #region Private Members
 
-        private CatalogModel _catalog;
         private readonly ICatalogsProvider _catalogsProvider;
         private readonly IEventAggregator _eventAggregator;
+
+        private CatalogModel _catalog;
         private SortModel _sort;
+        private GenreModel _genre;
 
         #endregion
 
@@ -37,6 +39,11 @@
             _sort = sort;
         }
 
+        public void SetGenre(GenreModel genre)
+        {
+            _genre = genre;
+        }
+
         #region Implementation of IIncrementalSource<MangaModel>
 
         public async Task<IEnumerable<MangaShortModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
@@ -45,10 +52,20 @@
 
             IEnumerable<MangaShortModel> fetchedResult = null;
 
-            if (_sort is null)
-                fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, pageIndex);
+            if (_genre is null)
+            {
+                if (_sort is null)
+                    fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, pageIndex);
+                else
+                    fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, _sort, pageIndex);
+            }
             else
-                fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, _sort, pageIndex);
+            {
+                if (_sort is null)
+                    fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, _genre, pageIndex);
+                else
+                    fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, _genre, _sort, pageIndex);
+            }
 
             _eventAggregator.PublishOnUIThread(new EndIncrementalLoading());
 

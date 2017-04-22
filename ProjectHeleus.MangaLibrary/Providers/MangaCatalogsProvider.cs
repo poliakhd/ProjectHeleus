@@ -1,7 +1,6 @@
 ﻿namespace ProjectHeleus.MangaLibrary.Providers
 {
     using System;
-    using System.Collections.Generic;
     using System.Threading.Tasks;
     using Windows.Web.Http;
     using Caliburn.Micro;
@@ -46,15 +45,34 @@
                 }
             }
         }
-
-
-        public async Task<BindableCollection<GenreModel>> GetCatalogGenres(CatalogModel catalog)
+        public async Task<BindableCollection<MangaShortModel>> GetCatalogContent(CatalogModel catalog, SortModel sort, int page)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/{sort.Id}/{page}"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    return JsonConvert.DeserializeObject<BindableCollection<GenreModel>>(await response.GetTextResultAsync());
+                    return JsonConvert.DeserializeObject<BindableCollection<MangaShortModel>>(await response.GetTextResultAsync());
+                }
+            }
+        }
+
+        public async Task<BindableCollection<MangaShortModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, int page)
+        {
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{page}"), HttpMethod.Get))
+            {
+                using (var response = await HttpHelper.Instance.SendRequestAsync(request))
+                {
+                    return JsonConvert.DeserializeObject<BindableCollection<MangaShortModel>>(await response.GetTextResultAsync());
+                }
+            }
+        }
+        public async Task<BindableCollection<MangaShortModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, SortModel sort, int page)
+        {
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{sort.Id}/{page}"), HttpMethod.Get))
+            {
+                using (var response = await HttpHelper.Instance.SendRequestAsync(request))
+                {
+                    return JsonConvert.DeserializeObject<BindableCollection<MangaShortModel>>(await response.GetTextResultAsync());
                 }
             }
         }
@@ -69,13 +87,13 @@
                 }
             }
         }
-        public async Task<BindableCollection<MangaShortModel>> GetCatalogContent(CatalogModel catalog, SortModel sort, int page)
+        public async Task<BindableCollection<GenreModel>> GetCatalogGenres(CatalogModel catalog)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/{sort.Id}/{page}"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    return JsonConvert.DeserializeObject<BindableCollection<MangaShortModel>>(await response.GetTextResultAsync());
+                    return JsonConvert.DeserializeObject<BindableCollection<GenreModel>>(await response.GetTextResultAsync());
                 }
             }
         }
