@@ -38,13 +38,13 @@
 
         #region Implementation of ICatalogParser
 
-        public async Task<IEnumerable<string>> GetCatalogSorts()
+        public async Task<IEnumerable<ISort>> GetCatalogSorts()
         {
-            var sorts = new List<string>
+            var sorts = new List<SortModel>
             {
-                SortType.Update.ToString().ToLower(),
-                SortType.Rating.ToString().ToLower(),
-                SortType.Popular.ToString().ToLower()
+                new SortModel() {Id = SortType.Update.ToString().ToLower(), Title = "Latest Chapters"},
+                new SortModel() {Id = SortType.Rating.ToString().ToLower(), Title = "Rating"},
+                new SortModel() {Id = SortType.Popular.ToString().ToLower(), Title = "Popularity"}
             };
 
             return await Task.FromResult(sorts);

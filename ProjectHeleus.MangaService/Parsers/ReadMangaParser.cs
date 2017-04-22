@@ -40,14 +40,14 @@
         #endregion
 
         #region Implementation of ICatalogParser
-        public async Task<IEnumerable<string>> GetCatalogSorts()
+        public async Task<IEnumerable<ISort>> GetCatalogSorts()
         {
-            var sorts = new List<string>
+            var sorts = new List<SortModel>
             {
-                SortType.New.ToString().ToLower(),
-                SortType.Popular.ToString().ToLower(),
-                SortType.Rating.ToString().ToLower(),
-                SortType.Update.ToString().ToLower()
+                new SortModel() {Id = SortType.Update.ToString().ToLower(), Title = "Дата обновления"},
+                new SortModel() {Id = SortType.Rating.ToString().ToLower(), Title = "Рейтинг"},
+                new SortModel() {Id = SortType.Popular.ToString().ToLower(), Title = "Популярность"},
+                new SortModel() {Id = SortType.New.ToString().ToLower(), Title = "Новинки"},
             };
 
             return await Task.FromResult(sorts);
@@ -129,7 +129,7 @@
 
                     var htmlViews = htmlManga.QuerySelector(".tile-info p");
 
-                    if (int.TryParse(htmlViews.TextContent.Substring(htmlViews.TextContent.LastIndexOf(' ')), out int views))
+                    if (htmlViews != null && int.TryParse(htmlViews.TextContent.Substring(htmlViews.TextContent.LastIndexOf(' ')), out int views))
                         formattedManga.Views = views;
 
                     #endregion

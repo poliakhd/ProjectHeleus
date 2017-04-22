@@ -43,7 +43,7 @@
             return await Task.FromResult(catalogs);
         }
 
-        public async Task<IEnumerable<string>> GetCatalogSorts(CatalogType catalogType)
+        public async Task<IEnumerable<ISort>> GetCatalogSorts(CatalogType catalogType)
         {
             var parser = _container.GetParser(catalogType);
             return await parser.GetCatalogSorts();
