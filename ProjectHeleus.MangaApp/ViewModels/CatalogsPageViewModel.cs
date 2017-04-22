@@ -3,13 +3,10 @@ using Microsoft.Toolkit.Uwp;
 
 namespace ProjectHeleus.MangaApp.ViewModels
 {
-    using System;
-    using Windows.UI.Xaml;
     using MangaLibrary.Core.Collections;
     using MangaLibrary.Core.Messages;
     using MangaLibrary.Models;
     using MangaLibrary.Providers.Interfaces;
-    using SharedLibrary.Extenstions;
 
     public class CatalogsPageViewModel 
         : Screen, IHandle<BeginIncrementalLoading>, IHandle<EndIncrementalLoading>
@@ -18,24 +15,16 @@ namespace ProjectHeleus.MangaApp.ViewModels
 
         private readonly ICatalogsProvider _catalogsProvider;
         private readonly IEventAggregator _eventAggregator;
-        private BindableCollection<CatalogModel> _catalogs;
-        private bool _isSourcesPaneOpen;
+        
         private CatalogModel _catalog;
-        private IncrementalLoadingCollection<MangaCollection, MangaShortModel> _mangas;
+
         private bool _isBusy;
         private bool _isCatalogsBusy;
+        private bool _isSourcesPaneOpen;
+        private GenreModel _genre;
+        private SortModel _sort;
 
         #endregion
-
-        public bool IsSourcesPaneOpen
-        {
-            get { return _isSourcesPaneOpen; }
-            set
-            {
-                _isSourcesPaneOpen = value;
-                NotifyOfPropertyChange();
-            }
-        }
 
         public CatalogModel Catalog
         {
@@ -44,35 +33,46 @@ namespace ProjectHeleus.MangaApp.ViewModels
             {
                 _catalog = value;
 
-                var w = IoC.Get<MangaCollection>();
-                w.SetCatalog(value);
-                _mangas = new IncrementalLoadingCollection<MangaCollection, MangaShortModel>(w);
+                SetMangaCollection(value);
+                SetGenresCollection(value);
+                SetSortsCollection(value);
+
+                IsSourcesPaneOpen = false;
 
                 NotifyOfPropertyChange();
-                NotifyOfPropertyChange(nameof(Mangas));
-
-                DoCatalogsPaneBehavior();
             }
         }
+        public BindableCollection<CatalogModel> Catalogs { get; set; }
 
-        public BindableCollection<CatalogModel> Catalogs
+        public IncrementalLoadingCollection<MangaCollection, MangaShortModel> Mangas { get; set; }
+
+        public GenreModel Genre
         {
-            get { return _catalogs; }
+            get { return _genre; }
             set
             {
-                _catalogs = value;
+                _genre = value;
+                
+
+
                 NotifyOfPropertyChange();
             }
         }
-        public IncrementalLoadingCollection<MangaCollection, MangaShortModel> Mangas
+
+        public BindableCollection<GenreModel> Genres { get; set; }
+
+        public SortModel Sort
         {
-            get { return _mangas; }
+            get { return _sort; }
             set
             {
-                _mangas = value; 
+                _sort = value;
+
+                SetMangaSortCollection(_catalog, value);
                 NotifyOfPropertyChange();
             }
         }
+        public BindableCollection<SortModel> Sorts { get; set; }
 
         public CatalogsPageViewModel(ICatalogsProvider catalogsProvider, IEventAggregator eventAggregator)
         {
@@ -89,6 +89,8 @@ namespace ProjectHeleus.MangaApp.ViewModels
             _eventAggregator.Subscribe(this);
             Catalogs = await _catalogsProvider.GetAllCatalogs();
 
+            NotifyOfPropertyChange(nameof(Catalogs));
+
             IsCatalogsBusy = false;
         }
 
@@ -96,7 +98,6 @@ namespace ProjectHeleus.MangaApp.ViewModels
         {
             DoCatalogsPaneBehavior();
         }
-
         private void DoCatalogsPaneBehavior()
         {
             IsSourcesPaneOpen = !IsSourcesPaneOpen;
@@ -120,6 +121,51 @@ namespace ProjectHeleus.MangaApp.ViewModels
                 NotifyOfPropertyChange();
             }
         }
+        public bool IsSourcesPaneOpen
+        {
+            get { return _isSourcesPaneOpen; }
+            set
+            {
+                _isSourcesPaneOpen = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private void SetMangaCollection(CatalogModel catalog)
+        {
+            var mangaCollection = IoC.Get<MangaCollection>();
+            mangaCollection.SetCatalog(catalog);
+
+            Mangas = new IncrementalLoadingCollection<MangaCollection, MangaShortModel>(mangaCollection);
+
+            NotifyOfPropertyChange(nameof(Mangas));
+        }
+        private void SetMangaSortCollection(CatalogModel catalog, SortModel sort)
+        {
+            if (catalog != null)
+            {
+                var mangaCollection = IoC.Get<MangaCollection>();
+                mangaCollection.SetCatalog(catalog);
+                mangaCollection.SetSort(sort);
+
+                Mangas = new IncrementalLoadingCollection<MangaCollection, MangaShortModel>(mangaCollection);
+
+                NotifyOfPropertyChange(nameof(Mangas));
+            }
+        }
+
+        private async void SetGenresCollection(CatalogModel catalog)
+        {
+            Genres = await _catalogsProvider.GetCatalogGenres(catalog);
+
+            NotifyOfPropertyChange(nameof(Genres));
+        }
+        private async void SetSortsCollection(CatalogModel catalog)
+        {
+            Sorts = await _catalogsProvider.GetCatalogSorts(catalog);
+
+            NotifyOfPropertyChange(nameof(Sorts));
+        }
 
         #region Implementation of IHandle<BeginIncrementalLoading>
 
@@ -138,10 +184,5 @@ namespace ProjectHeleus.MangaApp.ViewModels
         }
 
         #endregion
-
-        private void SizeChanged(object sender, SizeChangedEventArgs sizeChangedEventArgs)
-        {
-            //
-        }
     }
 }

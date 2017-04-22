@@ -17,6 +17,7 @@
         private CatalogModel _catalog;
         private readonly ICatalogsProvider _catalogsProvider;
         private readonly IEventAggregator _eventAggregator;
+        private SortModel _sort;
 
         #endregion
 
@@ -31,12 +32,24 @@
             _catalog = catalog;
         }
 
+        public void SetSort(SortModel sort)
+        {
+            _sort = sort;
+        }
+
         #region Implementation of IIncrementalSource<MangaModel>
 
         public async Task<IEnumerable<MangaShortModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
         {
             _eventAggregator.PublishOnUIThread(new BeginIncrementalLoading());
-            var fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, pageIndex);
+
+            IEnumerable<MangaShortModel> fetchedResult = null;
+
+            if (_sort is null)
+                fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, pageIndex);
+            else
+                fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, _sort, pageIndex);
+
             _eventAggregator.PublishOnUIThread(new EndIncrementalLoading());
 
             return fetchedResult;

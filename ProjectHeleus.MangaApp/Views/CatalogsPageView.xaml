@@ -52,19 +52,16 @@
                    OpenPaneLength="240"
                    PanePlacement="Right">
             <SplitView.Pane>
-                <Grid>
-                    <ListView x:Name="CatalogsListView"
-                              ItemsSource="{Binding Path=Catalogs, UpdateSourceTrigger=PropertyChanged}"
-                              SelectedItem="{Binding Path=Catalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                <!--  Region Catalogs  -->
+
+                <Grid x:Name="Gridww" Visibility="Visible">
+                    <ListView ItemsSource="{Binding Path=Catalogs, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=Catalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <ListView.Header>
-                            <Grid x:Name="MyHeaderGrid"
-                                  MinHeight="25"
-                                  Background="LightGray">
+                            <Grid MinHeight="25" Background="#464B4D">
                                 <StackPanel VerticalAlignment="Top">
                                     <TextBlock Margin="12"
                                                FontSize="20"
                                                FontWeight="SemiLight"
-                                               Foreground="Black"
                                                Text="Catalogs"
                                                TextAlignment="Center"
                                                TextWrapping="WrapWholeWords" />
@@ -100,13 +97,143 @@
                                                   Opacity="0.6"
                                                   Visibility="{Binding Path=IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
                 </Grid>
+
+                <!--  End Region  -->
             </SplitView.Pane>
             <SplitView.Content>
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid x:Name="SourcesLeftGrid" Width="225">
+                        <ListView ItemsSource="{Binding Path=Catalogs, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=Catalog, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.Header>
+                                <Grid MinHeight="25" Background="#969696">
+                                    <StackPanel VerticalAlignment="Top">
+                                        <TextBlock Margin="12"
+                                                   FontSize="20"
+                                                   FontWeight="SemiLight"
+                                                   Text="Catalogs"
+                                                   TextAlignment="Center"
+                                                   TextWrapping="WrapWholeWords" />
+
+                                    </StackPanel>
+                                </Grid>
+                            </ListView.Header>
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="models:CatalogModel">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+
+                                        <controls:ImageEx Width="25"
+                                                          Height="25"
+                                                          Margin="0,0,5,0"
+                                                          Source="{x:Bind Path=Icon}" />
+                                        <TextBlock Grid.Column="1"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="14"
+                                                   FontWeight="SemiLight"
+                                                   Text="{x:Bind Path=Title}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <notification:SfBusyIndicator AnimationSpeed="100"
+                                                      Background="#E8E8E8"
+                                                      IsBusy="{Binding Path=IsCatalogsBusy, UpdateSourceTrigger=PropertyChanged}"
+                                                      Opacity="0.6"
+                                                      Visibility="{Binding Path=IsCatalogsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </Grid>
+
+                    <Grid x:Name="FiltersLeftGrid"
+                          Grid.Column="2"
+                          Width="225"
+                          Visibility="Collapsed">
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="2*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <ListView ItemsSource="{Binding Path=Sorts, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=Sort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                <ListView.Header>
+                                    <Grid MinHeight="25" Background="#969696">
+                                        <StackPanel VerticalAlignment="Top">
+                                            <TextBlock Margin="12"
+                                                       FontSize="20"
+                                                       FontWeight="SemiLight"
+                                                       Text="Sort"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="WrapWholeWords" />
+                                        </StackPanel>
+                                    </Grid>
+                                </ListView.Header>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:SortModel">
+                                        <Grid>
+                                            <TextBlock VerticalAlignment="Center"
+                                                       FontSize="14"
+                                                       FontWeight="SemiLight"
+                                                       Text="{x:Bind Path=Title}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                            <notification:SfBusyIndicator AnimationSpeed="100"
+                                                          Background="#E8E8E8"
+                                                          IsBusy="{Binding Path=IsCatalogsBusy, UpdateSourceTrigger=PropertyChanged}"
+                                                          Opacity="0.6"
+                                                          Visibility="{Binding Path=IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        </Grid>
+
+                        <Grid Grid.Row="1">
+                            <ListView ItemsSource="{Binding Path=Genres, UpdateSourceTrigger=PropertyChanged}">
+                                <ListView.Header>
+                                    <Grid MinHeight="25" Background="#969696">
+                                        <StackPanel VerticalAlignment="Top">
+                                            <TextBlock Margin="12"
+                                                       FontSize="20"
+                                                       FontWeight="SemiLight"
+                                                       Text="Genres"
+                                                       TextAlignment="Center"
+                                                       TextWrapping="WrapWholeWords" />
+                                        </StackPanel>
+                                    </Grid>
+                                </ListView.Header>
+                                <ListView.ItemTemplate>
+                                    <DataTemplate x:DataType="models:GenreModel">
+                                        <Grid>
+
+                                            <TextBlock VerticalAlignment="Center"
+                                                       FontSize="14"
+                                                       FontWeight="SemiLight"
+                                                       Text="{x:Bind Path=Title}" />
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+
+                            <notification:SfBusyIndicator AnimationSpeed="100"
+                                                          Background="#E8E8E8"
+                                                          IsBusy="{Binding Path=IsCatalogsBusy, UpdateSourceTrigger=PropertyChanged}"
+                                                          Opacity="0.6"
+                                                          Visibility="{Binding Path=IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        </Grid>
+                    </Grid>
+
                     <controls:AdaptiveGridView x:Name="MangaArticles"
+                                               Grid.Column="1"
                                                Margin="5"
                                                animations:ReorderGridAnimation.Duration="500"
-                                               micro:Message.Attach="[Event SizeChanged] = [SizeChanged($source, $eventArgs)]"
                                                ItemsSource="{Binding Path=Mangas}"
                                                StretchContentForSingleRow="False">
                         <controls:AdaptiveGridView.ItemTemplate>
@@ -151,7 +278,7 @@
                                                 <input:SfRating.Resources>
                                                     <Style TargetType="input:SfRatingItem">
                                                         <Setter Property="RatedFill" Value="Gold" />
-                                                        <Setter Property="Width" Value="13" />
+                                                        <Setter Property="Width" Value="11" />
                                                     </Style>
                                                 </input:SfRating.Resources>
                                             </input:SfRating>
@@ -162,7 +289,8 @@
                         </controls:AdaptiveGridView.ItemTemplate>
                     </controls:AdaptiveGridView>
 
-                    <notification:SfBusyIndicator AnimationSpeed="100"
+                    <notification:SfBusyIndicator Grid.Column="1"
+                                                  AnimationSpeed="100"
                                                   Background="#E8E8E8"
                                                   IsBusy="{Binding Path=IsBusy, UpdateSourceTrigger=PropertyChanged}"
                                                   Opacity="0.6"
@@ -172,7 +300,8 @@
         </SplitView>
 
         <CommandBar Grid.Row="2">
-            <AppBarButton x:Uid="SourcesBarButton"
+            <AppBarButton x:Name="SourcesBarButton"
+                          x:Uid="SourcesBarButton"
                           HorizontalAlignment="Right"
                           micro:Message.Attach="[Event Click] = [MangaSources()]"
                           Icon="List" />
@@ -185,8 +314,23 @@
                         <AdaptiveTrigger MinWindowWidth="1440" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MangaArticles.DesiredWidth" Value="200" />
-                        <Setter Target="MangaArticles.ItemHeight" Value="275" />
+                        <Setter Target="MangaArticles.DesiredWidth" Value="135" />
+                        <Setter Target="MangaArticles.ItemHeight" Value="210" />
+                        <Setter Target="SourcesLeftGrid.Visibility" Value="Visible" />
+                        <Setter Target="FiltersLeftGrid.Visibility" Value="Visible" />
+                        <Setter Target="SourcesBarButton.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="SemiWideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1080" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="MangaArticles.DesiredWidth" Value="135" />
+                        <Setter Target="MangaArticles.ItemHeight" Value="210" />
+                        <Setter Target="SourcesLeftGrid.Visibility" Value="Visible" />
+                        <Setter Target="FiltersLeftGrid.Visibility" Value="Visible" />
+                        <Setter Target="SourcesBarButton.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="WideState">
@@ -194,8 +338,11 @@
                         <AdaptiveTrigger MinWindowWidth="720" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MangaArticles.DesiredWidth" Value="175" />
-                        <Setter Target="MangaArticles.ItemHeight" Value="250" />
+                        <Setter Target="MangaArticles.DesiredWidth" Value="130" />
+                        <Setter Target="MangaArticles.ItemHeight" Value="205" />
+                        <Setter Target="SourcesLeftGrid.Visibility" Value="Visible" />
+                        <Setter Target="FiltersLeftGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="SourcesBarButton.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
                 <VisualState x:Name="NarrowState">
@@ -203,8 +350,10 @@
                         <AdaptiveTrigger MinWindowWidth="0" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
-                        <Setter Target="MangaArticles.DesiredWidth" Value="150" />
-                        <Setter Target="MangaArticles.ItemHeight" Value="225" />
+                        <Setter Target="MangaArticles.DesiredWidth" Value="125" />
+                        <Setter Target="MangaArticles.ItemHeight" Value="200" />
+                        <Setter Target="SourcesLeftGrid.Visibility" Value="Collapsed" />
+                        <Setter Target="FiltersLeftGrid.Visibility" Value="Collapsed" />
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>

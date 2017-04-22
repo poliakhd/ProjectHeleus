@@ -118,6 +118,7 @@
     <Compile Include="Models\GenreModel.cs" />
     <Compile Include="Models\MangaModel.cs" />
     <Compile Include="Models\MangaShortModel.cs" />
+    <Compile Include="Models\SortModel.cs" />
     <Compile Include="Models\TranslatorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\Interfaces\ICatalogsProvider.cs" />
