@@ -99,6 +99,8 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Settings.cs" />
+    <Compile Include="Helpers\Converters\ObjectToObjectConverter.cs" />
+    <Compile Include="Helpers\Extensions\ImageExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ShellMenuProvider.cs" />
     <Compile Include="ViewModels\CatalogsPageViewModel.cs" />
@@ -135,11 +137,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-  </ItemGroup>
-  <ItemGroup>
-    <SDKReference Include="Syncfusion Controls for UWP XAML, Version=15.1.0.41">
-      <Name>Syncfusion Controls for UWP XAML</Name>
-    </SDKReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ProjectHeleus.MangaLibrary\ProjectHeleus.MangaLibrary.csproj">

@@ -29,12 +29,10 @@
     </Page.Resources>
 
     <Grid Background="{Binding Source={StaticResource Settings}, Path=PaneBackgroundColor, UpdateSourceTrigger=PropertyChanged}">
-        <controls:HamburgerMenu micro:Message.Attach="[Event ItemClick] = [MainMenuItemClick($source, $eventArgs)]; [Event OptionsItemClick] = [OptionMenuItemClick($source, $eventArgs)]"
+        <controls:HamburgerMenu x:Name="Menu" micro:Message.Attach="[Event ItemClick] = [MainMenuItemClick($source, $eventArgs)]; [Event OptionsItemClick] = [OptionMenuItemClick($source, $eventArgs)]"
                                 CompactPaneLength="48"
-                                DisplayMode="CompactOverlay"
                                 Foreground="White"
                                 HamburgerHeight="48"
-                                IsPaneOpen="{Binding Path=PaneOpen, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 ItemTemplate="{StaticResource MenuItemTemplate}"
                                 ItemsSource="{Binding Path=MainMenu, UpdateSourceTrigger=PropertyChanged}"
                                 OpenPaneLength="240"
@@ -62,5 +60,32 @@
                 </Frame>
             </Grid>
         </controls:HamburgerMenu>
+
+        <!--  Region Visual States  -->
+
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowStates">
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1080" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Menu.IsPaneOpen" Value="True" />
+                        <Setter Target="Menu.DisplayMode" Value="CompactInline" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="Menu.IsPaneOpen" Value="False" />
+                        <Setter Target="Menu.DisplayMode" Value="CompactOverlay" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
+        <!--  End Region  -->
     </Grid>
 </Page>

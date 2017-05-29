@@ -41,9 +41,9 @@ namespace ProjectHeleus.MangaService
                     config.ForSingletonOf<IMangasProvider>().Add<HubMangasProvider>();
                     config.ForSingletonOf<IGenresProvider>().Add<HubGenresProvider>();
 
-                    config.ForSingletonOf<IParser>().Add<MangaFoxParser>().Named(nameof(MangaFoxParser));
-                    config.ForSingletonOf<IParser>().Add<ReadMangaParser>().Named(nameof(ReadMangaParser));
-                    config.ForSingletonOf<IParser>().Add<MintMangaParser>().Named(nameof(MintMangaParser));
+                    config.For<IParser>().Add<MangaFoxParser>().Named(nameof(MangaFoxParser));
+                    config.For<IParser>().Add<ReadMangaParser>().Named(nameof(ReadMangaParser));
+                    config.For<IParser>().Add<MintMangaParser>().Named(nameof(MintMangaParser));
 
                     config.Populate(services);
                 }

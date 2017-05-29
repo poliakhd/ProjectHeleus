@@ -120,6 +120,9 @@
   <data name="Catalogs" xml:space="preserve">
     <value>Catalogs</value>
   </data>
+  <data name="CatalogsBarButton.Label" xml:space="preserve">
+    <value>Catalogs</value>
+  </data>
   <data name="ChangeColor.Content" xml:space="preserve">
     <value>Change color</value>
   </data>
@@ -131,6 +134,9 @@
   </data>
   <data name="DarkTheme.Header" xml:space="preserve">
     <value>Use dark theme</value>
+  </data>
+  <data name="GenresBarButton.Label" xml:space="preserve">
+    <value>Genres</value>
   </data>
   <data name="Home" xml:space="preserve">
     <value>Home</value>
@@ -153,7 +159,7 @@
   <data name="SettingsHeader.Text" xml:space="preserve">
     <value>Settings</value>
   </data>
-  <data name="SourcesBarButton.Label" xml:space="preserve">
-    <value>Catalogs</value>
+  <data name="SortsBarButton.Label" xml:space="preserve">
+    <value>Sorts</value>
   </data>
 </root>

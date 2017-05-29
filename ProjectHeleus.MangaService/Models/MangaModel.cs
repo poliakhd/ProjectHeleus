@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-
     using Core;
     using Interfaces;
 
@@ -13,7 +12,7 @@
         public string Name { get; set; }
         public IEnumerable<string> AlternateNames { get; set; }
 
-        public MangaStatusModel Status { get; set; }
+        public MangaStatusType Status { get; set; }
         public int Published { get; set; }
         public string Volumes { get; set; }
         public int Views { get; set; }

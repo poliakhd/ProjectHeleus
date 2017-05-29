@@ -1,9 +1,10 @@
-﻿using Caliburn.Micro;
-using Microsoft.Toolkit.Uwp;
-
-namespace ProjectHeleus.MangaApp.ViewModels
+﻿namespace ProjectHeleus.MangaApp.ViewModels
 {
     using System;
+
+    using Caliburn.Micro;
+    using Microsoft.Toolkit.Uwp;
+
     using MangaLibrary.Core.Collections;
     using MangaLibrary.Core.Messages;
     using MangaLibrary.Models;
@@ -26,6 +27,10 @@ namespace ProjectHeleus.MangaApp.ViewModels
         private SortModel _sort;
         private bool _isSortBusy;
         private bool _isGenresBusy;
+        private bool _isCatalogsInPaneVisible;
+        private bool _isSortsInPaneVisible;
+        private bool _isGenresInPaneVisible;
+        private bool _isNestedPaneOpen;
 
         #endregion
 
@@ -42,8 +47,6 @@ namespace ProjectHeleus.MangaApp.ViewModels
                 SetMangaCollection(value, null, null);
                 SetGenresCollection(value);
                 SetSortsCollection(value);
-
-                IsSourcesPaneOpen = false;
 
                 NotifyOfPropertyChange();
             }
@@ -88,70 +91,64 @@ namespace ProjectHeleus.MangaApp.ViewModels
 
         private async void Initialize()
         {
-            IsCatalogsBusy = true;
-
             _eventAggregator.Subscribe(this);
             Catalogs = await _catalogsProvider.GetAllCatalogs();
 
             NotifyOfPropertyChange(nameof(Catalogs));
-
-            IsCatalogsBusy = false;
         }
 
-        private void MangaSources()
+        public bool IsNestedPaneOpen
         {
-            DoCatalogsPaneBehavior();
-        }
-        private void DoCatalogsPaneBehavior()
-        {
-            IsSourcesPaneOpen = !IsSourcesPaneOpen;
-        }
-
-        public bool IsMangasBusy
-        {
-            get { return _isMangasBusy; }
+            get { return _isNestedPaneOpen; }
             set
             {
-                _isMangasBusy = value;
-                NotifyOfPropertyChange();
-            }
-        }
-        public bool IsCatalogsBusy
-        {
-            get { return _isCatalogsBusy; }
-            set
-            {
-                _isCatalogsBusy = value;
-                NotifyOfPropertyChange();
-            }
-        }
-        public bool IsSortBusy
-        {
-            get { return _isSortBusy; }
-            set
-            {
-                _isSortBusy = value;
-                NotifyOfPropertyChange();
-            }
-        }
-        public bool IsGenresBusy
-        {
-            get { return _isGenresBusy; }
-            set
-            {
-                _isGenresBusy = value;
+                _isNestedPaneOpen = value; 
                 NotifyOfPropertyChange();
             }
         }
 
-        public bool IsSourcesPaneOpen
+        public bool IsCatalogsInPaneVisible
         {
-            get { return _isSourcesPaneOpen; }
+            get { return _isCatalogsInPaneVisible; }
             set
             {
-                _isSourcesPaneOpen = value;
+                _isCatalogsInPaneVisible = value; 
                 NotifyOfPropertyChange();
             }
+        }
+        public bool IsSortsInPaneVisible
+        {
+            get { return _isSortsInPaneVisible; }
+            set
+            {
+                _isSortsInPaneVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
+        public bool IsGenresInPaneVisible
+        {
+            get { return _isGenresInPaneVisible; }
+            set
+            {
+                _isGenresInPaneVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public void ShowCatalogs()
+        {
+            IsSortsInPaneVisible = IsGenresInPaneVisible = false;
+            IsNestedPaneOpen = IsCatalogsInPaneVisible = true;
+        }
+        public void ShowSorts()
+        {
+            IsCatalogsInPaneVisible = IsGenresInPaneVisible = false;
+            IsNestedPaneOpen = IsSortsInPaneVisible = true;
+        }
+        public void ShowGenres()
+        {
+            IsSortsInPaneVisible = IsCatalogsInPaneVisible = false;
+            IsNestedPaneOpen = IsGenresInPaneVisible = true;
         }
 
         private void SetMangaCollection(CatalogModel catalog, SortModel sort, GenreModel genre)
@@ -167,23 +164,15 @@ namespace ProjectHeleus.MangaApp.ViewModels
         }
         private async void SetGenresCollection(CatalogModel catalog)
         {
-            IsGenresBusy = true;
-
             Genres = await _catalogsProvider.GetCatalogGenres(catalog);
 
             NotifyOfPropertyChange(nameof(Genres));
-
-            IsGenresBusy = false;
         }
         private async void SetSortsCollection(CatalogModel catalog)
         {
-            IsSortBusy = true;
-
             Sorts = await _catalogsProvider.GetCatalogSorts(catalog);
 
             NotifyOfPropertyChange(nameof(Sorts));
-
-            IsSortBusy = false;
         }
 
         #region Overrides of Screen
@@ -216,7 +205,6 @@ namespace ProjectHeleus.MangaApp.ViewModels
 
         public void Handle(BeginIncrementalLoading message)
         {
-            IsMangasBusy = true;
         }
 
         #endregion
@@ -225,7 +213,6 @@ namespace ProjectHeleus.MangaApp.ViewModels
 
         public void Handle(EndIncrementalLoading message)
         {
-            IsMangasBusy = false;
         }
 
         #endregion

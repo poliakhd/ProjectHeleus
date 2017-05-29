@@ -42,13 +42,13 @@ namespace ProjectHeleus.MangaApp
             _container.RegisterWinRTServices();
 
             _container
-#if DEBUG
-                .Instance(CurrentAppSimulator.LicenseInformation)
-                .Singleton<IInAppPurchaseProvider, SimulatorInAppPurchaseProviderProvider>()
-#else
-                .Instance(CurrentApp.LicenseInformation)
-                .Singleton<IInAppPurchaseProvider, InAppPurchaseProviderProvider>()
-#endif
+//#if DEBUG
+//                .Instance(CurrentAppSimulator.LicenseInformation)
+//                .Singleton<IInAppPurchaseProvider, SimulatorInAppPurchaseProviderProvider>()
+//#else
+//                .Instance(CurrentApp.LicenseInformation)
+//                .Singleton<IInAppPurchaseProvider, InAppPurchaseProviderProvider>()
+//#endif
                 .Singleton<IMenuProvider, ShellMenuProvider>()
                 .Singleton<ICatalogsProvider, MangaCatalogsProvider>()
                 .Singleton<ShellPageViewModel>()
