@@ -31,55 +31,25 @@
         private bool _isSortsInPaneVisible;
         private bool _isGenresInPaneVisible;
         private bool _isNestedPaneOpen;
+        private bool _isCatalogsLoading = false;
+        private BindableCollection<CatalogModel> _catalogs;
+        private BindableCollection<GenreModel> _genres;
+        private bool _isSortsLoading;
+        private bool _isGenresLoading;
+        private BindableCollection<SortModel> _sorts;
+        private bool _isMangasLoading;
 
         #endregion
 
-        public CatalogModel Catalog
+        public bool IsNestedPaneOpen
         {
-            get { return _catalog; }
+            get { return _isNestedPaneOpen; }
             set
             {
-                if(value is null)
-                    return;
-
-                _catalog = value;
-
-                SetMangaCollection(value, null, null);
-                SetGenresCollection(value);
-                SetSortsCollection(value);
-
+                _isNestedPaneOpen = value;
                 NotifyOfPropertyChange();
             }
         }
-        public BindableCollection<CatalogModel> Catalogs { get; set; }
-
-        public IncrementalLoadingCollection<MangaCollection, MangaShortModel> Mangas { get; set; }
-
-        public GenreModel Genre
-        {
-            get { return _genre; }
-            set
-            {
-                _genre = value;
-                
-                SetMangaCollection(_catalog, _sort, value);
-                NotifyOfPropertyChange();
-            }
-        }
-        public BindableCollection<GenreModel> Genres { get; set; }
-
-        public SortModel Sort
-        {
-            get { return _sort; }
-            set
-            {
-                _sort = value;
-
-                SetMangaCollection(_catalog, value, _genre);
-                NotifyOfPropertyChange();
-            }
-        }
-        public BindableCollection<SortModel> Sorts { get; set; }
 
         public CatalogsPageViewModel(ICatalogsProvider catalogsProvider, IEventAggregator eventAggregator)
         {
@@ -92,27 +62,130 @@
         private async void Initialize()
         {
             _eventAggregator.Subscribe(this);
-            Catalogs = await _catalogsProvider.GetAllCatalogs();
 
-            NotifyOfPropertyChange(nameof(Catalogs));
+            IsCatalogsLoading = true;
+            Catalogs = await _catalogsProvider.GetAllCatalogs();
         }
 
-        public bool IsNestedPaneOpen
+        #region Mangas
+
+        public IncrementalLoadingCollection<MangaCollection, MangaShortModel> Mangas { get; set; }
+
+        public bool IsMangasLoading
         {
-            get { return _isNestedPaneOpen; }
+            get { return _isMangasLoading; }
             set
             {
-                _isNestedPaneOpen = value; 
+                _isMangasLoading = value;
                 NotifyOfPropertyChange();
             }
         }
 
+        private void SetMangaCollection(CatalogModel catalog, SortModel sort, GenreModel genre)
+        {
+            var mangaCollection = IoC.Get<MangaCollection>();
+
+            mangaCollection.SetCatalog(catalog);
+            mangaCollection.SetSort(sort);
+            mangaCollection.SetGenre(genre);
+
+            Mangas = new IncrementalLoadingCollection<MangaCollection, MangaShortModel>(mangaCollection);
+
+            NotifyOfPropertyChange(nameof(Mangas));
+        }
+
+        #endregion
+
+        #region Catalogs
+
+        public CatalogModel Catalog
+        {
+            get { return _catalog; }
+            set
+            {
+                if (value is null)
+                    return;
+
+                _catalog = value;
+
+                SetMangaCollection(value, null, null);
+                SetGenresCollection(value);
+                SetSortsCollection(value);
+
+                NotifyOfPropertyChange();
+            }
+        }
+        public BindableCollection<CatalogModel> Catalogs
+        {
+            get { return _catalogs; }
+            set
+            {
+                IsCatalogsLoading = false;
+
+                _catalogs = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsCatalogsLoading
+        {
+            get { return _isCatalogsLoading; }
+            set
+            {
+                _isCatalogsLoading = value;
+                NotifyOfPropertyChange();
+            }
+        }
         public bool IsCatalogsInPaneVisible
         {
             get { return _isCatalogsInPaneVisible; }
             set
             {
-                _isCatalogsInPaneVisible = value; 
+                _isCatalogsInPaneVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public void ShowCatalogs()
+        {
+            IsSortsInPaneVisible = IsGenresInPaneVisible = false;
+            IsNestedPaneOpen = IsCatalogsInPaneVisible = true;
+        }
+
+        #endregion
+
+        #region Sorts
+
+
+        public SortModel Sort
+        {
+            get { return _sort; }
+            set
+            {
+                _sort = value;
+
+                SetMangaCollection(_catalog, value, _genre);
+                NotifyOfPropertyChange();
+            }
+        }
+        public BindableCollection<SortModel> Sorts
+        {
+            get { return _sorts; }
+            set
+            {
+                IsSortsLoading = false;
+
+                _sorts = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsSortsLoading
+        {
+            get { return _isSortsLoading; }
+            set
+            {
+                _isSortsLoading = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -122,6 +195,54 @@
             set
             {
                 _isSortsInPaneVisible = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public void ShowSorts()
+        {
+            IsCatalogsInPaneVisible = IsGenresInPaneVisible = false;
+            IsNestedPaneOpen = IsSortsInPaneVisible = true;
+        }
+        private async void SetSortsCollection(CatalogModel catalog)
+        {
+            IsSortsLoading = true;
+            Sorts = await _catalogsProvider.GetCatalogSorts(catalog);
+        }
+
+        #endregion
+
+        #region Genres
+
+        public GenreModel Genre
+        {
+            get { return _genre; }
+            set
+            {
+                _genre = value;
+
+                SetMangaCollection(_catalog, _sort, value);
+                NotifyOfPropertyChange();
+            }
+        }
+        public BindableCollection<GenreModel> Genres
+        {
+            get { return _genres; }
+            set
+            {
+                IsGenresLoading = false;
+
+                _genres = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public bool IsGenresLoading
+        {
+            get { return _isGenresLoading; }
+            set
+            {
+                _isGenresLoading = value;
                 NotifyOfPropertyChange();
             }
         }
@@ -135,45 +256,19 @@
             }
         }
 
-        public void ShowCatalogs()
-        {
-            IsSortsInPaneVisible = IsGenresInPaneVisible = false;
-            IsNestedPaneOpen = IsCatalogsInPaneVisible = true;
-        }
-        public void ShowSorts()
-        {
-            IsCatalogsInPaneVisible = IsGenresInPaneVisible = false;
-            IsNestedPaneOpen = IsSortsInPaneVisible = true;
-        }
         public void ShowGenres()
         {
             IsSortsInPaneVisible = IsCatalogsInPaneVisible = false;
             IsNestedPaneOpen = IsGenresInPaneVisible = true;
         }
-
-        private void SetMangaCollection(CatalogModel catalog, SortModel sort, GenreModel genre)
-        {
-            var mangaCollection = IoC.Get<MangaCollection>();
-            mangaCollection.SetCatalog(catalog);
-            mangaCollection.SetSort(sort);
-            mangaCollection.SetGenre(genre);
-
-            Mangas = new IncrementalLoadingCollection<MangaCollection, MangaShortModel>(mangaCollection);
-
-            NotifyOfPropertyChange(nameof(Mangas));
-        }
         private async void SetGenresCollection(CatalogModel catalog)
         {
+            IsGenresLoading = true;
             Genres = await _catalogsProvider.GetCatalogGenres(catalog);
-
-            NotifyOfPropertyChange(nameof(Genres));
         }
-        private async void SetSortsCollection(CatalogModel catalog)
-        {
-            Sorts = await _catalogsProvider.GetCatalogSorts(catalog);
 
-            NotifyOfPropertyChange(nameof(Sorts));
-        }
+        #endregion
+
 
         #region Overrides of Screen
 
@@ -184,18 +279,6 @@
             Genres?.Clear();
             Sorts?.Clear();
 
-            _catalog = null;
-            _genre = null;
-            _sort = null;
-
-            Mangas = null;
-            Catalogs = null;
-            Genres = null;
-            Sorts = null;
-
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
-
             base.OnDeactivate(close);
         }
 
@@ -205,6 +288,7 @@
 
         public void Handle(BeginIncrementalLoading message)
         {
+            IsMangasLoading = true;
         }
 
         #endregion
@@ -213,6 +297,7 @@
 
         public void Handle(EndIncrementalLoading message)
         {
+            IsMangasLoading = false;
         }
 
         #endregion

@@ -205,6 +205,15 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
+                    <ProgressRing Grid.Column="0"
+                                  Width="50"
+                                  Height="50"
+                                  VerticalAlignment="Center"
+                                  HorizontalContentAlignment="Center"
+                                  Foreground="LightGray"
+                                  IsActive="{Binding Path=IsCatalogsLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Visibility="{Binding Path=IsCatalogsLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
+
                     <controls:AdaptiveGridView x:Name="MangaArticles"
                                                Grid.Column="1"
                                                Margin="5"
@@ -241,12 +250,21 @@
                             </DataTemplate>
                         </controls:AdaptiveGridView.ItemTemplate>
                     </controls:AdaptiveGridView>
+                    <ProgressRing Grid.Column="1"
+                                  Width="50"
+                                  Height="50"
+                                  VerticalAlignment="Center"
+                                  HorizontalContentAlignment="Center"
+                                  Foreground="LightGray"
+                                  IsActive="{Binding Path=IsMangasLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Visibility="{Binding Path=IsMangasLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
+
                     <Grid x:Name="RightSection"
                           Grid.Column="2"
                           Width="225"
                           Visibility="Collapsed">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" MinHeight="100" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
 
@@ -274,6 +292,14 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
+                        <ProgressRing Grid.Row="0"
+                                      Width="50"
+                                      Height="50"
+                                      VerticalAlignment="Center"
+                                      HorizontalContentAlignment="Center"
+                                      Foreground="LightGray"
+                                      IsActive="{Binding Path=IsSortsLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Visibility="{Binding Path=IsSortsLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                         <ListView Grid.Row="1"
                                   ItemsSource="{x:Bind Path=ViewModel.Genres, Mode=OneWay}"
@@ -300,6 +326,14 @@
                                 </DataTemplate>
                             </ListView.ItemTemplate>
                         </ListView>
+                        <ProgressRing Grid.Row="1"
+                                      Width="50"
+                                      Height="50"
+                                      VerticalAlignment="Center"
+                                      HorizontalContentAlignment="Center"
+                                      Foreground="LightGray"
+                                      IsActive="{Binding Path=IsGenresLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Visibility="{Binding Path=IsGenresLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </Grid>
                 </Grid>
             </SplitView.Content>

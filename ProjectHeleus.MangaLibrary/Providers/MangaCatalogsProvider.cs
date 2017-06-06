@@ -22,7 +22,7 @@
 
         public async Task<BindableCollection<CatalogModel>> GetAllCatalogs()
         {
-            using (var request = new HttpHelperRequest(new Uri("http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs"), HttpMethod.Post))
+            using (var request = new HttpHelperRequest(new Uri("http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
@@ -55,7 +55,6 @@
                 }
             }
         }
-
         public async Task<BindableCollection<MangaShortModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, int page)
         {
             using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{page}"), HttpMethod.Get))
