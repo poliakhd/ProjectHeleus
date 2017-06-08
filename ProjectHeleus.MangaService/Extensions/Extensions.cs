@@ -2,10 +2,11 @@
 {
     using System;
 
-    using Core;
+    using StructureMap;
+
     using Parsers;
     using Parsers.Interfaces;
-    using StructureMap;
+    using Shared.Types;
 
     public static class Extensions
     {

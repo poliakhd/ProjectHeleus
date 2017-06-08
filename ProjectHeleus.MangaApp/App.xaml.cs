@@ -1,24 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using Windows.ApplicationModel;
-using Windows.ApplicationModel.Activation;
-using Windows.ApplicationModel.Resources;
-using Windows.ApplicationModel.Store;
-using Windows.UI;
-using Windows.UI.Core;
-using Caliburn.Micro;
-using ProjectHeleus.MangaApp.ViewModels;
-using ProjectHeleus.SharedLibrary.Providers.AppPurchase;
-using ProjectHeleus.SharedLibrary.Providers.AppPurchase.Contracts;
-using ProjectHeleus.SharedLibrary.Providers.Menu.Contracts;
-using ColorHelper = Microsoft.Toolkit.Uwp.ColorHelper;
-
-namespace ProjectHeleus.MangaApp
+﻿namespace ProjectHeleus.MangaApp
 {
-    using MangaLibrary.Core.Collections;
-    using MangaLibrary.Providers;
-    using MangaLibrary.Providers.Interfaces;
+    using System;
+    using System.Collections.Generic;
+
+    using Windows.UI.Core;
+    using Windows.ApplicationModel.Activation;
+
+    using Caliburn.Micro;
+
     using Providers;
+    using ViewModels;
+    using MangaLibrary.Providers;
+    using MangaLibrary.Core.Collections;
+    using MangaLibrary.Providers.Interfaces;
+    using WindowsLibrary.Providers.Menu.Contracts;
 
     /// <summary>
     /// Provides application-specific behavior to supplement the default Application class.

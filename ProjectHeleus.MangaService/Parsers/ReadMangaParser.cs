@@ -11,13 +11,12 @@
     using AngleSharp.Dom;
     using AngleSharp.Dom.Html;
     using AngleSharp.Extensions;
-
     using Microsoft.Extensions.Logging;
 
-    using Core;
-    using Models;
     using Interfaces;
-    using Models.Interfaces;
+    using Shared.Types;
+    using Shared.Models;
+    using Shared.Models.Interfaces;
 
     public class ReadMangaParser 
         : IParser

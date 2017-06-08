@@ -2,7 +2,7 @@
 {
     using System.Threading.Tasks;
 
-    using Models.Interfaces;
+    using Shared.Models.Interfaces;
 
     public interface IMangaParser
     {

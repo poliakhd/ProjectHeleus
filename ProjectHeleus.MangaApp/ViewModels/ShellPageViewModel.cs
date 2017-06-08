@@ -1,11 +1,13 @@
-﻿using Windows.UI.Xaml.Controls;
-using Caliburn.Micro;
-using ProjectHeleus.SharedLibrary.Extenstions;
-using ProjectHeleus.SharedLibrary.Models;
-using ProjectHeleus.SharedLibrary.Providers.Menu.Contracts;
-
-namespace ProjectHeleus.MangaApp.ViewModels
+﻿namespace ProjectHeleus.MangaApp.ViewModels
 {
+    using Windows.UI.Xaml.Controls;
+
+    using Caliburn.Micro;
+
+    using WindowsLibrary.Models;
+    using WindowsLibrary.Extenstions;
+    using WindowsLibrary.Providers.Menu.Contracts;
+
     public class ShellPageViewModel
         : Screen
     {

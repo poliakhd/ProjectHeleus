@@ -1,11 +1,13 @@
 ﻿namespace ProjectHeleus.MangaApp.Providers
 {
     using System.Collections.Generic;
-    using Windows.ApplicationModel.Resources;
+
     using Windows.UI.Xaml.Controls;
-    using SharedLibrary.Models;
-    using SharedLibrary.Providers.Menu.Contracts;
+    using Windows.ApplicationModel.Resources;
+
     using ViewModels;
+    using WindowsLibrary.Models;
+    using WindowsLibrary.Providers.Menu.Contracts;
 
     public class ShellMenuProvider : IMenuProvider
     {

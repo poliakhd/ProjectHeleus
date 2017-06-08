@@ -1,12 +1,14 @@
 ﻿namespace ProjectHeleus.MangaLibrary.Core.Collections
 {
-    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using System.Collections.Generic;
+
     using Caliburn.Micro;
-    using Messages;
     using Microsoft.Toolkit.Uwp;
-    using Models;
+
+    using Messages;
+    using Shared.Models;
     using Providers.Interfaces;
 
     public class MangaCollection 

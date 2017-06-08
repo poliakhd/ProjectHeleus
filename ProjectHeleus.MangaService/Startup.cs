@@ -1,16 +1,18 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using ProjectHeleus.MangaService.Parsers;
-using ProjectHeleus.MangaService.Parsers.Interfaces;
-using ProjectHeleus.MangaService.Providers;
-using StructureMap;
-
-namespace ProjectHeleus.MangaService
+﻿namespace ProjectHeleus.MangaService
 {
+    using System;
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+
+    using Newtonsoft.Json;
+    using StructureMap;
+
+    using Parsers;
+    using Providers;
+    using Parsers.Interfaces;
     using Providers.Interfaces;
 
     public class Startup
@@ -30,7 +32,9 @@ namespace ProjectHeleus.MangaService
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services
+                .AddMvc()
+                .AddJsonOptions(settings => settings.SerializerSettings.Formatting = Formatting.Indented);
 
             var container = new Container();
 

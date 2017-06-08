@@ -2,12 +2,15 @@
 {
     using System;
     using System.Threading.Tasks;
+
     using Windows.Web.Http;
+
     using Caliburn.Micro;
-    using Interfaces;
-    using Microsoft.Toolkit.Uwp;
-    using Models;
     using Newtonsoft.Json;
+    using Microsoft.Toolkit.Uwp;
+
+    using Interfaces;
+    using Shared.Models;
 
     public class MangaCatalogsProvider
         : ICatalogsProvider

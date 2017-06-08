@@ -2,16 +2,15 @@
 {
     using System.Threading.Tasks;
     using System.Collections.Generic;
-    
-    using Microsoft.Extensions.Logging;
 
     using StructureMap;
+    using Microsoft.Extensions.Logging;
 
-    using Core;
-    using Models;
     using Extensions;
     using Interfaces;
-    using Models.Interfaces;
+    using Shared.Types;
+    using Shared.Models;
+    using Shared.Models.Interfaces;
 
     public class HubCatalogsProvider
         : ICatalogsProvider

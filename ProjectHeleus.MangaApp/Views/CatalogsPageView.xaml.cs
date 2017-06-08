@@ -1,7 +1,7 @@
-﻿using Windows.UI.Xaml.Controls;
-
-namespace ProjectHeleus.MangaApp.Views
+﻿namespace ProjectHeleus.MangaApp.Views
 {
+    using Windows.UI.Xaml.Controls;
+
     using ViewModels;
 
     public sealed partial class CatalogsPageView : Page

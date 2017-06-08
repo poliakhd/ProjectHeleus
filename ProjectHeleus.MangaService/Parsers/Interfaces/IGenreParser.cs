@@ -3,8 +3,8 @@
     using System.Threading.Tasks;
     using System.Collections.Generic;
 
-    using Core;
-    using Models.Interfaces;
+    using Shared.Types;
+    using Shared.Models.Interfaces;
 
     public interface IGenreParser
     {

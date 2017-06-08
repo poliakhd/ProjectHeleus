@@ -4,10 +4,10 @@
 
     using StructureMap;
 
-    using Core;
     using Extensions;
-    using Models.Interfaces;
     using Interfaces;
+    using Shared.Types;
+    using Shared.Models.Interfaces;
 
     public class HubMangasProvider
         : IMangasProvider

@@ -2,9 +2,9 @@
 {
     using System.Threading.Tasks;
 
-    using Core;
-    using Models.Interfaces;
-
+    using Shared.Types;
+    using Shared.Models.Interfaces;
+    
     public interface IMangasProvider
     {
         Task<IManga> GetMangaContentAsync(CatalogType catalogType, string url);

@@ -6,10 +6,10 @@
 
     using Microsoft.AspNetCore.Mvc;
 
-    using Core;
     using Extensions;
-    using Models.Interfaces;
+    using Shared.Types;
     using Providers.Interfaces;
+    using Shared.Models.Interfaces;
 
     public class CatalogsController 
         : Controller

@@ -11,11 +11,12 @@
     <AssemblyName>ProjectHeleus.MangaLibrary</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <TargetPlatformVersion>10.0.15063.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <RuntimeIdentifiers>win10-arm;win10-arm-aot;win10-x86;win10-x86-aot;win10-x64;win10-x64-aot</RuntimeIdentifiers>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -103,33 +104,41 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <!-- A reference to the entire .Net Framework and Windows SDK are automatically included -->
-    <None Include="project.json" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Core\Collections\MangaCollection.cs" />
     <Compile Include="Core\Extensions.cs" />
     <Compile Include="Core\Messages\BeginIncrementalLoading.cs" />
     <Compile Include="Core\Messages\EndIncrementalLoading.cs" />
-    <Compile Include="Models\AuthorModel.cs" />
-    <Compile Include="Models\CatalogModel.cs" />
-    <Compile Include="Models\ChapterImagesModel.cs" />
-    <Compile Include="Models\ChapterModel.cs" />
-    <Compile Include="Models\GenreModel.cs" />
-    <Compile Include="Models\MangaModel.cs" />
-    <Compile Include="Models\MangaShortModel.cs" />
-    <Compile Include="Models\SortModel.cs" />
-    <Compile Include="Models\TranslatorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\Interfaces\ICatalogsProvider.cs" />
     <Compile Include="Providers\MangaCatalogsProvider.cs" />
     <EmbeddedResource Include="Properties\ProjectHeleus.MangaLibrary.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ProjectHeleus.SharedLibrary\ProjectHeleus.SharedLibrary.csproj">
-      <Project>{5752698f-902b-422e-9b28-db2bd3be3cda}</Project>
-      <Name>ProjectHeleus.SharedLibrary</Name>
+    <ProjectReference Include="..\ProjectHeleus.Shared\ProjectHeleus.Shared.csproj">
+      <Project>{E86D42F0-EDC7-4D17-BA85-AFC7EAB2DEBD}</Project>
+      <Name>ProjectHeleus.Shared</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <PackageReference Include="Caliburn.Micro.Core">
+      <Version>3.1.0</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
+      <Version>5.3.3</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp">
+      <Version>1.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
+      <Version>1.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Toolkit.Uwp.Services">
+      <Version>1.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json">
+      <Version>10.0.2</Version>
+    </PackageReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

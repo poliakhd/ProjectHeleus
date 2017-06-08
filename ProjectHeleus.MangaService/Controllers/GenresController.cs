@@ -3,12 +3,13 @@ namespace ProjectHeleus.MangaService.Controllers
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Core;
+
     using Microsoft.AspNetCore.Mvc;
 
     using Extensions;
-    using Models.Interfaces;
+    using Shared.Types;
     using Providers.Interfaces;
+    using Shared.Models.Interfaces;
 
     public class GenresController : Controller
     {

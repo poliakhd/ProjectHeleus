@@ -3,11 +3,12 @@
     using System.Threading.Tasks;
     using System.Collections.Generic;
 
-    using Core;
+    using StructureMap;
+
     using Extensions;
     using Interfaces;
-    using Models.Interfaces;
-    using StructureMap;
+    using Shared.Types;
+    using Shared.Models.Interfaces;
 
     public class HubGenresProvider : IGenresProvider
     {

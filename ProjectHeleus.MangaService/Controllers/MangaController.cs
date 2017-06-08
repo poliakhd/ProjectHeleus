@@ -5,8 +5,8 @@
     using Microsoft.AspNetCore.Mvc;
 
     using Extensions;
-    using Models.Interfaces;
     using Providers.Interfaces;
+    using Shared.Models.Interfaces;
 
 
     public class MangaController : Controller

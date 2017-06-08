@@ -1,15 +1,13 @@
 ﻿namespace ProjectHeleus.MangaApp.ViewModels
 {
-    using System;
-
     using Caliburn.Micro;
     using Microsoft.Toolkit.Uwp;
 
+    using Shared.Models;
     using MangaLibrary.Core.Collections;
     using MangaLibrary.Core.Messages;
-    using MangaLibrary.Models;
     using MangaLibrary.Providers.Interfaces;
-
+    
     public class CatalogsPageViewModel 
         : Screen, IHandle<BeginIncrementalLoading>, IHandle<EndIncrementalLoading>
     {

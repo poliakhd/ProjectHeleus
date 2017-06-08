@@ -1,8 +1,10 @@
 ﻿namespace ProjectHeleus.MangaLibrary.Providers.Interfaces
 {
     using System.Threading.Tasks;
+
     using Caliburn.Micro;
-    using Models;
+
+    using Shared.Models;
 
     public interface ICatalogsProvider
     {

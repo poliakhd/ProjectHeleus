@@ -8,13 +8,12 @@
 
     using AngleSharp;
     using AngleSharp.Dom;
-
     using Microsoft.Extensions.Logging;
 
-    using Core;
-    using Models;
     using Interfaces;
-    using Models.Interfaces;
+    using Shared.Types;
+    using Shared.Models;
+    using Shared.Models.Interfaces;
 
     public class MangaFoxParser 
         : IParser
