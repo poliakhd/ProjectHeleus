@@ -29,7 +29,7 @@
         private bool _isSortsInPaneVisible;
         private bool _isGenresInPaneVisible;
         private bool _isNestedPaneOpen;
-        private bool _isCatalogsLoading = false;
+        private bool _isCatalogsLoading;
         private BindableCollection<CatalogModel> _catalogs;
         private BindableCollection<GenreModel> _genres;
         private bool _isSortsLoading;

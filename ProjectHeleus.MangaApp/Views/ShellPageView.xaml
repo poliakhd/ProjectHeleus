@@ -1,13 +1,12 @@
-﻿<Page
-    x:Class="ProjectHeleus.MangaApp.Views.ShellPageView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:micro="using:Caliburn.Micro"
-    xmlns:models="using:ProjectHeleus.WindowsLibrary.Models"
-    mc:Ignorable="d">
+﻿<Page x:Class="ProjectHeleus.MangaApp.Views.ShellPageView"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:micro="using:Caliburn.Micro"
+      xmlns:models="using:ProjectHeleus.WindowsLibrary.Models"
+      mc:Ignorable="d">
 
     <Page.Resources>
         <DataTemplate x:Name="MenuItemTemplate" x:DataType="models:MenuItem">
@@ -17,43 +16,39 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <SymbolIcon
-                    Grid.Column="0"
-                    Foreground="White"
-                    Symbol="{x:Bind Icon, Mode=OneWay}" />
-                <TextBlock
-                    Grid.Column="1"
-                    VerticalAlignment="Center"
-                    FontSize="16"
-                    Foreground="White"
-                    Text="{x:Bind Name, Mode=OneWay}" />
+                <SymbolIcon Grid.Column="0"
+                            Foreground="White"
+                            Symbol="{x:Bind Icon, Mode=OneWay}" />
+                <TextBlock Grid.Column="1"
+                           VerticalAlignment="Center"
+                           FontSize="16"
+                           Foreground="White"
+                           Text="{x:Bind Name, Mode=OneWay}" />
             </Grid>
         </DataTemplate>
     </Page.Resources>
 
     <Grid Background="{Binding Source={StaticResource Settings}, Path=PaneBackgroundColor, UpdateSourceTrigger=PropertyChanged}">
-        <controls:HamburgerMenu
-            x:Name="Menu"
-            micro:Message.Attach="[Event ItemClick] = [MainMenuItemClick($source, $eventArgs)]; [Event OptionsItemClick] = [OptionMenuItemClick($source, $eventArgs)]"
-            CompactPaneLength="48"
-            Foreground="White"
-            HamburgerHeight="48"
-            ItemTemplate="{StaticResource MenuItemTemplate}"
-            ItemsSource="{Binding Path=MainMenu, UpdateSourceTrigger=PropertyChanged}"
-            OpenPaneLength="240"
-            OptionsItemTemplate="{StaticResource MenuItemTemplate}"
-            OptionsItemsSource="{Binding Path=OptionsMenu, UpdateSourceTrigger=PropertyChanged}"
-            PaneBackground="#464B4D">
+        <controls:HamburgerMenu x:Name="Menu"
+                                micro:Message.Attach="[Event ItemClick] = [MainMenuItemClick($source, $eventArgs)]; [Event OptionsItemClick] = [OptionMenuItemClick($source, $eventArgs)]"
+                                CompactPaneLength="48"
+                                Foreground="White"
+                                HamburgerHeight="48"
+                                ItemTemplate="{StaticResource MenuItemTemplate}"
+                                ItemsSource="{Binding Path=MainMenu, UpdateSourceTrigger=PropertyChanged}"
+                                OpenPaneLength="240"
+                                OptionsItemTemplate="{StaticResource MenuItemTemplate}"
+                                OptionsItemsSource="{Binding Path=OptionsMenu, UpdateSourceTrigger=PropertyChanged}"
+                                PaneBackground="#464B4D">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Frame
-                    Grid.Row="0"
-                    micro:Message.Attach="[Event Loaded] = [SetupNavigation($source)]"
-                    DataContext="{x:Null}">
+                <Frame Grid.Row="0"
+                       micro:Message.Attach="[Event Loaded] = [SetupNavigation($source)]"
+                       DataContext="{x:Null}">
                     <Frame.ContentTransitions>
                         <TransitionCollection>
                             <NavigationThemeTransition>
