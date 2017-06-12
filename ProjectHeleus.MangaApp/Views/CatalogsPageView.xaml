@@ -232,7 +232,7 @@
                                                StretchContentForSingleRow="False"
                                                Visibility="Visible">
                         <controls:AdaptiveGridView.ItemTemplate>
-                            <DataTemplate x:DataType="models:MangaShortModel">
+                            <DataTemplate x:DataType="models:MangaPreviewModel">
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="130" />

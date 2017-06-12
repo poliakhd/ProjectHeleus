@@ -12,7 +12,7 @@
     using Providers.Interfaces;
 
     public class MangaCollection 
-        : IIncrementalSource<MangaShortModel>
+        : IIncrementalSource<MangaPreviewModel>
     {
         #region Private Members
 
@@ -48,11 +48,11 @@
 
         #region Implementation of IIncrementalSource<MangaModel>
 
-        public async Task<IEnumerable<MangaShortModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
+        public async Task<IEnumerable<MangaPreviewModel>> GetPagedItemsAsync(int pageIndex, int pageSize, CancellationToken cancellationToken = new CancellationToken())
         {
             _eventAggregator.PublishOnUIThread(new BeginIncrementalLoading());
 
-            IEnumerable<MangaShortModel> fetchedResult = null;
+            IEnumerable<MangaPreviewModel> fetchedResult = null;
 
             if (_genre is null)
             {

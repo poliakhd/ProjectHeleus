@@ -71,7 +71,7 @@
             }
         }
 
-        private async Task<IEnumerable<MangaShortModel>> GetCatalogContentAsync(string url, int page)
+        private async Task<IEnumerable<MangaPreviewModel>> GetCatalogContentAsync(string url, int page)
         {
             #region Build URL
 
@@ -80,7 +80,7 @@
 
             #endregion
 
-            var formattedMangas = new List<MangaShortModel>();
+            var formattedMangas = new List<MangaPreviewModel>();
 
             try
             {
@@ -103,7 +103,7 @@
                         var id = htmlManga.QuerySelector(".manga_text a")?.GetAttribute("href").TrimEnd('/');
                         id = id.Substring(id.LastIndexOf('/') + 1);
 
-                        var formattedManga = new MangaShortModel
+                        var formattedManga = new MangaPreviewModel
                         {
                             Id = id,
                             Title =
@@ -126,28 +126,6 @@
                             formattedManga.Rating = float.Parse(ratings);
                             formattedManga.RatingLimit = 5;
                         }
-
-                        #endregion
-
-                        var info = htmlManga.QuerySelectorAll(".info");
-
-                        #region Views
-
-                        if (info.Length > 1)
-                            if (int.TryParse(info[1].TextContent.Split(' ')[1].Replace(".", "").Replace(",", ""),
-                                out int views))
-                                formattedManga.Views = views;
-
-                        #endregion
-
-                        #region Genres
-
-                        formattedManga.Authors = null;
-                        formattedManga.Genres =
-                            info[0].TextContent.Split(',')
-                                .Select(x => x.Replace(".", "").Trim())
-                                .Where(y => !string.IsNullOrEmpty(y))
-                                .Select(x => new GenreModel() {Title = x, Url = null});
 
                         #endregion
 

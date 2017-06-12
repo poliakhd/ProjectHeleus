@@ -67,7 +67,7 @@
 
         #region Mangas
 
-        public IncrementalLoadingCollection<MangaCollection, MangaShortModel> Mangas { get; set; }
+        public IncrementalLoadingCollection<MangaCollection, MangaPreviewModel> Mangas { get; set; }
 
         public bool IsMangasLoading
         {
@@ -87,7 +87,7 @@
             mangaCollection.SetSort(sort);
             mangaCollection.SetGenre(genre);
 
-            Mangas = new IncrementalLoadingCollection<MangaCollection, MangaShortModel>(mangaCollection);
+            Mangas = new IncrementalLoadingCollection<MangaCollection, MangaPreviewModel>(mangaCollection);
 
             NotifyOfPropertyChange(nameof(Mangas));
         }

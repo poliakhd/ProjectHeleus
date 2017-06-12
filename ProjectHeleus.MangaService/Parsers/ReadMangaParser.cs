@@ -85,7 +85,7 @@
 
             #endregion
 
-            var formattedMangas = new List<MangaShortModel>();
+            var formattedMangas = new List<MangaPreviewModel>();
 
             try
             {
@@ -102,7 +102,7 @@
                 {
                     #region Header
 
-                    var formattedManga = new MangaShortModel
+                    var formattedManga = new MangaPreviewModel
                     {
                         Id = htmlManga.QuerySelector(".img a")?.GetAttribute("href").Replace("/", ""),
                         Title = htmlManga.QuerySelector("h4")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
@@ -121,52 +121,6 @@
                         formattedManga.Rating = float.Parse(htmlRatings[0]);
                         formattedManga.RatingLimit = float.Parse(htmlRatings[2]);
                     }
-
-                    #endregion
-
-                    #region Views
-
-                    var htmlViews = htmlManga.QuerySelector(".tile-info p");
-
-                    if (htmlViews != null && int.TryParse(htmlViews.TextContent.Substring(htmlViews.TextContent.LastIndexOf(' ')), out int views))
-                        formattedManga.Views = views;
-
-                    #endregion
-
-                    #region AuthorsAndGenres
-
-                    var htmlTileInfo = htmlManga.QuerySelector(".tile-info");
-
-                    var authorsAndGenres = htmlTileInfo.QuerySelectorAll("a");
-                    var authorsAndGenresSeparator = htmlTileInfo.Children.Index(htmlTileInfo.ChildNodes.FirstOrDefault(x => x is IHtmlBreakRowElement));
-
-                    formattedManga.Authors =
-                        authorsAndGenres.Take(authorsAndGenresSeparator)
-                            .Select(
-                                x =>
-                                    new AuthorModel()
-                                    {
-                                        Id =
-                                            x.GetAttribute("href")
-                                                .Substring(x.GetAttribute("href").LastIndexOf('/') + 1),
-                                        Name = x.TextContent,
-                                        Url = $@"{Url}{x.GetAttribute("href")}"
-                                    }
-                                );
-
-                    formattedManga.Genres =
-                        authorsAndGenres.Skip(authorsAndGenresSeparator)
-                            .Select(
-                                x =>
-                                    new GenreModel()
-                                    {
-                                        Id =
-                                            x.GetAttribute("href")
-                                                .Substring(x.GetAttribute("href").LastIndexOf('/') + 1),
-                                        Title = x.TextContent,
-                                        Url = $@"{Url}{x.GetAttribute("href")}"
-                                    }
-                                );
 
                     #endregion
 

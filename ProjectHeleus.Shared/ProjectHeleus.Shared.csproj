@@ -53,7 +53,7 @@
     <Compile Include="Models\Interfaces\ISort.cs" />
     <Compile Include="Models\Interfaces\ITranslator.cs" />
     <Compile Include="Models\MangaModel.cs" />
-    <Compile Include="Models\MangaShortModel.cs" />
+    <Compile Include="Models\MangaPreviewModel.cs" />
     <Compile Include="Models\SortModel.cs" />
     <Compile Include="Models\TranslatorModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
