@@ -5,12 +5,15 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+    using System.Net;
+    using System.Text;
     using System.Text.RegularExpressions;
 
     using AngleSharp;
     using AngleSharp.Dom;
     using AngleSharp.Dom.Html;
     using AngleSharp.Extensions;
+    using AngleSharp.Parser.Html;
     using Microsoft.Extensions.Logging;
 
     using Interfaces;
@@ -78,6 +81,8 @@
 
         private async Task<IEnumerable<IManga>> GetCatalogContentAsync(string url, int page)
         {
+            var parser = new HtmlParser();
+
             #region Build URL
 
             if (page > 0)
@@ -89,44 +94,55 @@
 
             try
             {
-                var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(url);
-                var htmlMangas = htmlDocument.QuerySelectorAll(".tile.col-sm-6");
-
-                if (!htmlMangas.Any())
+                using (var client = new WebClient())
                 {
-                    _logger.LogInformation($"There were no content for catalog: {url}");
-                    return null;
-                }
 
-                foreach (var htmlManga in htmlMangas)
-                {
-                    #region Header
-
-                    var formattedManga = new MangaPreviewModel
+                    client.Encoding = Encoding.UTF8;
+                    
+                    using (var htmlDocument = parser.Parse(await client.DownloadStringTaskAsync(url)))
                     {
-                        Id = htmlManga.QuerySelector(".img a")?.GetAttribute("href").Replace("/", ""),
-                        Title = htmlManga.QuerySelector("h4")?.TextContent.Replace("\n", "").TrimStart(' ').TrimEnd(' '),
-                        Url = $@"{Url}{htmlManga.QuerySelector(".img a")?.GetAttribute("href")}",
-                        Cover = htmlManga.QuerySelector(".img a img")?.GetAttribute("src")
-                    };
+                        var htmlMangas = htmlDocument.QuerySelectorAll(".tile.col-sm-6");
 
-                    #endregion
+                        if (!htmlMangas.Any())
+                        {
+                            _logger.LogInformation($"There were no content for catalog: {url}");
+                            return null;
+                        }
 
-                    #region Rating
+                        foreach (var htmlManga in htmlMangas)
+                        {
+                            #region Header
 
-                    var htmlRatings = htmlManga.QuerySelector(".desc .rating")?.GetAttribute("title").Split(' ');
+                            var formattedManga = new MangaPreviewModel
+                            {
+                                Id = htmlManga.QuerySelector(".img a")?.GetAttribute("href").Replace("/", ""),
+                                Title =
+                                    htmlManga.QuerySelector("h4")?
+                                        .TextContent.Replace("\n", "")
+                                        .TrimStart(' ')
+                                        .TrimEnd(' '),
+                                Url = $@"{Url}{htmlManga.QuerySelector(".img a")?.GetAttribute("href")}",
+                                Cover = htmlManga.QuerySelector(".img a img")?.GetAttribute("src")
+                            };
 
-                    if (htmlRatings != null)
-                    {
-                        formattedManga.Rating = float.Parse(htmlRatings[0]);
-                        formattedManga.RatingLimit = float.Parse(htmlRatings[2]);
+                            #endregion
+
+                            #region Rating
+
+                            var htmlRatings = htmlManga.QuerySelector(".desc .rating")?.GetAttribute("title").Split(' ');
+
+                            if (htmlRatings != null)
+                            {
+                                formattedManga.Rating = float.Parse(htmlRatings[0]);
+                                formattedManga.RatingLimit = float.Parse(htmlRatings[2]);
+                            }
+
+                            #endregion
+
+                            formattedMangas.Add(formattedManga);
+                        }
                     }
-
-                    #endregion
-
-                    formattedMangas.Add(formattedManga);
                 }
-
             }
             catch (Exception e)
             {
@@ -150,6 +166,8 @@
 
         public async Task<IManga> GetMangaAsync(string url)
         {
+            var parser = new HtmlParser();
+
             #region Build URL
 
             url = $"{Url}/{url}";
@@ -160,38 +178,41 @@
 
             try
             {
-                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync(url))
+                using (var client = new WebClient() {Encoding = Encoding.UTF8})
                 {
-                    var htmlManga = htmlDocument.QuerySelector(".leftContent");
-
-                    if (htmlManga == null)
-                        return null;
-
-                    GetInformation(parsedManga, htmlManga);
-
-                    var information = htmlManga.QuerySelectorAll(".subject-meta.col-sm-7 p");
-
-                    if (information.Any())
+                    using (var htmlDocument = parser.Parse(await client.DownloadStringTaskAsync(url)))
                     {
-                        GetVolume(information, parsedManga);
-                        GetViews(information, parsedManga);
+                        var htmlManga = htmlDocument.QuerySelector(".leftContent");
 
-                        foreach (var informationLine in information.Skip(2))
+                        if (htmlManga == null)
+                            return null;
+
+                        GetInformation(parsedManga, htmlManga);
+
+                        var information = htmlManga.QuerySelectorAll(".subject-meta.col-sm-7 p");
+
+                        if (information.Any())
                         {
-                            if (GetGenres(informationLine, parsedManga))
-                                continue;
+                            GetVolume(information, parsedManga);
+                            GetViews(information, parsedManga);
 
-                            if (GetAuthors(informationLine, parsedManga))
-                                continue;
+                            foreach (var informationLine in information.Skip(2))
+                            {
+                                if (GetGenres(informationLine, parsedManga))
+                                    continue;
 
-                            if (GetTranslators(informationLine, parsedManga))
-                                continue;
+                                if (GetAuthors(informationLine, parsedManga))
+                                    continue;
 
-                            GetPublishedYear(informationLine, parsedManga);
+                                if (GetTranslators(informationLine, parsedManga))
+                                    continue;
+
+                                GetPublishedYear(informationLine, parsedManga);
+                            }
                         }
-                    }
 
-                    GetChapters(htmlManga, parsedManga);
+                        GetChapters(htmlManga, parsedManga);
+                    }
                 }
             }
             catch (Exception e)
@@ -211,6 +232,8 @@
         }
         public async Task<IChapterImages> GetMangaChapterAsync(string url)
         {
+            var parser = new HtmlParser();
+
             #region Build URL
 
             url = $"{Url}/{url}";
@@ -219,47 +242,58 @@
 
             try
             {
-                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader().WithJavaScript()).OpenAsync(url))
+                using (var client = new WebClient())
                 {
-                    var htmlChapterImages = htmlDocument.QuerySelectorAll("script").FirstOrDefault(x => x.TextContent.Contains("rm_h.init"));
-                    if (htmlChapterImages == null)
-                        return null;
-
-                    string formattedImagesSource;
-
-                    #region Preparing images source
-
-                    var jsImagesSource = htmlChapterImages.TextContent.Substring(htmlChapterImages.TextContent.IndexOf("rm_h.init"));
-
-                    var preFormattedImagesSource = jsImagesSource.Substring(jsImagesSource.IndexOf("(")).TrimEnd();
-
-                    var startBracket = preFormattedImagesSource.IndexOf("[");
-                    var endBracket = preFormattedImagesSource.LastIndexOf("]");
-
-                    formattedImagesSource = preFormattedImagesSource.Substring(startBracket + 1, endBracket - startBracket - 1);
-
-                    #endregion
-
-                    if (string.IsNullOrEmpty(formattedImagesSource))
+                    using (var htmlDocument = parser.Parse(await client.DownloadStringTaskAsync(url)))
                     {
-                        _logger.LogInformation($"Cannot retrive images for chapter: Url - {url}; jsImagesSource: {jsImagesSource}; preFormattedImagesSource: {preFormattedImagesSource};");
-                        return null;
+
+                        var htmlChapterImages =
+                            htmlDocument.QuerySelectorAll("script")
+                                .FirstOrDefault(x => x.TextContent.Contains("rm_h.init"));
+                        if (htmlChapterImages == null)
+                            return null;
+
+                        string formattedImagesSource;
+
+                        #region Preparing images source
+
+                        var jsImagesSource =
+                            htmlChapterImages.TextContent.Substring(htmlChapterImages.TextContent.IndexOf("rm_h.init"));
+
+                        var preFormattedImagesSource = jsImagesSource.Substring(jsImagesSource.IndexOf("(")).TrimEnd();
+
+                        var startBracket = preFormattedImagesSource.IndexOf("[");
+                        var endBracket = preFormattedImagesSource.LastIndexOf("]");
+
+                        formattedImagesSource = preFormattedImagesSource.Substring(startBracket + 1,
+                            endBracket - startBracket - 1);
+
+                        #endregion
+
+                        if (string.IsNullOrEmpty(formattedImagesSource))
+                        {
+                            _logger.LogInformation(
+                                $"Cannot retrive images for chapter: Url - {url}; jsImagesSource: {jsImagesSource}; preFormattedImagesSource: {preFormattedImagesSource};");
+                            return null;
+                        }
+
+                        var localImagesHrefs = new List<string>();
+
+                        foreach (Match match in new Regex(@"\[(.*?)\]").Matches(formattedImagesSource))
+                        {
+                            var image = match.Groups[1].Value;
+
+                            if (string.IsNullOrEmpty(image))
+                                continue;
+
+                            var imageAttributes = image.Split(',');
+                            localImagesHrefs.Add(
+                                $@"{imageAttributes[1].Replace("\'", "")}{imageAttributes[0].Replace("\'", "")}{imageAttributes
+                                    [2].Replace("\"", "")}");
+                        }
+
+                        return new ChapterImagesModel() {Images = localImagesHrefs};
                     }
-
-                    var localImagesHrefs = new List<string>();
-
-                    foreach (Match match in new Regex(@"\[(.*?)\]").Matches(formattedImagesSource))
-                    {
-                        var image = match.Groups[1].Value;
-
-                        if (string.IsNullOrEmpty(image))
-                            continue;
-
-                        var imageAttributes = image.Split(',');
-                        localImagesHrefs.Add($@"{imageAttributes[1].Replace("\'", "")}{imageAttributes[0].Replace("\'", "")}{imageAttributes[2].Replace("\"", "")}");
-                    }
-
-                    return new ChapterImagesModel() { Images = localImagesHrefs };
                 }
             }
             catch (Exception e)
@@ -308,7 +342,7 @@
             var viewsIndex = information[1].TextContent.IndexOf(":", StringComparison.Ordinal);
 
             if (viewsIndex > 0)
-                formattedManga.Views = int.Parse(information[1].TextContent.Substring(viewsIndex + 1));
+                formattedManga.Views = int.Parse(information[2].TextContent.Substring(viewsIndex + 1));
         }
         private bool GetGenres(IElement informationLine, MangaModel formattedManga)
         {
@@ -379,23 +413,30 @@
 
         public async Task<IEnumerable<IGenre>> GetAllGenresAsync()
         {
+            var parser = new HtmlParser();
+
             try
             {
-                using (var htmlDocument = await BrowsingContext.New(Configuration.Default.WithDefaultLoader()).OpenAsync($"{Url}/list/genres/sort_name"))
+                using (var client = new WebClient())
                 {
-                    return
-                        htmlDocument.QuerySelectorAll(".table.table-hover tbody tr td a")?
-                            .Select(
-                                x =>
-                                    new GenreModel()
-                                    {
-                                        Id =
-                                            x.GetAttribute("href")?
-                                                .TrimEnd('/')
-                                                .Substring(x.GetAttribute("href").TrimEnd('/').LastIndexOf("/") + 1),
-                                        Title = x.TextContent,
-                                        Url = $"{Url}{x.GetAttribute("href")}"
-                                    });
+                    using (
+                        var htmlDocument =
+                            parser.Parse(await client.DownloadStringTaskAsync($"{Url}/list/genres/sort_name")))
+                    {
+                        return
+                            htmlDocument.QuerySelectorAll(".table.table-hover tbody tr td a")?
+                                .Select(
+                                    x =>
+                                        new GenreModel()
+                                        {
+                                            Id =
+                                                x.GetAttribute("href")?
+                                                    .TrimEnd('/')
+                                                    .Substring(x.GetAttribute("href").TrimEnd('/').LastIndexOf("/") + 1),
+                                            Title = x.TextContent,
+                                            Url = $"{Url}{x.GetAttribute("href")}"
+                                        });
+                    }
                 }
             }
             catch (Exception e)
