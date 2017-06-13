@@ -9,6 +9,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:micro="using:Caliburn.Micro"
       xmlns:models="using:ProjectHeleus.Shared.Models"
+      xmlns:callisto="using:Callisto.Controls"
       mc:Ignorable="d">
 
     <Page.Resources>
@@ -217,13 +218,12 @@
                                       Visibility="{Binding Path=IsCatalogsLoading, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
                     </Grid>
 
-
                     <controls:AdaptiveGridView x:Name="MangaArticles"
                                                Grid.Column="1"
                                                Margin="5"
                                                animations:ReorderGridAnimation.Duration="500"
                                                DesiredWidth="120"
-                                               ItemHeight="180"
+                                               ItemHeight="200"
                                                ItemsSource="{x:Bind Path=ViewModel.Mangas, Mode=OneWay}"
                                                OneRowModeEnabled="False"
                                                StretchContentForSingleRow="False"
@@ -233,7 +233,7 @@
                                 <Grid>
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="160" />
-                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="40" />
                                     </Grid.RowDefinitions>
 
                                     <Image Grid.Row="0"
@@ -366,19 +366,7 @@
             <VisualStateGroup x:Name="WindowStates">
                 <VisualState x:Name="VeyWideState">
                     <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1440" />
-                    </VisualState.StateTriggers>
-                    <VisualState.Setters>
-                        <Setter Target="LeftSection.Visibility" Value="Visible" />
-                        <Setter Target="RightSection.Visibility" Value="Visible" />
-                        <Setter Target="CatalogsButton.Visibility" Value="Collapsed" />
-                        <Setter Target="SortsButton.Visibility" Value="Collapsed" />
-                        <Setter Target="GenresButton.Visibility" Value="Collapsed" />
-                    </VisualState.Setters>
-                </VisualState>
-                <VisualState x:Name="SemiWideState">
-                    <VisualState.StateTriggers>
-                        <AdaptiveTrigger MinWindowWidth="1080" />
+                        <AdaptiveTrigger MinWindowWidth="1720" />
                     </VisualState.StateTriggers>
                     <VisualState.Setters>
                         <Setter Target="LeftSection.Visibility" Value="Visible" />
