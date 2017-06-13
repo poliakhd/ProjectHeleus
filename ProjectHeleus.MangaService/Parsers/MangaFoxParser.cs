@@ -427,7 +427,7 @@
 
             if (page > 0)
             {
-                formattedUrl = formattedUrl.Replace("{{0}}", "");
+                formattedUrl = formattedUrl.Replace("{0}", "");
                 formattedUrl = $"{formattedUrl}{page}.html{{0}}";
             }
 
