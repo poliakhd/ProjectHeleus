@@ -225,6 +225,7 @@
                                                DesiredWidth="120"
                                                ItemHeight="200"
                                                ItemsSource="{x:Bind Path=ViewModel.Mangas, Mode=OneWay}"
+                                               SelectedItem="{Binding Path=SelectedManga, Mode=TwoWay}"
                                                OneRowModeEnabled="False"
                                                StretchContentForSingleRow="False"
                                                Visibility="Visible">

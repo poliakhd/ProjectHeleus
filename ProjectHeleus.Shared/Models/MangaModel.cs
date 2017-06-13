@@ -2,9 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-
+    using Converters;
     using Types;
     using Interfaces;
+    using Newtonsoft.Json;
 
     public class MangaModel 
         : IManga
@@ -21,12 +22,18 @@
         public float RatingLimit { get; set; }
         public string Description { get; set; }
 
-        public IEnumerable<Uri> Covers { get; set; }
+        public IEnumerable<string> Covers { get; set; }
+
+        [JsonConverter(typeof(ConcreteTypeConverter<IEnumerable<GenreModel>>))]
         public IEnumerable<IGenre> Genres { get; set; }
 
+        [JsonConverter(typeof(ConcreteTypeConverter<IEnumerable<AuthorModel>>))]
         public IEnumerable<IAuthor> Authors { get; set; }
+
+        [JsonConverter(typeof(ConcreteTypeConverter<IEnumerable<TranslatorModel>>))]
         public IEnumerable<ITranslator> Translators { get; set; }
-        
+
+        [JsonConverter(typeof(ConcreteTypeConverter<IEnumerable<ChapterModel>>))]
         public IEnumerable<IChapter> Chapters { get; set; }
     }
 }

@@ -46,9 +46,11 @@
 //#endif
                 .Singleton<IMenuProvider, ShellMenuProvider>()
                 .Singleton<ICatalogsProvider, MangaCatalogsProvider>()
+                .Singleton<IDetailProvider, MangaDetailProvider>()
                 .Singleton<ShellPageViewModel>()
                 .Singleton<SettingsPageViewModel>()
                 .PerRequest<CatalogsPageViewModel>()
+                .PerRequest<DetailPageViewModel>()
                 .PerRequest<MangaCollection>();
 
             ConfigureNavigation();

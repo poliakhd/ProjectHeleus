@@ -103,10 +103,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ShellMenuProvider.cs" />
     <Compile Include="ViewModels\CatalogsPageViewModel.cs" />
+    <Compile Include="ViewModels\DetailPageViewModel.cs" />
     <Compile Include="ViewModels\SettingsPageViewModel.cs" />
     <Compile Include="ViewModels\ShellPageViewModel.cs" />
     <Compile Include="Views\CatalogsPageView.xaml.cs">
       <DependentUpon>CatalogsPageView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\DetailPageView.xaml.cs">
+      <DependentUpon>DetailPageView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SettingsPageView.xaml.cs">
       <DependentUpon>SettingsPageView.xaml</DependentUpon>
@@ -156,6 +160,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\DetailPageView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\SettingsPageView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -197,6 +205,7 @@
       <Version>10.0.2</Version>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

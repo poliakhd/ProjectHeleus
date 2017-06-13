@@ -178,7 +178,7 @@
 
             try
             {
-                using (var client = new WebClient() {Encoding = Encoding.UTF8})
+                using (var client = new WebClient() { Encoding = Encoding.UTF8 })
                 {
                     using (var htmlDocument = parser.Parse(await client.DownloadStringTaskAsync(url)))
                     {
@@ -321,7 +321,7 @@
             }.Where(x => x != null);
             formattedManga.Description = mangaRaw.QuerySelector("meta[itemprop=description]")?.GetAttribute("content");
             formattedManga.Covers =
-                mangaRaw.QuerySelectorAll(".picture-fotorama img")?.Select(x => new Uri(x.GetAttribute("data-full")));
+                mangaRaw.QuerySelectorAll(".picture-fotorama img")?.Select(x => x.GetAttribute("data-full"));
             formattedManga.Rating =
                 float.Parse(mangaRaw.QuerySelector(".user-rating meta[itemprop=ratingValue]")?.GetAttribute("content"));
         }
@@ -339,7 +339,7 @@
         }
         private void GetViews(IHtmlCollection<IElement> information, MangaModel formattedManga)
         {
-            var viewsIndex = information[1].TextContent.IndexOf(":", StringComparison.Ordinal);
+            var viewsIndex = information[2].TextContent.IndexOf(":", StringComparison.Ordinal);
 
             if (viewsIndex > 0)
                 formattedManga.Views = int.Parse(information[2].TextContent.Substring(viewsIndex + 1));

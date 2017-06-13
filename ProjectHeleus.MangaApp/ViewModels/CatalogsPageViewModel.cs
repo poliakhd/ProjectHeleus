@@ -1,5 +1,6 @@
 ﻿namespace ProjectHeleus.MangaApp.ViewModels
 {
+    using System;
     using Caliburn.Micro;
     using Microsoft.Toolkit.Uwp;
 
@@ -15,7 +16,8 @@
 
         private readonly ICatalogsProvider _catalogsProvider;
         private readonly IEventAggregator _eventAggregator;
-        
+        private readonly INavigationService _navigationService;
+
         private CatalogModel _catalog;
 
         private bool _isMangasBusy;
@@ -36,6 +38,7 @@
         private bool _isGenresLoading;
         private BindableCollection<SortModel> _sorts;
         private bool _isMangasLoading;
+        private MangaPreviewModel _selectedManga;
 
         #endregion
 
@@ -49,10 +52,11 @@
             }
         }
 
-        public CatalogsPageViewModel(ICatalogsProvider catalogsProvider, IEventAggregator eventAggregator)
+        public CatalogsPageViewModel(ICatalogsProvider catalogsProvider, IEventAggregator eventAggregator, INavigationService navigationService)
         {
             _catalogsProvider = catalogsProvider;
             _eventAggregator = eventAggregator;
+            _navigationService = navigationService;
 
             Initialize();
         }
@@ -68,6 +72,18 @@
         #region Mangas
 
         public IncrementalLoadingCollection<MangaCollection, MangaPreviewModel> Mangas { get; set; }
+
+        public MangaPreviewModel SelectedManga
+        {
+            get { return _selectedManga; }
+            set
+            {
+                _selectedManga = value;
+                _navigationService.NavigateToViewModel<DetailPageViewModel>(new Tuple<MangaPreviewModel, CatalogModel>(value, _catalog));
+
+                NotifyOfPropertyChange();
+            }
+        }
 
         public bool IsMangasLoading
         {

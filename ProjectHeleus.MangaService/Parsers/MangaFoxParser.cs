@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using System.Net;
+    using System.Text;
     using AngleSharp;
     using AngleSharp.Dom;
     using AngleSharp.Parser.Html;
@@ -168,7 +169,7 @@
 
             try
             {
-                using (var client = new WebClient())
+                using (var client = new WebClient() { Encoding = Encoding.UTF8})
                 {
                     using (var htmlDocument = parser.Parse(await client.DownloadStringTaskAsync(url)))
                     {
@@ -268,7 +269,7 @@
             formattedManga.AlternateNames = htmlManga.QuerySelector("#title h3")?.TextContent.Split(';');
             formattedManga.Description = htmlManga.QuerySelector(".summary")?.TextContent;
             formattedManga.Covers =
-                htmlManga.QuerySelectorAll("#series_info .cover img")?.Select(x => new Uri(x.GetAttribute("src")));
+                htmlManga.QuerySelectorAll("#series_info .cover img")?.Select(x => x.GetAttribute("src"));
 
             var textRating = htmlManga.QuerySelectorAll("#series_info > .data > span")?[2].TextContent;
 

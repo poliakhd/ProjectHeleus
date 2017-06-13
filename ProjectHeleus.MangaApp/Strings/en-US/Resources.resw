@@ -135,6 +135,18 @@
   <data name="DarkTheme.Header" xml:space="preserve">
     <value>Use dark theme</value>
   </data>
+  <data name="DetailChapters.FontSize" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="DetailChapters.Text" xml:space="preserve">
+    <value>Chapters</value>
+  </data>
+  <data name="DetailInformation.FontSize" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="DetailInformation.Text" xml:space="preserve">
+    <value>Information</value>
+  </data>
   <data name="GenresBarButton.Label" xml:space="preserve">
     <value>Genres</value>
   </data>
