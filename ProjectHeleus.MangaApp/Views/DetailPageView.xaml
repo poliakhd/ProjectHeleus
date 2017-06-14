@@ -65,14 +65,14 @@
                     <FlipView Grid.Row="0"
                               Grid.Column="0"
                               Width="230"
-                              Height="400"
+                              Height="350"
                               ItemsSource="{Binding Path=CoverModels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="viewModels:CoverModel">
                                 <Image Width="230"
-                                       Height="400"
+                                       Height="350"
                                        extensions:ImageExtensions.DecodableUriSource="{x:Bind Path=Path}"
-                                       extensions:ImageExtensions.DecodePixelHeight="400"
+                                       extensions:ImageExtensions.DecodePixelHeight="350"
                                        extensions:ImageExtensions.DecodePixelType="Logical"
                                        extensions:ImageExtensions.DecodePixelWidth="230" />
                             </DataTemplate>

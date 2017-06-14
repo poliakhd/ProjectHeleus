@@ -49,7 +49,7 @@
                 .Singleton<IDetailProvider, MangaDetailProvider>()
                 .Singleton<ShellPageViewModel>()
                 .Singleton<SettingsPageViewModel>()
-                .PerRequest<CatalogsPageViewModel>()
+                .Singleton<CatalogsPageViewModel>()
                 .PerRequest<DetailPageViewModel>()
                 .PerRequest<MangaCollection>();
 

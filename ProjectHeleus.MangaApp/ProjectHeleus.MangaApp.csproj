@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="Core\Settings.cs" />
     <Compile Include="Helpers\Extensions\ImageExtensions.cs" />
+    <Compile Include="Helpers\Extensions\ScrollExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ShellMenuProvider.cs" />
     <Compile Include="ViewModels\CatalogsPageViewModel.cs" />
@@ -200,6 +201,9 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.UI.Controls">
       <Version>1.4.1</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
+      <Version>2.0.0</Version>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>10.0.2</Version>

@@ -1,14 +1,17 @@
 ﻿namespace ProjectHeleus.MangaApp.ViewModels
 {
     using System;
+    using Windows.UI.Xaml;
     using Caliburn.Micro;
+    using Helpers.Extensions;
     using Microsoft.Toolkit.Uwp;
 
     using Shared.Models;
     using MangaLibrary.Core.Collections;
     using MangaLibrary.Core.Messages;
     using MangaLibrary.Providers.Interfaces;
-    
+    using Microsoft.Toolkit.Uwp.UI.Controls;
+
     public class CatalogsPageViewModel 
         : Screen, IHandle<BeginIncrementalLoading>, IHandle<EndIncrementalLoading>
     {
@@ -39,6 +42,7 @@
         private BindableCollection<SortModel> _sorts;
         private bool _isMangasLoading;
         private MangaPreviewModel _selectedManga;
+        private AdaptiveGridView _grid;
 
         #endregion
 
@@ -79,9 +83,9 @@
             set
             {
                 _selectedManga = value;
-                _navigationService.NavigateToViewModel<DetailPageViewModel>(new Tuple<MangaPreviewModel, CatalogModel>(value, _catalog));
 
-                NotifyOfPropertyChange();
+                if(value != null)
+                    _navigationService.NavigateToViewModel<DetailPageViewModel>(new Tuple<MangaPreviewModel, CatalogModel>(value, _catalog));
             }
         }
 
@@ -106,6 +110,14 @@
             Mangas = new IncrementalLoadingCollection<MangaCollection, MangaPreviewModel>(mangaCollection);
 
             NotifyOfPropertyChange(nameof(Mangas));
+        }
+
+        private async void MangaArticlesLoaded(object obj)
+        {
+            _grid = obj as AdaptiveGridView;
+
+            if (_selectedManga != null)
+                await _grid.ScrollToItemAsync(_selectedManga);
         }
 
         #endregion
@@ -286,14 +298,11 @@
 
         #region Overrides of Screen
 
-        protected override void OnDeactivate(bool close)
+        protected override void OnActivate()
         {
-            Mangas?.Clear();
-            Catalogs?.Clear();
-            Genres?.Clear();
-            Sorts?.Clear();
+            _isNestedPaneOpen = false;
 
-            base.OnDeactivate(close);
+            base.OnActivate();
         }
 
         #endregion
