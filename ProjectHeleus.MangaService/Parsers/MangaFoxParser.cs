@@ -79,7 +79,7 @@
 
             #region Build URL
 
-            if (!skipUrlBuilding && page > 1)
+            if (!skipUrlBuilding && page > 0)
                 url = $"{url.Substring(0, url.LastIndexOf('/') + 1)}{page}.htm{url.Substring(url.LastIndexOf('/') + 1)}";
 
             #endregion

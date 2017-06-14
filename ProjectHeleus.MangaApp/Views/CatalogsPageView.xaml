@@ -225,7 +225,7 @@
                                                animations:ReorderGridAnimation.Duration="500"
                                                micro:Message.Attach="[Event Loaded] = [MangaArticlesLoaded($source)]"
                                                DesiredWidth="120"
-                                               ItemHeight="200"
+                                               ItemHeight="208"
                                                ItemsSource="{x:Bind Path=ViewModel.Mangas, Mode=OneWay}"
                                                OneRowModeEnabled="False"
                                                SelectedValue="{Binding Path=SelectedManga, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -233,10 +233,10 @@
                                                Visibility="Visible">
                         <controls:AdaptiveGridView.ItemTemplate>
                             <DataTemplate x:DataType="models:MangaPreviewModel">
-                                <Grid>
+                                <Grid Margin="5">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="160" />
-                                        <RowDefinition Height="40" />
+                                        <RowDefinition Height="48" />
                                     </Grid.RowDefinitions>
 
                                     <Image Grid.Row="0"

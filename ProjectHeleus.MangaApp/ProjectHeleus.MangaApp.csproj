@@ -101,6 +101,7 @@
     <Compile Include="Core\Settings.cs" />
     <Compile Include="Helpers\Extensions\ImageExtensions.cs" />
     <Compile Include="Helpers\Extensions\ScrollExtensions.cs" />
+    <Compile Include="Models\StringModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ShellMenuProvider.cs" />
     <Compile Include="ViewModels\CatalogsPageViewModel.cs" />
