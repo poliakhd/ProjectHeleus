@@ -230,7 +230,7 @@
 
             return parsedManga;
         }
-        public async Task<IChapterImages> GetMangaChapterAsync(string url)
+        public virtual async Task<IChapterImages> GetMangaChapterAsync(string url)
         {
             var parser = new HtmlParser();
 
@@ -339,10 +339,15 @@
         }
         private void GetViews(IHtmlCollection<IElement> information, MangaModel formattedManga)
         {
-            var viewsIndex = information[2].TextContent.IndexOf(":", StringComparison.Ordinal);
+            if (information.Length > 6)
+            {
+                var viewsIndex = information[2].TextContent.IndexOf(":", StringComparison.Ordinal);
 
-            if (viewsIndex > 0)
-                formattedManga.Views = int.Parse(information[2].TextContent.Substring(viewsIndex + 1));
+                if (viewsIndex > 0)
+                    formattedManga.Views = int.Parse(information[2].TextContent.Substring(viewsIndex + 1));
+            }
+            else
+                formattedManga.Views = 0;
         }
         private bool GetGenres(IElement informationLine, MangaModel formattedManga)
         {

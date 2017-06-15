@@ -9,12 +9,17 @@
       xmlns:local="using:ProjectHeleus.MangaApp.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:models="using:ProjectHeleus.MangaApp.Models"
+      xmlns:shared="using:ProjectHeleus.Shared.Models"
+      xmlns:micro="using:Caliburn.Micro"
       mc:Ignorable="d">
 
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
-                                              FalseValue="Collapsed"
-                                              TrueValue="Visible" />
+                                              FalseValue="Visible"
+                                              TrueValue="Collapsed" />
+        <converters:BoolToObjectConverter x:Key="BoolToObjectConverter"
+                                          FalseValue="true"
+                                          TrueValue="false" />
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -54,7 +59,7 @@
         </Grid>
         <!--  End Region Header  -->
 
-        <Pivot Grid.Row="1">
+        <Pivot x:Name="PivotWith" Grid.Row="1">
             <PivotItem>
                 <PivotItem.Header>
                     <TextBlock x:Uid="DetailInformation"
@@ -62,59 +67,13 @@
                                FontWeight="SemiLight" />
                 </PivotItem.Header>
 
-                <ScrollViewer VerticalScrollMode="Auto">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*" />
-                        </Grid.RowDefinitions>
-
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Grid Grid.Row="0" Grid.Column="0">
+                <Grid>
+                    <ScrollViewer VerticalScrollMode="Auto" Visibility="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                        <Grid>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <FlipView Width="160"
-                                      Height="240"
-                                      ItemsSource="{Binding Path=CoverModels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <FlipView.ItemTemplate>
-                                    <DataTemplate x:DataType="models:StringModel">
-                                        <Image Width="160"
-                                               Height="240"
-                                               extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=Value}"
-                                               extenstions:ImageExtensions.DecodePixelHeight="240"
-                                               extenstions:ImageExtensions.DecodePixelType="Logical"
-                                               extenstions:ImageExtensions.DecodePixelWidth="160" />
-                                    </DataTemplate>
-                                </FlipView.ItemTemplate>
-                            </FlipView>
-
-                            <callisto:Rating Grid.Row="1"
-                                             Margin="0"
-                                             Padding="0"
-                                             HorizontalAlignment="Center"
-                                             FontSize="14"
-                                             Foreground="Black"
-                                             IsEnabled="True"
-                                             ItemCount="5"
-                                             PointerOverFill="{x:Null}"
-                                             PointerPressedFill="{x:Null}"
-                                             Value="{Binding Path=Rating, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>
-
-                        <Grid Grid.Row="0"
-                              Grid.Column="1"
-                              Margin="5,0,0,0">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
 
                             <Grid.ColumnDefinitions>
@@ -122,111 +81,501 @@
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Grid.ColumnSpan="2"
-                                       FontSize="22"
-                                       FontWeight="SemiLight"
-                                       Foreground="Black"
-                                       Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                       TextWrapping="WrapWholeWords" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="0"
-                                       Grid.ColumnSpan="2"
-                                       FontSize="14"
-                                       FontWeight="SemiLight"
-                                       Foreground="DarkGray"
-                                       Text="{Binding Path=Titles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                       TextWrapping="WrapWholeWords" />
+                            <Grid Grid.Row="0" Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <FlipView Width="160"
+                                          Height="240"
+                                          ItemsSource="{Binding Path=CoverModels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <FlipView.ItemTemplate>
+                                        <DataTemplate x:DataType="models:StringModel">
+                                            <Image Width="160"
+                                                   Height="240"
+                                                   extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=Value}"
+                                                   extenstions:ImageExtensions.DecodePixelHeight="240"
+                                                   extenstions:ImageExtensions.DecodePixelType="Logical"
+                                                   extenstions:ImageExtensions.DecodePixelWidth="160" />
+                                        </DataTemplate>
+                                    </FlipView.ItemTemplate>
+                                </FlipView>
+
+                                <callisto:Rating Grid.Row="1"
+                                                 Margin="0"
+                                                 Padding="0"
+                                                 HorizontalAlignment="Center"
+                                                 FontSize="14"
+                                                 Foreground="Black"
+                                                 IsEnabled="True"
+                                                 ItemCount="5"
+                                                 PointerOverFill="{x:Null}"
+                                                 PointerPressedFill="{x:Null}"
+                                                 Value="{Binding Path=Rating, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+
+                            <Grid Grid.Row="0"
+                                  Grid.Column="1"
+                                  Margin="5,0,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.ColumnSpan="2"
+                                           FontSize="22"
+                                           FontWeight="SemiLight"
+                                           Foreground="Black"
+                                           Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                           TextWrapping="WrapWholeWords" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="0"
+                                           Grid.ColumnSpan="2"
+                                           FontSize="14"
+                                           FontWeight="SemiLight"
+                                           Foreground="DarkGray"
+                                           Text="{Binding Path=Titles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                           TextWrapping="WrapWholeWords" />
+                            </Grid>
+
+                            <Grid Grid.Row="1"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock x:Uid="DetailsAuthors"
+                                           Grid.Column="0"
+                                           Margin="0,10,2,0"
+                                           HorizontalAlignment="Right"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"
+                                           Foreground="Black"
+                                           Visibility="{Binding Path=AuthorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="0"
+                                           Grid.Column="1"
+                                           Margin="0,10,0,0"
+                                           FontSize="14"
+                                           FontWeight="SemiLight"
+                                           Foreground="Black"
+                                           Text="{Binding Path=Authors, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                           TextWrapping="WrapWholeWords"
+                                           Visibility="{Binding Path=AuthorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock x:Uid="DetailsTranslators"
+                                           Grid.Row="1"
+                                           Grid.Column="0"
+                                           Margin="0,0,2,0"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"
+                                           Foreground="Black"
+                                           Visibility="{Binding Path=TranslatorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="1"
+                                           Grid.Column="1"
+                                           FontSize="14"
+                                           FontWeight="SemiLight"
+                                           Foreground="Black"
+                                           Text="{Binding Path=Translators, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                           TextWrapping="WrapWholeWords"
+                                           Visibility="{Binding Path=TranslatorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                <TextBlock x:Uid="DetailsGenres"
+                                           Grid.Row="2"
+                                           Grid.Column="0"
+                                           Margin="0,0,2,0"
+                                           HorizontalAlignment="Right"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"
+                                           Foreground="Black"
+                                           Visibility="{Binding Path=GenresVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Grid.Row="2"
+                                           Grid.Column="1"
+                                           FontSize="14"
+                                           FontWeight="SemiLight"
+                                           Foreground="Black"
+                                           Text="{Binding Path=Genres, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                           TextWrapping="WrapWholeWords"
+                                           Visibility="{Binding Path=GenresVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </Grid>
+
+                            <Grid Grid.Row="2"
+                                  Grid.Column="0"
+                                  Grid.ColumnSpan="2"
+                                  Margin="0,10,0,0">
+                                <TextBlock FontSize="14"
+                                           FontWeight="SemiLight"
+                                           Foreground="Black"
+                                           Text="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                           TextWrapping="WrapWholeWords" />
+                            </Grid>
                         </Grid>
-
-                        <Grid Grid.Row="1"
-                              Grid.Column="0"
-                              Grid.ColumnSpan="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock x:Uid="DetailsAuthors"
-                                       Grid.Column="0"
-                                       Margin="0,10,2,0"
-                                       HorizontalAlignment="Right"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="Black"
-                                       Visibility="{Binding Path=AuthorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="1"
-                                       Margin="0,10,0,0"
-                                       FontSize="14"
-                                       FontWeight="SemiLight"
-                                       Foreground="Black"
-                                       Text="{Binding Path=Authors, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                       TextWrapping="WrapWholeWords"
-                                       Visibility="{Binding Path=AuthorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                            <TextBlock x:Uid="DetailsTranslators"
-                                       Grid.Row="1"
-                                       Grid.Column="0"
-                                       Margin="0,0,2,0"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="Black"
-                                       Visibility="{Binding Path=TranslatorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="1"
-                                       Grid.Column="1"
-                                       FontSize="14"
-                                       FontWeight="SemiLight"
-                                       Foreground="Black"
-                                       Text="{Binding Path=Translators, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                       TextWrapping="WrapWholeWords"
-                                       Visibility="{Binding Path=TranslatorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-
-                            <TextBlock x:Uid="DetailsGenres"
-                                       Grid.Row="2"
-                                       Grid.Column="0"
-                                       Margin="0,0,2,0"
-                                       HorizontalAlignment="Right"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="Black"
-                                       Visibility="{Binding Path=GenresVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBlock Grid.Row="2"
-                                       Grid.Column="1"
-                                       FontSize="14"
-                                       FontWeight="SemiLight"
-                                       Foreground="Black"
-                                       Text="{Binding Path=Genres, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                       TextWrapping="WrapWholeWords"
-                                       Visibility="{Binding Path=GenresVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>
-
-                        <Grid Grid.Row="2"
-                              Grid.Column="0"
-                              Grid.ColumnSpan="2"
-                              Margin="0,10,0,0">
-                            <TextBlock FontSize="14"
-                                       FontWeight="SemiLight"
-                                       Foreground="Black"
-                                       Text="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                                       TextWrapping="WrapWholeWords" />
-                        </Grid>
-                    </Grid>
-                </ScrollViewer>
+                    </ScrollViewer>
+                    <ProgressRing Width="50"
+                                  Height="50"
+                                  VerticalAlignment="Center"
+                                  HorizontalContentAlignment="Center"
+                                  Foreground="#8a9597"
+                                  IsActive="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToObjectConverter}}"
+                                  Visibility="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
             </PivotItem>
             <PivotItem>
                 <PivotItem.Header>
                     <TextBlock x:Uid="DetailChapters" FontWeight="SemiLight" />
                 </PivotItem.Header>
+                <Grid>
+                    <ListView ItemsSource="{Binding Path=Chapters, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate x:DataType="shared:ChapterModel">
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock FontSize="16"
+                                               FontWeight="SemiLight"
+                                               Foreground="Black"
+                                               Text="{x:Bind Path=Name, Mode=OneWay}" />
+
+                                    <TextBlock Grid.Row="1"
+                                               FontSize="12"
+                                               FontWeight="SemiLight"
+                                               Foreground="Black"
+                                               Text="{x:Bind Path=Date, Mode=OneWay}" />
+
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Background" Value="#e9e9e9" />
+                                <Setter Property="Height" Value="60" />
+                                <Setter Property="Margin" Value="0,0,0,5" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
+
+                    <ProgressRing Width="50"
+                                  Height="50"
+                                  VerticalAlignment="Center"
+                                  HorizontalContentAlignment="Center"
+                                  Foreground="#8a9597"
+                                  IsActive="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToObjectConverter}}"
+                                  Visibility="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
+                </Grid>
             </PivotItem>
         </Pivot>
+
+        <Grid x:Name="PivotWithout" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="435" />
+                <ColumnDefinition Width="435" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Pivot Grid.Column="0">
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock x:Uid="DetailInformation"
+                                   FontSize="26"
+                                   FontWeight="SemiLight" />
+                    </PivotItem.Header>
+
+                    <Grid>
+                        <ScrollViewer VerticalScrollMode="Auto" Visibility="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Row="0" Grid.Column="0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <FlipView Width="160"
+                                              Height="240"
+                                              ItemsSource="{Binding Path=CoverModels, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <FlipView.ItemTemplate>
+                                            <DataTemplate x:DataType="models:StringModel">
+                                                <Image Width="160"
+                                                       Height="240"
+                                                       extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=Value}"
+                                                       extenstions:ImageExtensions.DecodePixelHeight="240"
+                                                       extenstions:ImageExtensions.DecodePixelType="Logical"
+                                                       extenstions:ImageExtensions.DecodePixelWidth="160" />
+                                            </DataTemplate>
+                                        </FlipView.ItemTemplate>
+                                    </FlipView>
+
+                                    <callisto:Rating Grid.Row="1"
+                                                     Margin="0"
+                                                     Padding="0"
+                                                     HorizontalAlignment="Center"
+                                                     FontSize="14"
+                                                     Foreground="Black"
+                                                     IsEnabled="True"
+                                                     ItemCount="5"
+                                                     PointerOverFill="{x:Null}"
+                                                     PointerPressedFill="{x:Null}"
+                                                     Value="{Binding Path=Rating, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+
+                                <Grid Grid.Row="0"
+                                      Grid.Column="1"
+                                      Margin="5,0,0,0">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.ColumnSpan="2"
+                                               FontSize="22"
+                                               FontWeight="SemiLight"
+                                               Foreground="Black"
+                                               Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                               TextWrapping="WrapWholeWords" />
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="0"
+                                               Grid.ColumnSpan="2"
+                                               FontSize="14"
+                                               FontWeight="SemiLight"
+                                               Foreground="DarkGray"
+                                               Text="{Binding Path=Titles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                               TextWrapping="WrapWholeWords" />
+                                </Grid>
+
+                                <Grid Grid.Row="1"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock x:Uid="DetailsAuthors"
+                                               Grid.Column="0"
+                                               Margin="0,10,2,0"
+                                               HorizontalAlignment="Right"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Foreground="Black"
+                                               Visibility="{Binding Path=AuthorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Grid.Row="0"
+                                               Grid.Column="1"
+                                               Margin="0,10,0,0"
+                                               FontSize="14"
+                                               FontWeight="SemiLight"
+                                               Foreground="Black"
+                                               Text="{Binding Path=Authors, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                               TextWrapping="WrapWholeWords"
+                                               Visibility="{Binding Path=AuthorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                    <TextBlock x:Uid="DetailsTranslators"
+                                               Grid.Row="1"
+                                               Grid.Column="0"
+                                               Margin="0,0,2,0"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Foreground="Black"
+                                               Visibility="{Binding Path=TranslatorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Grid.Row="1"
+                                               Grid.Column="1"
+                                               FontSize="14"
+                                               FontWeight="SemiLight"
+                                               Foreground="Black"
+                                               Text="{Binding Path=Translators, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                               TextWrapping="WrapWholeWords"
+                                               Visibility="{Binding Path=TranslatorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                                    <TextBlock x:Uid="DetailsGenres"
+                                               Grid.Row="2"
+                                               Grid.Column="0"
+                                               Margin="0,0,2,0"
+                                               HorizontalAlignment="Right"
+                                               FontSize="14"
+                                               FontWeight="SemiBold"
+                                               Foreground="Black"
+                                               Visibility="{Binding Path=GenresVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <TextBlock Grid.Row="2"
+                                               Grid.Column="1"
+                                               FontSize="14"
+                                               FontWeight="SemiLight"
+                                               Foreground="Black"
+                                               Text="{Binding Path=Genres, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                               TextWrapping="WrapWholeWords"
+                                               Visibility="{Binding Path=GenresVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+
+                                <Grid Grid.Row="2"
+                                      Grid.Column="0"
+                                      Grid.ColumnSpan="2"
+                                      Margin="0,10,0,0">
+                                    <TextBlock FontSize="14"
+                                               FontWeight="SemiLight"
+                                               Foreground="Black"
+                                               Text="{Binding Path=Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                               TextWrapping="WrapWholeWords" />
+                                </Grid>
+                            </Grid>
+                        </ScrollViewer>
+                        <ProgressRing Width="50"
+                                      Height="50"
+                                      VerticalAlignment="Center"
+                                      HorizontalContentAlignment="Center"
+                                      Foreground="#8a9597"
+                                      IsActive="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToObjectConverter}}"
+                                      Visibility="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </Grid>
+                </PivotItem>
+            </Pivot>
+
+            <Pivot Grid.Column="1">
+                <PivotItem>
+                    <PivotItem.Header>
+                        <TextBlock x:Uid="DetailChapters"
+                                   FontWeight="SemiLight"
+                                   Foreground="Black" />
+                    </PivotItem.Header>
+                    <Grid>
+                        <ListView ItemsSource="{Binding Path=Chapters, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding Path=SelectedChapter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate x:DataType="shared:ChapterModel">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock FontSize="16"
+                                                   FontWeight="SemiLight"
+                                                   Foreground="Black"
+                                                   Text="{x:Bind Path=Name, Mode=OneWay}" />
+
+                                        <TextBlock Grid.Row="1"
+                                                   FontSize="12"
+                                                   FontWeight="SemiLight"
+                                                   Foreground="Black"
+                                                   Text="{x:Bind Path=Date, Mode=OneWay}" />
+
+                                    </Grid>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Background" Value="#e9e9e9" />
+                                    <Setter Property="Height" Value="60" />
+                                    <Setter Property="Margin" Value="0,0,0,5" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                        </ListView>
+
+                        <ProgressRing Width="50"
+                                      Height="50"
+                                      VerticalAlignment="Center"
+                                      HorizontalContentAlignment="Center"
+                                      Foreground="#8a9597"
+                                      IsActive="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToObjectConverter}}"
+                                      Visibility="{Binding Path=IsMangaLoaded, Mode=OneWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    </Grid>
+                </PivotItem>
+            </Pivot>
+
+            <Pivot Grid.Column="2" x:Name="Images">
+                <PivotItem Background="Black">
+                    <PivotItem.Header>
+                        <TextBlock x:Uid="DetailManga"
+                                   FontSize="26"
+                                   FontWeight="SemiLight" />
+                    </PivotItem.Header>
+
+                    <FlipView micro:Message.Attach="[Event KeyDown] = [OnKeyDown($eventArgs)]; [Event PointerWheelChanged] = [OnPointerWheelChanged($eventArgs)];" ItemsSource="{Binding Path=ChapterImages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                        <FlipView.ItemTemplate>
+                            <DataTemplate>
+                                <controls:ImageEx Source="{Binding Path=Value, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                            </DataTemplate>
+                        </FlipView.ItemTemplate>
+                    </FlipView>
+                </PivotItem>
+            </Pivot>
+        </Grid>
+
+        <!--  Region Visual States  -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="WindowStates">
+                <VisualState x:Name="VeyWideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PivotWithout.Visibility" Value="Visible" />
+                        <Setter Target="Images.Visibility" Value="Visible" />
+                        <Setter Target="PivotWith.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="WideState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="720" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PivotWithout.Visibility" Value="Visible" />
+                        <Setter Target="PivotWith.Visibility" Value="Collapsed" />
+                        <Setter Target="Images.Visibility" Value="Collapsed" />
+                    </VisualState.Setters>
+                </VisualState>
+                <VisualState x:Name="NarrowState">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="PivotWithout.Visibility" Value="Collapsed" />
+                        <Setter Target="Images.Visibility" Value="Collapsed" />
+                        <Setter Target="PivotWith.Visibility" Value="Visible" />
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>

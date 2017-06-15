@@ -147,6 +147,12 @@
   <data name="DetailInformation.Text" xml:space="preserve">
     <value>Information</value>
   </data>
+  <data name="DetailManga.FontSize" xml:space="preserve">
+    <value>20</value>
+  </data>
+  <data name="DetailManga.Text" xml:space="preserve">
+    <value>Manga</value>
+  </data>
   <data name="DetailsAuthors.Text" xml:space="preserve">
     <value>Authors:</value>
   </data>

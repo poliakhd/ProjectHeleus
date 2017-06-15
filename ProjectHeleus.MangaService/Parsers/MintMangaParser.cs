@@ -1,6 +1,8 @@
 ﻿namespace ProjectHeleus.MangaService.Parsers
 {
+    using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
+    using Shared.Models.Interfaces;
 
     public class MintMangaParser 
         : ReadMangaParser
@@ -16,5 +18,14 @@
         {
 
         }
+
+        #region Overrides of ReadMangaParser
+
+        public override Task<IChapterImages> GetMangaChapterAsync(string url)
+        {
+            return base.GetMangaChapterAsync(url + "?mature=1");
+        }
+
+        #endregion
     }
 }

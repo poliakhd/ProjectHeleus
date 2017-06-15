@@ -23,6 +23,16 @@
                 }
             }
         }
+        public async Task<ChapterImagesModel> GetMangaChapterContent(CatalogModel catalog, MangaModel manga, ChapterModel chapter)
+        {
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/manga/{catalog.Id}/{chapter.Id}"), HttpMethod.Get))
+            {
+                using (var response = await HttpHelper.Instance.SendRequestAsync(request))
+                {
+                    return JsonConvert.DeserializeObject<ChapterImagesModel>(await response.GetTextResultAsync(), new JsonSerializerSettings { TypeNameHandling = TypeNameHandling.Auto });
+                }
+            }
+        }
 
         #endregion
     }

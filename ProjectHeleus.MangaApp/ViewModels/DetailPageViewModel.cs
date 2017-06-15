@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Windows.System;
+    using Windows.UI.Xaml.Input;
     using WindowsLibrary.Extenstions;
     using Caliburn.Micro;
     using MangaLibrary.Providers.Interfaces;
@@ -19,6 +21,9 @@
 
         private Tuple<MangaPreviewModel, CatalogModel> _parameter;
         private MangaModel _mangaModel;
+        private bool _isMangaLoaded;
+        private ChapterModel _selectedChapter;
+        private IEnumerable<StringModel> _chapterImages;
 
         #endregion
 
@@ -32,6 +37,15 @@
             }
         }
 
+        public bool IsMangaLoaded
+        {
+            get { return _isMangaLoaded; }
+            set
+            {
+                _isMangaLoaded = value; 
+                NotifyOfPropertyChange();
+            }
+        }
 
         public DetailPageViewModel(ICatalogsProvider catalogsProvider, IEventAggregator eventAggregator, IDetailProvider detailProvider)
         {
@@ -68,8 +82,38 @@
 
         public string Description => _mangaModel?.Description;
 
+        public IEnumerable<ChapterModel> Chapters => _mangaModel?.Chapters.Cast<ChapterModel>();
+
+        public ChapterModel SelectedChapter
+        {
+            get { return _selectedChapter; }
+            set
+            {
+                _selectedChapter = value;
+
+                if (value != null)
+                {
+                    LoadImages();
+                }
+
+                NotifyOfPropertyChange();
+            }
+        }
+
+        public IEnumerable<StringModel> ChapterImages
+        {
+            get { return _chapterImages; }
+            set
+            {
+                _chapterImages = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
         private async void GetMangaContent()
         {
+            IsMangaLoaded = false;
+
             _mangaModel = await _detailProvider.GetMangaContent(Parameter.Item2, Parameter.Item1);
 
             NotifyOfPropertyChange(nameof(Title));
@@ -90,6 +134,26 @@
             NotifyOfPropertyChange(nameof(RatingLimit));
 
             NotifyOfPropertyChange(nameof(Description));
+
+            NotifyOfPropertyChange(nameof(Chapters));
+
+            IsMangaLoaded = true;
+        }
+
+        private async void LoadImages()
+        {
+            var images = await _detailProvider.GetMangaChapterContent(Parameter.Item2, _mangaModel, SelectedChapter);
+            ChapterImages = images.Images.Select(x => new StringModel() { Value = x });
+        }
+
+        private void OnKeyDown(KeyRoutedEventArgs args)
+        {
+            
+        }
+
+        private void OnPointerWheelChanged(object obj)
+        {
+            
         }
     }
 }
