@@ -5,7 +5,7 @@
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:extensions="using:ProjectHeleus.MangaApp.Helpers.Extensions"
+      xmlns:extenstions="using:ProjectHeleus.WindowsLibrary.Extenstions"
       xmlns:local="using:ProjectHeleus.MangaApp.Views"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:models="using:ProjectHeleus.MangaApp.Models"
@@ -45,10 +45,10 @@
             <Image Grid.Column="0"
                    Width="30"
                    Height="30"
-                   extensions:ImageExtensions.DecodableUriSource="{x:Bind Path=ViewModel.Parameter.Item2.Icon, Mode=OneWay}"
-                   extensions:ImageExtensions.DecodePixelHeight="30"
-                   extensions:ImageExtensions.DecodePixelType="Logical"
-                   extensions:ImageExtensions.DecodePixelWidth="30"
+                   extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=ViewModel.Parameter.Item2.Icon, Mode=OneWay}"
+                   extenstions:ImageExtensions.DecodePixelHeight="30"
+                   extenstions:ImageExtensions.DecodePixelType="Logical"
+                   extenstions:ImageExtensions.DecodePixelWidth="30"
                    Stretch="UniformToFill" />
 
         </Grid>
@@ -88,10 +88,10 @@
                                     <DataTemplate x:DataType="models:StringModel">
                                         <Image Width="160"
                                                Height="240"
-                                               extensions:ImageExtensions.DecodableUriSource="{x:Bind Path=Value}"
-                                               extensions:ImageExtensions.DecodePixelHeight="240"
-                                               extensions:ImageExtensions.DecodePixelType="Logical"
-                                               extensions:ImageExtensions.DecodePixelWidth="160" />
+                                               extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=Value}"
+                                               extenstions:ImageExtensions.DecodePixelHeight="240"
+                                               extenstions:ImageExtensions.DecodePixelType="Logical"
+                                               extenstions:ImageExtensions.DecodePixelWidth="160" />
                                     </DataTemplate>
                                 </FlipView.ItemTemplate>
                             </FlipView>
@@ -172,7 +172,7 @@
                                        Text="{Binding Path=Authors, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                        TextWrapping="WrapWholeWords"
                                        Visibility="{Binding Path=AuthorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                            
+
                             <TextBlock x:Uid="DetailsTranslators"
                                        Grid.Row="1"
                                        Grid.Column="0"
@@ -189,7 +189,7 @@
                                        Text="{Binding Path=Translators, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                        TextWrapping="WrapWholeWords"
                                        Visibility="{Binding Path=TranslatorsVisibility, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                            
+
                             <TextBlock x:Uid="DetailsGenres"
                                        Grid.Row="2"
                                        Grid.Column="0"

@@ -6,7 +6,7 @@
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:extensions="using:ProjectHeleus.MangaApp.Helpers.Extensions"
+      xmlns:extenstions="using:ProjectHeleus.WindowsLibrary.Extenstions"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:micro="using:Caliburn.Micro"
       xmlns:models="using:ProjectHeleus.Shared.Models"
@@ -38,10 +38,10 @@
             <Image Grid.Column="0"
                    Width="30"
                    Height="30"
-                   extensions:ImageExtensions.DecodableUriSource="{x:Bind Path=ViewModel.Catalog.Icon, Mode=OneWay}"
-                   extensions:ImageExtensions.DecodePixelHeight="30"
-                   extensions:ImageExtensions.DecodePixelType="Logical"
-                   extensions:ImageExtensions.DecodePixelWidth="30"
+                   extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=ViewModel.Catalog.Icon, Mode=OneWay}"
+                   extenstions:ImageExtensions.DecodePixelHeight="30"
+                   extenstions:ImageExtensions.DecodePixelType="Logical"
+                   extenstions:ImageExtensions.DecodePixelWidth="30"
                    Stretch="UniformToFill" />
 
             <TextBlock Grid.Column="1"
@@ -85,10 +85,10 @@
                                     </Grid.ColumnDefinitions>
 
                                     <Image Grid.Row="0"
-                                           extensions:ImageExtensions.DecodableUriSource="{x:Bind Path=Icon, Mode=OneWay}"
-                                           extensions:ImageExtensions.DecodePixelHeight="25"
-                                           extensions:ImageExtensions.DecodePixelType="Logical"
-                                           extensions:ImageExtensions.DecodePixelWidth="25"
+                                           extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=Icon, Mode=OneWay}"
+                                           extenstions:ImageExtensions.DecodePixelHeight="25"
+                                           extenstions:ImageExtensions.DecodePixelType="Logical"
+                                           extenstions:ImageExtensions.DecodePixelWidth="25"
                                            x:Phase="1"
                                            Stretch="UniformToFill" />
 
@@ -193,10 +193,10 @@
 
                                         <Image Grid.Row="0"
                                                Width="25"
-                                               extensions:ImageExtensions.DecodableUriSource="{x:Bind Path=Icon, Mode=OneWay}"
-                                               extensions:ImageExtensions.DecodePixelHeight="25"
-                                               extensions:ImageExtensions.DecodePixelType="Logical"
-                                               extensions:ImageExtensions.DecodePixelWidth="25"
+                                               extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=Icon, Mode=OneWay}"
+                                               extenstions:ImageExtensions.DecodePixelHeight="25"
+                                               extenstions:ImageExtensions.DecodePixelType="Logical"
+                                               extenstions:ImageExtensions.DecodePixelWidth="25"
                                                x:Phase="1" />
 
                                         <TextBlock Grid.Column="1"
@@ -240,10 +240,10 @@
                                     </Grid.RowDefinitions>
 
                                     <Image Grid.Row="0"
-                                           extensions:ImageExtensions.DecodableUriSource="{x:Bind Path=Cover, Mode=OneWay}"
-                                           extensions:ImageExtensions.DecodePixelHeight="160"
-                                           extensions:ImageExtensions.DecodePixelType="Logical"
-                                           extensions:ImageExtensions.DecodePixelWidth="120"
+                                           extenstions:ImageExtensions.DecodableUriSource="{x:Bind Path=Cover, Mode=OneWay}"
+                                           extenstions:ImageExtensions.DecodePixelHeight="160"
+                                           extenstions:ImageExtensions.DecodePixelType="Logical"
+                                           extenstions:ImageExtensions.DecodePixelWidth="120"
                                            x:Phase="1"
                                            Stretch="UniformToFill" />
 

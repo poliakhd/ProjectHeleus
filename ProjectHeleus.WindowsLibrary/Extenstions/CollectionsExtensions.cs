@@ -4,7 +4,7 @@
 
     using Caliburn.Micro;
 
-    public static class Extensions
+    public static class CollectionsExtensions
     {
         public static BindableCollection<T> ToBindableCollection<T>(this IEnumerable<T> source)
         {

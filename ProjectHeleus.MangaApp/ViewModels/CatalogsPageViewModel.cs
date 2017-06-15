@@ -1,9 +1,8 @@
 ﻿namespace ProjectHeleus.MangaApp.ViewModels
 {
     using System;
-    using Windows.UI.Xaml;
+    using WindowsLibrary.Extenstions;
     using Caliburn.Micro;
-    using Helpers.Extensions;
     using Microsoft.Toolkit.Uwp;
 
     using Shared.Models;

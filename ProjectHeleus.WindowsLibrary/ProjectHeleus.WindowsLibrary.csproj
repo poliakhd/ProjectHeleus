@@ -106,7 +106,9 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Extenstions\Extensions.cs" />
+    <Compile Include="Extenstions\CollectionsExtensions.cs" />
+    <Compile Include="Extenstions\ImageExtensions.cs" />
+    <Compile Include="Extenstions\ScrollExtensions.cs" />
     <Compile Include="Models\MenuItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\AppPurchase\Contracts\IInAppPurchaseProvider.cs" />
