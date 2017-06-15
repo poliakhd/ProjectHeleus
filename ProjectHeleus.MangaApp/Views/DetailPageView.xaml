@@ -123,7 +123,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.ColumnSpan="2"
-                                       FontSize="24"
+                                       FontSize="22"
                                        FontWeight="SemiLight"
                                        Foreground="Black"
                                        Text="{Binding Path=Title, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
@@ -131,7 +131,7 @@
                             <TextBlock Grid.Row="1"
                                        Grid.Column="0"
                                        Grid.ColumnSpan="2"
-                                       FontSize="16"
+                                       FontSize="14"
                                        FontWeight="SemiLight"
                                        Foreground="DarkGray"
                                        Text="{Binding Path=Titles, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
