@@ -63,13 +63,13 @@
         public async Task<IEnumerable<ISort>> GetCatalogSorts(CatalogType catalogType)
         {
             var parser = _container.GetParser(catalogType);
-            return await parser.GetCatalogSorts();
+            return await parser.GetCatalogSortings();
         }
 
         public async Task<IEnumerable<IManga>> GetAllFromCatalogAsync(CatalogType catalogType, SortType sort, int page)
         {
             var parser = _container.GetParser(catalogType);
-            return await parser.GetAllFromCatalogAsync(sort, page);
+            return await parser.GetCatalogMangasAsync(sort, page);
         }
 
         #endregion

@@ -4,7 +4,7 @@
     using Microsoft.Extensions.Logging;
     using Shared.Models.Interfaces;
 
-    public class MintMangaParser 
+    public partial class MintMangaParser 
         : ReadMangaParser
     {
         #region Hides of IParser
@@ -19,13 +19,6 @@
 
         }
 
-        #region Overrides of ReadMangaParser
 
-        public override Task<IChapterImages> GetMangaChapterAsync(string url)
-        {
-            return base.GetMangaChapterAsync(url + "?mature=1");
-        }
-
-        #endregion
     }
 }

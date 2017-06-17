@@ -28,13 +28,13 @@
         public async Task<IEnumerable<IGenre>> GetAllGenresAsync(CatalogType catalogType)
         {
             var parser = _container.GetParser(catalogType);
-            return await parser.GetAllGenresAsync();
+            return await parser.GetCatalogGenresAsync();
         }
 
         public async Task<IEnumerable<IManga>> GetAllFromGenreAsync(CatalogType catalogType, SortType sortType, string url, int page)
         {
             var parser = _container.GetParser(catalogType);
-            return await parser.GetAllFromGenreGenreAsync(sortType, url, page);
+            return await parser.GetGenreMangasAsync(sortType, url, page);
         }
 
         #endregion

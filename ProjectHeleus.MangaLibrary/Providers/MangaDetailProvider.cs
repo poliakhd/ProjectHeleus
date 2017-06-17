@@ -15,7 +15,7 @@
 
         public async Task<MangaModel> GetMangaContent(CatalogModel catalog, MangaPreviewModel mangaPreview)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/manga/{catalog.Id}/{mangaPreview.Id}"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/manga/{catalog.Id}/{mangaPreview.Id}"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
@@ -25,7 +25,7 @@
         }
         public async Task<ChapterImagesModel> GetMangaChapterContent(CatalogModel catalog, MangaModel manga, ChapterModel chapter)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/manga/{catalog.Id}/{chapter.Id}"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/manga/{catalog.Id}/{chapter.Id}"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {

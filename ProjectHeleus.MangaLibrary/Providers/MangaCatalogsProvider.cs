@@ -25,7 +25,7 @@
 
         public async Task<BindableCollection<CatalogModel>> GetAllCatalogs()
         {
-            using (var request = new HttpHelperRequest(new Uri("http://tenmanga.eastus2.cloudapp.azure.com/api/catalogs"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri("http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
@@ -40,7 +40,7 @@
         }
         public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, int page)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/catalogs/{catalog.Id}/{page}"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/{page}"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
@@ -50,7 +50,7 @@
         }
         public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, SortModel sort, int page)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/catalogs/{catalog.Id}/{sort.Id}/{page}"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/{sort.Id}/{page}"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
@@ -60,7 +60,7 @@
         }
         public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, int page)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{page}"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{page}"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
@@ -70,7 +70,7 @@
         }
         public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, SortModel sort, int page)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{sort.Id}/{page}"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{sort.Id}/{page}"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
@@ -81,7 +81,7 @@
 
         public async Task<BindableCollection<SortModel>> GetCatalogSorts(CatalogModel catalog)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/catalogs/{catalog.Id}/"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
@@ -91,7 +91,7 @@
         }
         public async Task<BindableCollection<GenreModel>> GetCatalogGenres(CatalogModel catalog)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.eastus2.cloudapp.azure.com/api/genres/{catalog.Id}/"), HttpMethod.Get))
+            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/"), HttpMethod.Get))
             {
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {

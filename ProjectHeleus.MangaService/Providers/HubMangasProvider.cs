@@ -28,14 +28,14 @@
         public async Task<IManga> GetMangaContentAsync(CatalogType catalogType, string url)
         {
             var parser = _container.GetParser(catalogType);
-            var mangas = await parser.GetMangaAsync(url);
+            var mangas = await parser.GetCatalogMangaAsync(url);
 
             return mangas;
         }
         public async Task<IChapterImages> GetMangaChapterContentAsync(CatalogType catalogType, string url)
         {
             var parser = _container.GetParser(catalogType);
-            var images = await parser.GetMangaChapterAsync(url);
+            var images = await parser.GetMangaChapterImagesAsync(url);
 
             return images;
         }
