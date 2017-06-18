@@ -5,6 +5,7 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.Text.RegularExpressions;
     
     using AngleSharp.Dom;
@@ -109,8 +110,6 @@
                             if (htmlChapterImages == null)
                                 return null;
 
-                            string formattedImagesSource;
-
                             #region Preparing images source
 
                             var jsImagesSource =
@@ -121,7 +120,7 @@
                             var startBracket = preFormattedImagesSource.IndexOf("[");
                             var endBracket = preFormattedImagesSource.LastIndexOf("]");
 
-                            formattedImagesSource = preFormattedImagesSource.Substring(startBracket + 1,
+                            var formattedImagesSource = preFormattedImagesSource.Substring(startBracket + 1,
                                 endBracket - startBracket - 1);
 
                             #endregion

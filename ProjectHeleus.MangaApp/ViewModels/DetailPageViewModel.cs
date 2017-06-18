@@ -4,10 +4,16 @@
     using System.Collections.Generic;
     using System.Linq;
     using Windows.System;
+    using Windows.UI.Xaml;
+    using Windows.UI.Xaml.Controls;
     using Windows.UI.Xaml.Input;
+    using Windows.UI.Xaml.Media;
+    using Windows.UI.Xaml.Media.Imaging;
     using WindowsLibrary.Extenstions;
     using Caliburn.Micro;
     using MangaLibrary.Providers.Interfaces;
+    using Microsoft.Toolkit.Uwp.UI.Animations;
+    using Microsoft.Toolkit.Uwp.UI.Controls;
     using Models;
     using Shared.Models;
 
@@ -23,7 +29,8 @@
         private MangaModel _mangaModel;
         private bool _isMangaLoaded;
         private ChapterModel _selectedChapter;
-        private IEnumerable<StringModel> _chapterImages;
+        private IEnumerable<ImageModel> _chapterImages;
+        private double _width;
 
         #endregion
 
@@ -100,7 +107,7 @@
             }
         }
 
-        public IEnumerable<StringModel> ChapterImages
+        public IEnumerable<ImageModel> ChapterImages
         {
             get { return _chapterImages; }
             set
@@ -143,7 +150,7 @@
         private async void LoadImages()
         {
             var images = await _detailProvider.GetMangaChapterContent(Parameter.Item2, _mangaModel, SelectedChapter);
-            ChapterImages = images.Images.Select(x => new StringModel() { Value = x });
+            ChapterImages = images.Images.Select(x => new ImageModel() {Url = x});
         }
 
         private void OnKeyDown(KeyRoutedEventArgs args)
@@ -154,6 +161,31 @@
         private void OnPointerWheelChanged(object obj)
         {
             
+        }
+
+
+        public double Height { get; set; }
+
+        public double Width
+        {
+            get { return _width; }
+            set
+            {
+                _width = value;
+                NotifyOfPropertyChange();
+            }
+        }
+
+        private void OnSizeChanged(SizeChangedEventArgs args)
+        {
+            Height = args.NewSize.Height;
+            Width = args.NewSize.Width;
+        }
+
+        private void OnImageOpened(ImageEx source, ScrollViewer obj)
+        {
+            obj.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            obj.VerticalScrollMode = ScrollMode.Disabled;
         }
     }
 }

@@ -31,5 +31,10 @@ namespace ProjectHeleus.MangaApp.Views
         {
             this.InitializeComponent();
         }
+
+        private void Image_OnImageOpened(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

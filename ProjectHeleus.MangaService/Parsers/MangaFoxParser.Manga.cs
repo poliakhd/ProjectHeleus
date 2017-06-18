@@ -100,7 +100,11 @@
                     {
                         using (var htmlDocument = new HtmlParser().Parse(responese.GetStringContent()))
                         {
-                            var htmlImages = htmlDocument.QuerySelectorAll("#top_bar select option").Where(x => x.TextContent != "Comments");
+                            var htmlImages =
+                                htmlDocument.QuerySelectorAll("#top_bar select option")
+                                    .Where(x => x.TextContent != "Comments");
+
+                            _logger.LogError(htmlDocument.Body.TextContent);
 
                             if (!htmlImages.Any())
                                 return null;
@@ -115,14 +119,19 @@
                                     if (!string.IsNullOrEmpty(images[htmlImage.TextContent]))
                                         continue;
 
-                                    using (var imageRequest = new HttpRequestMessage(HttpMethod.Get, string.Format(urlTemplate, htmlImage.TextContent)))
+                                    using (
+                                        var imageRequest = new HttpRequestMessage(HttpMethod.Get,
+                                            string.Format(urlTemplate, htmlImage.TextContent)))
                                     using (var imageResponse = await client.SendAsync(imageRequest))
                                     {
                                         if (responese.IsSuccessStatusCode)
                                         {
-                                            using (var imageSource = new HtmlParser().Parse(imageResponse.GetStringContent()))
+                                            using (
+                                                var imageSource =
+                                                    new HtmlParser().Parse(imageResponse.GetStringContent()))
                                             {
-                                                images[htmlImage.TextContent] = imageSource.QuerySelector(".read_img a img")?.GetAttribute("src");
+                                                images[htmlImage.TextContent] =
+                                                    imageSource.QuerySelector(".read_img a img")?.GetAttribute("src");
                                             }
                                         }
                                     }
@@ -130,6 +139,11 @@
 
                             } while (images.Values.Any(x => x is null));
                         }
+                    }
+                    else
+                    {
+                        _logger.LogTrace(responese.StatusCode.ToString());
+                        _logger.LogTrace(responese.GetStringContent());
                     }
                 }
             }
