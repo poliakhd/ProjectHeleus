@@ -12,92 +12,175 @@
     using Interfaces;
     using Shared.Models;
 
+
     public class MangaCatalogsProvider
         : ICatalogsProvider
     {
-        #region Private Members
-
-        private readonly HttpClient _httpClient = new HttpClient();
-
-        #endregion
+        #region Implementation of IBaseProvider
 
         public string Url { get; set; }
 
-        public async Task<BindableCollection<CatalogModel>> GetAllCatalogs()
+        #endregion
+
+        #region Implementation of ICatalogsProvider
+
+        public async Task<ProviderRespose<BindableCollection<CatalogModel>>> GetAllCatalogs()
         {
-            using (var request = new HttpHelperRequest(new Uri("http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs"), HttpMethod.Get))
+            try
             {
+                using (var request = new HttpHelperRequest(new Uri("http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs"), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    return JsonConvert.DeserializeObject<BindableCollection<CatalogModel>>(await response.GetTextResultAsync());
+                    var responseData = JsonConvert.DeserializeObject<BindableCollection<CatalogModel>>(await response.GetTextResultAsync());
+
+                    return new ProviderRespose<BindableCollection<CatalogModel>>()
+                    {
+                        HasResponse = true,
+                        Value = responseData,
+                        HasError = false,
+                        ErrorMessage = string.Empty,
+                        ErrorType = ErrorType.None
+                    };
                 }
+            }
+            catch (Exception ex)
+            {
+                return new ProviderRespose<BindableCollection<CatalogModel>>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = ex.Message,
+                    ErrorType = ErrorType.Unknown
+                };
             }
         }
 
-        public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog)
+        public Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog)
         {
-            return await GetCatalogContent(catalog, 0);
+            return GetCatalogContent(catalog, null, null, 0);
         }
-        public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, int page)
+        public Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog, int page)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/{page}"), HttpMethod.Get))
+            return GetCatalogContent(catalog, null, null, page);
+        }
+        public Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog, SortModel sort, int page)
+        {
+            return GetCatalogContent(catalog, null, sort, page);
+        }
+        public Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog, GenreModel genre, int page)
+        {
+            return GetCatalogContent(catalog, genre, null, page);
+        }
+        public async Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog, GenreModel genre, SortModel sort, int page)
+        {
+            try
             {
+                using (var request = new HttpHelperRequest(new Uri(BuildUrl(catalog, genre, sort, page)), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    return JsonConvert.DeserializeObject<BindableCollection<MangaPreviewModel>>(await response.GetTextResultAsync());
+                    var responseData = JsonConvert.DeserializeObject<BindableCollection<MangaPreviewModel>>(await response.GetTextResultAsync());
+
+                    return new ProviderRespose<BindableCollection<MangaPreviewModel>>()
+                    {
+                        HasResponse = true,
+                        Value = responseData,
+                        HasError = false,
+                        ErrorMessage = string.Empty,
+                        ErrorType = ErrorType.None
+                    };
                 }
             }
-        }
-        public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, SortModel sort, int page)
-        {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/{sort.Id}/{page}"), HttpMethod.Get))
+            catch (Exception ex)
             {
-                using (var response = await HttpHelper.Instance.SendRequestAsync(request))
+                return new ProviderRespose<BindableCollection<MangaPreviewModel>>()
                 {
-                    return JsonConvert.DeserializeObject<BindableCollection<MangaPreviewModel>>(await response.GetTextResultAsync());
-                }
-            }
-        }
-        public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, int page)
-        {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{page}"), HttpMethod.Get))
-            {
-                using (var response = await HttpHelper.Instance.SendRequestAsync(request))
-                {
-                    return JsonConvert.DeserializeObject<BindableCollection<MangaPreviewModel>>(await response.GetTextResultAsync());
-                }
-            }
-        }
-        public async Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, SortModel sort, int page)
-        {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{sort.Id}/{page}"), HttpMethod.Get))
-            {
-                using (var response = await HttpHelper.Instance.SendRequestAsync(request))
-                {
-                    return JsonConvert.DeserializeObject<BindableCollection<MangaPreviewModel>>(await response.GetTextResultAsync());
-                }
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = ex.Message,
+                    ErrorType = ErrorType.Unknown
+                };
             }
         }
 
-        public async Task<BindableCollection<SortModel>> GetCatalogSorts(CatalogModel catalog)
+
+        public async Task<ProviderRespose<BindableCollection<SortModel>>> GetCatalogSorts(CatalogModel catalog)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/"), HttpMethod.Get))
+            try
             {
+                using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/"), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    return JsonConvert.DeserializeObject<BindableCollection<SortModel>>(await response.GetTextResultAsync());
+                    var responseData = JsonConvert.DeserializeObject<BindableCollection<SortModel>>(await response.GetTextResultAsync());
+
+                    return new ProviderRespose<BindableCollection<SortModel>>()
+                    {
+                        HasResponse = true,
+                        Value = responseData,
+                        HasError = false,
+                        ErrorMessage = string.Empty,
+                        ErrorType = ErrorType.None
+                    };
                 }
+            }
+            catch (Exception ex)
+            {
+                return new ProviderRespose<BindableCollection<SortModel>>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = ex.Message,
+                    ErrorType = ErrorType.Unknown
+                };
             }
         }
-        public async Task<BindableCollection<GenreModel>> GetCatalogGenres(CatalogModel catalog)
+        public async Task<ProviderRespose<BindableCollection<GenreModel>>> GetCatalogGenres(CatalogModel catalog)
         {
-            using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/"), HttpMethod.Get))
+            try
             {
+                using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/"), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    return JsonConvert.DeserializeObject<BindableCollection<GenreModel>>(await response.GetTextResultAsync());
+                    var responseData = JsonConvert.DeserializeObject<BindableCollection<GenreModel>>(await response.GetTextResultAsync());
+                    return new ProviderRespose<BindableCollection<GenreModel>>()
+                    {
+                        HasResponse = true,
+                        Value = responseData,
+                        HasError = false,
+                        ErrorMessage = string.Empty,
+                        ErrorType = ErrorType.None
+                    };
                 }
             }
+            catch (Exception ex)
+            {
+                return new ProviderRespose<BindableCollection<GenreModel>>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = ex.Message,
+                    ErrorType = ErrorType.Unknown
+                };
+            }
+        }
+
+        #endregion
+
+        private string BuildUrl(CatalogModel catalog, GenreModel genre, SortModel sort, int page)
+        {
+            if ((genre is null) && (sort is null))
+                return $"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/{page}";
+
+            if ((sort != null) && (genre is null))
+                return $"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/{sort.Id}/{page}";
+
+            if ((genre != null) && (sort is null))
+                return $"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{page}";
+
+            return $"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/{genre.Id}/{sort.Id}/{page}";
         }
     }
 }

@@ -69,7 +69,10 @@
             _eventAggregator.Subscribe(this);
 
             IsCatalogsLoading = true;
-            Catalogs = await _catalogsProvider.GetAllCatalogs();
+
+            var catalogs = await _catalogsProvider.GetAllCatalogs();
+            if (catalogs.HasResponse)
+                Catalogs = catalogs.Value;
         }
 
         #region Mangas
@@ -181,7 +184,6 @@
 
         #region Sorts
 
-
         public SortModel Sort
         {
             get { return _sort; }
@@ -232,7 +234,10 @@
         private async void SetSortsCollection(CatalogModel catalog)
         {
             IsSortsLoading = true;
-            Sorts = await _catalogsProvider.GetCatalogSorts(catalog);
+
+            var sorts = await _catalogsProvider.GetCatalogSorts(catalog);
+            if (sorts.HasResponse)
+                Sorts = sorts.Value;
         }
 
         #endregion
@@ -289,7 +294,10 @@
         private async void SetGenresCollection(CatalogModel catalog)
         {
             IsGenresLoading = true;
-            Genres = await _catalogsProvider.GetCatalogGenres(catalog);
+
+            var genres = await _catalogsProvider.GetCatalogGenres(catalog);
+            if(genres.HasResponse)
+                Genres = genres.Value;
         }
 
         #endregion

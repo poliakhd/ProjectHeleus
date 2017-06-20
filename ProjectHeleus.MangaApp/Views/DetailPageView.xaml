@@ -1,23 +1,18 @@
 ﻿<Page x:Class="ProjectHeleus.MangaApp.Views.DetailPageView"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:behaviors="using:Microsoft.Toolkit.Uwp.UI.Animations.Behaviors"
       xmlns:callisto="using:Callisto.Controls"
       xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
       xmlns:converters="using:Microsoft.Toolkit.Uwp.UI.Converters"
-      xmlns:convertersLocal="using:ProjectHeleus.MangaApp.Helpers.Converters"
       xmlns:core="using:Microsoft.Xaml.Interactions.Core"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:data="using:WinRTMultibinding.Foundation.Data"
       xmlns:extenstions="using:ProjectHeleus.WindowsLibrary.Extenstions"
       xmlns:interactivity="using:Microsoft.Xaml.Interactivity"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-      xmlns:media="using:Microsoft.Xaml.Interactions.Media"
       xmlns:micro="using:Caliburn.Micro"
       xmlns:models="using:ProjectHeleus.MangaApp.Models"
       xmlns:shared="using:ProjectHeleus.Shared.Models"
       mc:Ignorable="d">
-
     <Page.Resources>
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"
                                               FalseValue="Visible"
@@ -25,7 +20,6 @@
         <converters:BoolToObjectConverter x:Key="BoolToObjectConverter"
                                           FalseValue="true"
                                           TrueValue="false" />
-
     </Page.Resources>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
@@ -538,19 +532,30 @@
                     </PivotItem.Header>
 
                     <!--  micro:Message.Attach="[Event KeyDown] = [OnKeyDown($eventArgs)]; [Event PointerWheelChanged] = [OnPointerWheelChanged($eventArgs)];[Event SizeChanged] = [OnSizeChanged($eventArgs)];"  -->
-
                     <!--  micro:Message.Attach="[Event ImageExOpened] = [OnImageOpened($source, $view, $eventArgs, Viewer)]"  -->
 
-                    <FlipView x:Name="View" ItemsSource="{Binding Path=ChapterImages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                    <FlipView x:Name="View"
+                              ItemsSource="{Binding Path=ChapterImages, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                              SelectionChanged="Image_OnImageOpened">
                         <FlipView.ItemTemplate>
                             <DataTemplate x:DataType="models:ImageModel">
                                 <ScrollViewer x:Name="Viewer"
-                                              Width="{Binding ElementName=Images, Path=ActualWidth, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                               HorizontalScrollBarVisibility="Disabled"
-                                              VerticalScrollBarVisibility="Visible"
-                                              VerticalScrollMode="Auto">
+                                              VerticalScrollBarVisibility="Disabled"
+                                              VerticalScrollMode="Disabled">
 
-                                    <controls:ImageEx x:Name="ImageEx" Source="{Binding Path=Url, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                    <Image x:Name="Image" Source="{Binding Path=Url, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                        <interactivity:Interaction.Behaviors>
+                                            <core:EventTriggerBehavior EventName="ImageOpened">
+                                                <micro:ActionMessage MethodName="OnImageOpened">
+                                                    <micro:Parameter Value="{Binding ElementName=Image}" />
+                                                    <micro:Parameter Value="{Binding ElementName=Viewer}" />
+                                                </micro:ActionMessage>
+                                            </core:EventTriggerBehavior>
+                                        </interactivity:Interaction.Behaviors>
+                                    </Image>
+
+                                    <!--<controls:ImageEx x:Name="ImageEx" Source="{Binding Path=Url, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
                                         <interactivity:Interaction.Behaviors>
                                             <core:EventTriggerBehavior EventName="ImageExOpened">
                                                 <micro:ActionMessage MethodName="OnImageOpened">
@@ -559,7 +564,7 @@
                                                 </micro:ActionMessage>
                                             </core:EventTriggerBehavior>
                                         </interactivity:Interaction.Behaviors>
-                                    </controls:ImageEx>
+                                    </controls:ImageEx>-->
                                 </ScrollViewer>
                             </DataTemplate>
                         </FlipView.ItemTemplate>
@@ -605,6 +610,3 @@
         </VisualStateManager.VisualStateGroups>
     </Grid>
 </Page>
-
-
-

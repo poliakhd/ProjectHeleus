@@ -3,9 +3,10 @@
     using System.Threading.Tasks;
     using Shared.Models;
 
-    public interface IDetailProvider
+    public interface IDetailProvider : IBaseProvider
     {
-        Task<MangaModel> GetMangaContent(CatalogModel catalog, MangaPreviewModel mangaPreview);
-        Task<ChapterImagesModel> GetMangaChapterContent(CatalogModel catalog, MangaModel manga, ChapterModel chapter);
+        Task<ProviderRespose<MangaModel>> GetMangaContent(CatalogModel catalog, MangaPreviewModel mangaPreview);
+
+        Task<ProviderRespose<ChapterImagesModel>> GetMangaChapterContent(CatalogModel catalog, MangaModel manga, ChapterModel chapter);
     }
 }

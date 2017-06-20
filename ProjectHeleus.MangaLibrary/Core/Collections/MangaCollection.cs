@@ -57,16 +57,16 @@
             if (_genre is null)
             {
                 if (_sort is null)
-                    fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, pageIndex);
+                    fetchedResult = (await _catalogsProvider.GetCatalogContent(_catalog, pageIndex)).Value;
                 else
-                    fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, _sort, pageIndex);
+                    fetchedResult = (await _catalogsProvider.GetCatalogContent(_catalog, _sort, pageIndex)).Value;
             }
             else
             {
                 if (_sort is null)
-                    fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, _genre, pageIndex);
+                    fetchedResult = (await _catalogsProvider.GetCatalogContent(_catalog, _genre, pageIndex)).Value;
                 else
-                    fetchedResult = await _catalogsProvider.GetCatalogContent(_catalog, _genre, _sort, pageIndex);
+                    fetchedResult = (await _catalogsProvider.GetCatalogContent(_catalog, _genre, _sort, pageIndex)).Value;
             }
 
             _eventAggregator.PublishOnUIThread(new EndIncrementalLoading());

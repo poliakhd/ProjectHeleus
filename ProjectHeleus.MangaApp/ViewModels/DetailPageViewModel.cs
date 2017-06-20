@@ -121,28 +121,36 @@
         {
             IsMangaLoaded = false;
 
-            _mangaModel = await _detailProvider.GetMangaContent(Parameter.Item2, Parameter.Item1);
 
-            NotifyOfPropertyChange(nameof(Title));
-            NotifyOfPropertyChange(nameof(Titles));
+            var manga = await _detailProvider.GetMangaContent(Parameter.Item2, Parameter.Item1);
 
-            NotifyOfPropertyChange(nameof(CoverModels));
+            if (manga.HasResponse)
+            {
+                _mangaModel = manga.Value;
 
-            NotifyOfPropertyChange(nameof(Authors));
-            NotifyOfPropertyChange(nameof(AuthorsVisibility));
+                NotifyOfPropertyChange(nameof(Title));
+                NotifyOfPropertyChange(nameof(Titles));
 
-            NotifyOfPropertyChange(nameof(Translators));
-            NotifyOfPropertyChange(nameof(TranslatorsVisibility));
+                NotifyOfPropertyChange(nameof(CoverModels));
 
-            NotifyOfPropertyChange(nameof(Genres));
-            NotifyOfPropertyChange(nameof(GenresVisibility));
+                NotifyOfPropertyChange(nameof(Authors));
+                NotifyOfPropertyChange(nameof(AuthorsVisibility));
 
-            NotifyOfPropertyChange(nameof(Rating));
-            NotifyOfPropertyChange(nameof(RatingLimit));
+                NotifyOfPropertyChange(nameof(Translators));
+                NotifyOfPropertyChange(nameof(TranslatorsVisibility));
 
-            NotifyOfPropertyChange(nameof(Description));
+                NotifyOfPropertyChange(nameof(Genres));
+                NotifyOfPropertyChange(nameof(GenresVisibility));
 
-            NotifyOfPropertyChange(nameof(Chapters));
+                NotifyOfPropertyChange(nameof(Rating));
+                NotifyOfPropertyChange(nameof(RatingLimit));
+
+                NotifyOfPropertyChange(nameof(Description));
+
+                NotifyOfPropertyChange(nameof(Chapters));
+            }
+
+
 
             IsMangaLoaded = true;
         }
@@ -150,42 +158,21 @@
         private async void LoadImages()
         {
             var images = await _detailProvider.GetMangaChapterContent(Parameter.Item2, _mangaModel, SelectedChapter);
-            ChapterImages = images.Images.Select(x => new ImageModel() {Url = x});
+            if (images.HasResponse)
+                ChapterImages = images.Value.Images.Select(x => new ImageModel() { Url = x });
         }
 
-        private void OnKeyDown(KeyRoutedEventArgs args)
+        private void OnImageOpened(Image source, ScrollViewer obj)
         {
-            
-        }
-
-        private void OnPointerWheelChanged(object obj)
-        {
-            
-        }
-
-
-        public double Height { get; set; }
-
-        public double Width
-        {
-            get { return _width; }
-            set
+            if (source.ActualHeight > obj.ActualHeight * 2)
             {
-                _width = value;
-                NotifyOfPropertyChange();
+                source.Width = 500;
             }
-        }
-
-        private void OnSizeChanged(SizeChangedEventArgs args)
-        {
-            Height = args.NewSize.Height;
-            Width = args.NewSize.Width;
-        }
-
-        private void OnImageOpened(ImageEx source, ScrollViewer obj)
-        {
-            obj.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
-            obj.VerticalScrollMode = ScrollMode.Disabled;
+            else
+            {
+                obj.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled;
+                obj.VerticalScrollMode = ScrollMode.Disabled;
+            }
         }
     }
 }

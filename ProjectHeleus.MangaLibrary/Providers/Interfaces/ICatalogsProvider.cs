@@ -6,20 +6,18 @@
 
     using Shared.Models;
 
-    public interface ICatalogsProvider
+    public interface ICatalogsProvider : IBaseProvider
     {
-        string Url { get; set; }
+        Task<ProviderRespose<BindableCollection<CatalogModel>>> GetAllCatalogs();
 
-        Task<BindableCollection<CatalogModel>> GetAllCatalogs();
+        Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog);
+        Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog, int page);
+        Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog, SortModel sort, int page);
 
-        Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog);
-        Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, int page);
-        Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, SortModel sort, int page);
+        Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog, GenreModel genre, int page);
+        Task<ProviderRespose<BindableCollection<MangaPreviewModel>>> GetCatalogContent(CatalogModel catalog, GenreModel genre, SortModel sort, int page);
 
-        Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, int page);
-        Task<BindableCollection<MangaPreviewModel>> GetCatalogContent(CatalogModel catalog, GenreModel genre, SortModel sort, int page);
-
-        Task<BindableCollection<SortModel>> GetCatalogSorts(CatalogModel catalog);
-        Task<BindableCollection<GenreModel>> GetCatalogGenres(CatalogModel catalog);
+        Task<ProviderRespose<BindableCollection<SortModel>>> GetCatalogSorts(CatalogModel catalog);
+        Task<ProviderRespose<BindableCollection<GenreModel>>> GetCatalogGenres(CatalogModel catalog);
     }
 }

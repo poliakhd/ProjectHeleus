@@ -109,6 +109,7 @@
     <Compile Include="Core\Messages\BeginIncrementalLoading.cs" />
     <Compile Include="Core\Messages\EndIncrementalLoading.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\Interfaces\IBaseProvider.cs" />
     <Compile Include="Providers\Interfaces\ICatalogsProvider.cs" />
     <Compile Include="Providers\Interfaces\IDetailProvider.cs" />
     <Compile Include="Providers\MangaCatalogsProvider.cs" />
