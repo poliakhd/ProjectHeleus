@@ -6,11 +6,12 @@
     using System.Net.Http;
     using System.Threading.Tasks;
     using System.Collections.Generic;
-    
+    using System.Text;
     using AngleSharp.Dom;
     using AngleSharp.Parser.Html;
 
     using Microsoft.Extensions.Logging;
+    using Microsoft.Extensions.Caching.Distributed;
 
     using Extensions;
     using Enhancements;
@@ -119,19 +120,22 @@
                                     if (!string.IsNullOrEmpty(images[htmlImage.TextContent]))
                                         continue;
 
-                                    using (
-                                        var imageRequest = new HttpRequestMessage(HttpMethod.Get,
-                                            string.Format(urlTemplate, htmlImage.TextContent)))
+                                    var cached = _cache.Get(string.Format(urlTemplate, htmlImage.TextContent));
+                                    if (cached != null)
+                                    {
+                                        images[htmlImage.TextContent] = Encoding.UTF8.GetString(cached);
+                                        continue;
+                                    }
+
+                                    using (var imageRequest = new HttpRequestMessage(HttpMethod.Get, string.Format(urlTemplate, htmlImage.TextContent)))
                                     using (var imageResponse = await client.SendAsync(imageRequest))
                                     {
                                         if (responese.IsSuccessStatusCode)
                                         {
-                                            using (
-                                                var imageSource =
-                                                    new HtmlParser().Parse(imageResponse.GetStringContent()))
+                                            using (var imageSource = new HtmlParser().Parse(imageResponse.GetStringContent()))
                                             {
-                                                images[htmlImage.TextContent] =
-                                                    imageSource.QuerySelector(".read_img a img")?.GetAttribute("src");
+                                                images[htmlImage.TextContent] = imageSource.QuerySelector(".read_img a img")?.GetAttribute("src");
+                                                _cache.Set(string.Format(urlTemplate, htmlImage.TextContent), Encoding.UTF8.GetBytes(images[htmlImage.TextContent]));
                                             }
                                         }
                                     }

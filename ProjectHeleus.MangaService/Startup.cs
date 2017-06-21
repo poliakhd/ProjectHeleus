@@ -36,6 +36,13 @@
                 .AddMvc()
                 .AddJsonOptions(settings => settings.SerializerSettings.Formatting = Formatting.Indented);
 
+            services.AddDistributedSqlServerCache(options =>
+            {
+                options.ConnectionString = @"Data Source=.;Initial Catalog=Cache;Integrated Security=True;";
+                options.SchemaName = "dbo";
+                options.TableName = "MangaImagesCache";
+            });
+
             var container = new Container();
 
             container.Configure(
