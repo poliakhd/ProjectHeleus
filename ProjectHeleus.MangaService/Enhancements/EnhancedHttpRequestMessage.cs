@@ -20,8 +20,6 @@
 
         private void PrepareHttpRequest()
         {
-            //85.143.218.246:3128
-
             Headers.Clear();
 
             Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));

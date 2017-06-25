@@ -135,7 +135,22 @@
                                             using (var imageSource = new HtmlParser().Parse(imageResponse.GetStringContent()))
                                             {
                                                 images[htmlImage.TextContent] = imageSource.QuerySelector(".read_img a img")?.GetAttribute("src");
-                                                _cache.Set(string.Format(urlTemplate, htmlImage.TextContent), Encoding.UTF8.GetBytes(images[htmlImage.TextContent]));
+
+                                                if (!string.IsNullOrEmpty(images[htmlImage.TextContent]))
+                                                {
+                                                    var image = images[htmlImage.TextContent];
+                                                    var imageTtl = image.Substring(image.IndexOf("ttl=") + 4);
+
+                                                    if (long.TryParse(imageTtl, out long imageIntTtl))
+                                                        _cache.Set(string.Format(urlTemplate, htmlImage.TextContent),
+                                                            Encoding.UTF8.GetBytes(images[htmlImage.TextContent]),
+                                                            new DistributedCacheEntryOptions()
+                                                            {
+                                                                AbsoluteExpiration =
+                                                                    DateTimeOffset.FromUnixTimeSeconds(imageIntTtl)
+                                                            }
+                                                        );
+                                                }
                                             }
                                         }
                                     }
