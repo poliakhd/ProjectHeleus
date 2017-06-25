@@ -51,6 +51,7 @@
         {
             #region Build URL
 
+            page++;
             if (!skipUrlBuilding && page > 0)
                 url = $"{url.Substring(0, url.LastIndexOf('/') + 1)}{page}.htm{url.Substring(url.LastIndexOf('/') + 1)}";
 
@@ -60,7 +61,6 @@
 
             try
             {
-
                 using (var client = new HttpClient())
                 using (var request = new EnhancedHttpRequestMessage(HttpMethod.Get, url))
                 using (var responese = await client.SendAsync(request))

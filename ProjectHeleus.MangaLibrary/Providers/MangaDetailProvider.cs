@@ -25,19 +25,39 @@
         {
             try
             {
-                using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/manga/{catalog.Id}/{mangaPreview.Id}"), HttpMethod.Get))
+                using (var request =
+                    new HttpHelperRequest(
+                        new Uri(
+                            $"http://tenmanga.westeurope.cloudapp.azure.com/api/manga/{catalog.Id}/{mangaPreview.Id}"),
+                        HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    var responseData = JsonConvert.DeserializeObject<MangaModel>(await response.GetTextResultAsync());
-                    return new ProviderRespose<MangaModel>()
+                    if (response.Success)
                     {
-                        HasResponse = true,
-                        Value = responseData,
-                        HasError = false,
-                        ErrorMessage = string.Empty,
-                        ErrorType = ErrorType.None
-                    };
+                        var responseData = JsonConvert.DeserializeObject<MangaModel>(await response.GetTextResultAsync());
+                        return new ProviderRespose<MangaModel>()
+                        {
+                            HasResponse = true,
+                            Value = responseData,
+                            HasError = false,
+                            ErrorMessage = string.Empty,
+                            ErrorType = ErrorType.None
+                        };
+                    }
+
+                    throw new FailedResponseException() {StatusCode = response.StatusCode};
                 }
+            }
+            catch (FailedResponseException frex)
+            {
+                return new ProviderRespose<MangaModel>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = string.Empty,
+                    ErrorType = ErrorType.ServiceError
+                };
             }
             catch (Exception ex)
             {
@@ -58,16 +78,33 @@
                 using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/manga/{catalog.Id}/{chapter.Id}"), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    var responseData = JsonConvert.DeserializeObject<ChapterImagesModel>(await response.GetTextResultAsync());
-                    return new ProviderRespose<ChapterImagesModel>()
+                    if (response.Success)
                     {
-                        HasResponse = true,
-                        Value = responseData,
-                        HasError = false,
-                        ErrorMessage = string.Empty,
-                        ErrorType = ErrorType.None
-                    };
+                        var responseData = JsonConvert.DeserializeObject<ChapterImagesModel>(await response.GetTextResultAsync());
+                        return new ProviderRespose<ChapterImagesModel>()
+                        {
+                            HasResponse = true,
+                            Value = responseData,
+                            HasError = false,
+                            ErrorMessage = string.Empty,
+                            ErrorType = ErrorType.None
+                        };
+
+                    }
+
+                    throw new FailedResponseException() { StatusCode = response.StatusCode };
                 }
+            }
+            catch (FailedResponseException frex)
+            {
+                return new ProviderRespose<ChapterImagesModel>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = string.Empty,
+                    ErrorType = ErrorType.ServiceError
+                };
             }
             catch (Exception ex)
             {

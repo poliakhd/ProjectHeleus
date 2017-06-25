@@ -31,17 +31,33 @@
                 using (var request = new HttpHelperRequest(new Uri("http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs"), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    var responseData = JsonConvert.DeserializeObject<BindableCollection<CatalogModel>>(await response.GetTextResultAsync());
-
-                    return new ProviderRespose<BindableCollection<CatalogModel>>()
+                    if (response.Success)
                     {
-                        HasResponse = true,
-                        Value = responseData,
-                        HasError = false,
-                        ErrorMessage = string.Empty,
-                        ErrorType = ErrorType.None
-                    };
+                        var responseData = JsonConvert.DeserializeObject<BindableCollection<CatalogModel>>(await response.GetTextResultAsync());
+
+                        return new ProviderRespose<BindableCollection<CatalogModel>>()
+                        {
+                            HasResponse = true,
+                            Value = responseData,
+                            HasError = false,
+                            ErrorMessage = string.Empty,
+                            ErrorType = ErrorType.None
+                        };
+                    }
+
+                    throw new FailedResponseException() { StatusCode = response.StatusCode };
                 }
+            }
+            catch (FailedResponseException frex)
+            {
+                return new ProviderRespose<BindableCollection<CatalogModel>>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = string.Empty,
+                    ErrorType = ErrorType.ServiceError
+                };
             }
             catch (Exception ex)
             {
@@ -79,17 +95,34 @@
                 using (var request = new HttpHelperRequest(new Uri(BuildUrl(catalog, genre, sort, page)), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    var responseData = JsonConvert.DeserializeObject<BindableCollection<MangaPreviewModel>>(await response.GetTextResultAsync());
-
-                    return new ProviderRespose<BindableCollection<MangaPreviewModel>>()
+                    if (response.Success)
                     {
-                        HasResponse = true,
-                        Value = responseData,
-                        HasError = false,
-                        ErrorMessage = string.Empty,
-                        ErrorType = ErrorType.None
-                    };
+                        var responseData = JsonConvert.DeserializeObject<BindableCollection<MangaPreviewModel>>(await response.GetTextResultAsync());
+
+                        return new ProviderRespose<BindableCollection<MangaPreviewModel>>()
+                        {
+                            HasResponse = true,
+                            Value = responseData,
+                            HasError = false,
+                            ErrorMessage = string.Empty,
+                            ErrorType = ErrorType.None
+                        };
+
+                    }
+
+                    throw new FailedResponseException() { StatusCode = response.StatusCode };
                 }
+            }
+            catch (FailedResponseException frex)
+            {
+                return new ProviderRespose<BindableCollection<MangaPreviewModel>>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = string.Empty,
+                    ErrorType = ErrorType.ServiceError
+                };
             }
             catch (Exception ex)
             {
@@ -112,17 +145,33 @@
                 using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/catalogs/{catalog.Id}/"), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    var responseData = JsonConvert.DeserializeObject<BindableCollection<SortModel>>(await response.GetTextResultAsync());
-
-                    return new ProviderRespose<BindableCollection<SortModel>>()
+                    if (response.Success)
                     {
-                        HasResponse = true,
-                        Value = responseData,
-                        HasError = false,
-                        ErrorMessage = string.Empty,
-                        ErrorType = ErrorType.None
-                    };
+                        var responseData = JsonConvert.DeserializeObject<BindableCollection<SortModel>>(await response.GetTextResultAsync());
+
+                        return new ProviderRespose<BindableCollection<SortModel>>()
+                        {
+                            HasResponse = true,
+                            Value = responseData,
+                            HasError = false,
+                            ErrorMessage = string.Empty,
+                            ErrorType = ErrorType.None
+                        };
+                    }
+
+                    throw new FailedResponseException() { StatusCode = response.StatusCode };
                 }
+            }
+            catch (FailedResponseException frex)
+            {
+                return new ProviderRespose<BindableCollection<SortModel>>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = string.Empty,
+                    ErrorType = ErrorType.ServiceError
+                };
             }
             catch (Exception ex)
             {
@@ -143,16 +192,32 @@
                 using (var request = new HttpHelperRequest(new Uri($"http://tenmanga.westeurope.cloudapp.azure.com/api/genres/{catalog.Id}/"), HttpMethod.Get))
                 using (var response = await HttpHelper.Instance.SendRequestAsync(request))
                 {
-                    var responseData = JsonConvert.DeserializeObject<BindableCollection<GenreModel>>(await response.GetTextResultAsync());
-                    return new ProviderRespose<BindableCollection<GenreModel>>()
+                    if (response.Success)
                     {
-                        HasResponse = true,
-                        Value = responseData,
-                        HasError = false,
-                        ErrorMessage = string.Empty,
-                        ErrorType = ErrorType.None
-                    };
+                        var responseData = JsonConvert.DeserializeObject<BindableCollection<GenreModel>>(await response.GetTextResultAsync());
+                        return new ProviderRespose<BindableCollection<GenreModel>>()
+                        {
+                            HasResponse = true,
+                            Value = responseData,
+                            HasError = false,
+                            ErrorMessage = string.Empty,
+                            ErrorType = ErrorType.None
+                        };
+                    }
+
+                    throw new FailedResponseException() { StatusCode = response.StatusCode };
                 }
+            }
+            catch (FailedResponseException frex)
+            {
+                return new ProviderRespose<BindableCollection<GenreModel>>()
+                {
+                    HasResponse = false,
+                    Value = null,
+                    HasError = true,
+                    ErrorMessage = string.Empty,
+                    ErrorType = ErrorType.ServiceError
+                };
             }
             catch (Exception ex)
             {

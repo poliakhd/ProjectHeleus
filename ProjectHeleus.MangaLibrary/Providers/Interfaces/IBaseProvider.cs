@@ -1,5 +1,13 @@
-﻿namespace ProjectHeleus.MangaLibrary.Providers.Interfaces
+﻿using System;
+using Windows.Web.Http;
+
+namespace ProjectHeleus.MangaLibrary.Providers.Interfaces
 {
+    public class FailedResponseException : Exception
+    {
+        public HttpStatusCode StatusCode { get; set; }  
+    }
+
     public enum ErrorType
     {
         None,
